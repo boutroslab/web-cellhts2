@@ -25,18 +25,18 @@
     <version>1.0.0-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>web cellHTS application</name>
-    <url>http://your.project.url</url>
+    <url>http://web-cellhts2.dkfz.de/</url>
     <description>a web-application for the (user-friendly) analysis of cellHTS2 datasets.</description>
      <scm>
-        <connection>scm:svn:http://b110-cellarray4/svn/cellHTS2-WebTools</connection>
-        <developerConnection>scm:svn:http://b110-cellarray4/svn/cellHTS2-WebTools
+        <connection>scm:svn:https://webcellhts.googlecode.com/svn/trunk/</connection>
+        <developerConnection>scm:svn:https://webcellhts.googlecode.com/svn/trunk/
         </developerConnection>
-        <url>scm:svn:http://b110-cellarray4/svn/cellHTS2-WebTools</url>
+        <url>scm:svn:https://webcellhts.googlecode.com/svn/trunk/</url>
     </scm>
 
     <issueManagement>
-         <system>Trac</system>
-         <url>http://b110-cellarray4/trac/cellHTS2-WebTools</url>
+         <system>Google Issues</system>
+         <url>http://code.google.com/p/webcellhts/issues/list</url>
     </issueManagement>       
 
     <developers>
@@ -113,19 +113,7 @@ of testing facilities designed for use with TestNG (http://testng.org/), so it's
             <groupId>org.apache.tapestry</groupId>
             <artifactId>t5c-contrib</artifactId>
             <version>0.5.15</version>
-        </dependency>
-        <dependency>
-            <groupId>de.dkfz.signaling</groupId>
-            <artifactId>cellhtsTools</artifactId>
-            <version>0.2.2</version>
-        </dependency>
-        <!--we use this to use a jni lib such as the jri interface in maven (normally native libs cannot be loaded from)-->
-        <!--within a jar so we have to use this loader to load the jri c dyn obj-->
-        <dependency>
-        <groupId>com.wapmx.native</groupId>
-            <artifactId>mx-native-loader</artifactId>
-            <version>1.2</version>
-        </dependency>
+        </dependency>          
         <dependency>
             <groupId>org.mortbay.jetty</groupId>
             <artifactId>jetty</artifactId>
@@ -261,8 +249,7 @@ java/.libs</value>
                 </configuration>
             </plugin>
 
-              <!--this is for doing an all-in-one jetty integrated jar file-->
-            <!--build with mvn assembly:assembly-->
+
               <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
@@ -270,7 +257,8 @@ java/.libs</value>
                     <target>1.5</target>
                 </configuration>
             </plugin>
-
+             <!--this is for doing an all-in-one jetty integrated executable jar file-->
+            <!--build with mvn assembly:assembly-->
 
             <plugin>
                 <groupId>net.sf.alchim</groupId>
@@ -284,8 +272,35 @@ java/.libs</value>
                     </execution>
                 </executions>
             </plugin>
-            
-
+<!--copy the generated all-in-one jetty integrated executable jar into the site structure that it gets integraated into the site-->
+<!--we build a html site for download there-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.3</version>
+                <executions>
+                    <execution>
+                        <id>copy-jar-resources</id>
+                        <!--do the copying in the install phase (so that the jar file is actually there)-->
+                        <phase>install</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>src/site/resources/binary</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>target</directory>
+                                    <includes>
+                                        <include>cellHTS-java-standalone.jar</include>
+                                    </includes>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 
 
         </plugins>
@@ -374,6 +389,15 @@ of a Tapestry Maven plugin is not required.   -->
     <properties>
         <tapestry-release-version>5.0.18</tapestry-release-version>
     </properties>
+     <!---->
+    <!--where to deploy/upload the project onto which server-->
+    <distributionManagement>
+      <site>
+        <id> website</id>
+        <url> scp://oliver@b110-sandbox:/var/www/cellhts_dox/</url>             
+      </site>
+
+    </distributionManagement>
 
 
     

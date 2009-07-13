@@ -33,8 +33,7 @@ import data.DataFile;
 import data.DataFileParameter;
 import data.Plate;
 import data.Experiment;
-import de.dkfz.signaling.cellhtsTools.tools.DescriptionParserImpl;
-import de.dkfz.signaling.cellhtsTools.tools.StringFunctionsImpl;
+
 
 /**
  *
@@ -777,8 +776,8 @@ public class FileParser {
      * @return true if successfully read and stored into the experiment object, false otherwise
      */
     public static boolean parseDescriptionFile(File filename,Experiment experiment) {
-        DescriptionParserImpl descParser = new DescriptionParserImpl();
-        StringFunctionsImpl str = new StringFunctionsImpl();
+        DescriptionParser descParser = new DescriptionParser();
+        StringFunctions str = new StringFunctions();
         SimpleDateFormat df = new SimpleDateFormat("mm/dd/yy");
         Map<String, String> descriptionMap;
             try {
