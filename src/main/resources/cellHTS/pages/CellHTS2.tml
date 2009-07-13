@@ -1,0 +1,939 @@
+<!--
+  ~ //
+  ~ // Copyright (C) 2009 Boutros-Labs(German cancer research center) b110-it@dkfz.de
+  ~ //
+  ~ //
+  ~ //    This program is free software: you can redistribute it and/or modify
+  ~ //    it under the terms of the GNU General Public License as published by
+  ~ //    the Free Software Foundation, either version 3 of the License, or
+  ~ //    (at your option) any later version.
+  ~ //
+  ~ //    This program is distributed in the hope that it will be useful,
+  ~ //    but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ //    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ //
+  ~ //    You should have received a copy of the GNU General Public License
+  ~ //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  ~
+  -->
+
+<html t:id="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_0_0.xsd">
+    <head>
+         <title>cellHTS2 WebTool</title>
+    </head>
+
+    <body onload="initJSCellHTS();">
+
+
+
+            <!--${browser}-->
+        <div id="step1DIV">
+             <div>
+              <b>Introduction</b> <br/><br/>
+              web cellHTS is a front end for cellHTS2 for an end-to-end analysis of cell-based high-throughput screening experiments.
+              The online version allows to analyse single and dual channel experiments using all features of cellHTS2.
+              web cellHTS guides the user through all analysis options and outputs a HTML including a full quality control report and a ranked hitlist.
+              A downloadable packagefor local installation will be available soon.
+              <br/><br/>   
+              cellHTS2 is a software package implemented in Bioconductor/R for cell-based high-throughput RNAi screens.
+              The cellHTS2 package is an updated version of the cellHTS package,
+              offering a broader set of normalization functionality and the integration of multi-channel screens.
+              <br/><br/> 
+              Please cite the following paper when using cellHTS2:
+              Boutros, M., L. Bras, and W. Huber. (2006). Analysis of cell-based RNAi screens. Genome Biology 7:R66.
+               <a href="http://genomebiology.com/2006/7/7/R66" title="abstract" target="_parent">[Abstract]</a>
+               <a href="http://genomebiology.com/content/pdf/gb-2006-7-7-r66.pdf" title="pdf" target="_parent">[Fulltext]</a>
+
+               <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=pubmed&amp;cmd=Retrieve&amp;dopt=AbstractPlus&amp;list_uids=16869968" title="pdf" target="_parent">[Pubmed]</a>
+               <br/><br/>
+           
+
+        </div>
+            <br/><br/>
+            <b>Start of a web cellHTS session</b>
+            <br/><br/>
+            <!--we use these divs to enable/disable content-->
+            Load previous session or start a new session (download example session
+            <a href="blank" target="_parent">[link]</a><br/>
+            <t:form t:id="sessionFileUpload">
+                <input t:type="upload" t:id="sessionFileUploadInput" validate="required"
+                  t:value="uploadedSessionFile"/>                                                                                                               
+            </t:form>
+            <t:if test="errorSessionFileUpload">
+                     <p>
+                        <FONT COLOR="red">Error:${sessionFileUploadErrorMsg}</FONT>
+                    </p>
+                <t:parameter t:name="else">
+                    <!--do nothing here-->
+                </t:parameter>
+            </t:if>
+
+
+            <b>Step 1:</b> What type of of screen should analysed?
+            <t:form t:id="channelTypes">
+
+
+                <!--this will produce events which can be caught by tapestry onEvent later, these are typical onXXX html events-->
+                <!--we will need this because we want to process this form without posting or submitting it right now-->
+                <!--we will submit it in the end but want to check it right now!!! not after submitting-->
+                <t:select t:id="channel"
+                          t:blankOption="always"
+                          t:blankLabel="please select"
+                          t:mixins="t5components/OnEvent"
+                          event="change"/>
+            </t:form>
+
+
+            <!--<t:actionlink t:id="channelView">Proceed</t:actionlink>-->
+
+            <t:if t:test="${isDualChannel}">
+                <p>
+                    <t:form t:id="channelForm" action="#" t:type="Form">
+
+                        Would you like to label your channels?
+                        <br/>
+
+                        <table style="padding-top:10px;">
+
+                            <tr>
+                                <td width="80px" align="center">
+                                    <strong>Channel 1:</strong>
+                                </td>
+                                <td width="130px">
+                                    <input t:type="TextField"
+                                     t:id="channel1Textfield"
+                                     value="channelLabel1"
+                                     validate="required,regexp" size="20"
+                                     t:mixins="t5components/OnEvent"
+                                     event="blur"/>
+
+                                </td>
+                                <td width="80px" align="center">
+                                    <strong>Channel 2:</strong>
+                                </td>
+                                <td width="130px">
+                                    <input t:type="TextField"
+                                     t:id="channel2Textfield"
+                                     value="channelLabel2"
+                                     validate="required,regexp" size="20"
+                                     t:mixins="t5components/OnEvent"
+                                     event="blur"/>
+
+
+                                </td>
+                            </tr>
+
+                        </table>
+
+                        <t:parameter t:name="else">
+                            <!--this is only to force a page refresh -->
+                            <!--I think tapestry better refreshes pages when stumbling over an if-->
+                        </t:parameter>
+                    </t:form>
+                </p>
+            </t:if>
+
+        </div>
+        <div id="step2DIV" style="display:none">
+            <!--<t:if t:test="${nextStep2}">-->
+            (Step 2) Please upload and assign your data files:
+            <p>You can upload csv raw plate result reader files or you can upload text files in cellHTS2 format.</p>
+
+            <t:form t:id="dataFileUpload">
+                <t:errors/>
+                <input t:type="upload" t:id="dataFileUploadInput" validate="required" t:value="uploadedDataFile"/>
+            </t:form>
+            Filename Parsing:
+            <input type="checkbox" t:type="commons/InPlaceCheckbox" context="literal:10" value="parseFileParams"
+                   onCompleteCallback="onCompleteFunction"/>
+            <!--target element for the servers side results-->
+            <!--if successful upload show grid component-->
+         
+                <t:UploadedFileGrid dataFileList="dataFileList" excludeFilesFromParsing="excludeFilesFromParsing" showTable="true" parseFileParams="parseFileParams" fixRegExp="fixRegExp"/>
+                <t:actionlink t:id="dropDataFileList">Drop all entries</t:actionlink>
+                <!--if unsuccessful upload show error message-->
+                <br/>
+                <t:if test="noErrorUploadFile" negate="true">
+                    <p>
+                        <FONT COLOR="red">${errorDatafileMsg}</FONT>
+                    </p>
+                </t:if>
+            
+                <br/>
+               <!--show pattern if we have at least one datafile accepted-->
+                <t:if test="ognl:dataFileList.isEmpty()" negate="true">
+                    <p>
+                    apply regexp
+                     <t:form t:id="updateFileParamsPage">
+                         <!--this is just dummy to reload the page-->
+                        <t:textfield t:id="fixRegExp" value="fixRegExp" size="20"/>
+                        <input type="submit" value="Update parameters"/>
+                    </t:form>
+                    </p>
+                    <p>
+                        Platelist File Upload
+                        <t:form t:id="platelistFileUpload">
+                            <input t:type="upload" t:id="platelistFileUploadInput" validate="required"
+                                t:value="uploadedPlatelistFile"/>
+
+                        </t:form>
+                            <t:if test="errorPlatelistFileUpload">
+                            <p>
+                                <FONT COLOR="red">Error:${errorPlatelistFileMsg}</FONT>
+                            </p>
+                            <t:parameter t:name="else">
+                                 <!--do nothing here-->
+                            </t:parameter>
+                            </t:if>
+
+                    </p>
+
+                 </t:if>
+
+
+
+            <!--<t:actionlink t:id="fileView">Proceed</t:actionlink>-->
+            <t:if test="validateErrorFileView">
+                <p>
+                    Either mandantory field plate number or replicate number is missing
+                </p>
+            </t:if>
+
+
+        </div>
+
+        <div id="step3DIV" style="display:none">
+            <t:if test="hasPlateFormat">
+                (Step 3) Please configure your plate layout
+                <t:PlateDesigner plateFormat="plateFormat"  clickedWellsAndPlates="clickedWellsAndPlates"/>
+
+                <p>
+                    Upload Plate Config file<br/>
+                    <t:form t:id="plateConfigFileUpload">
+                        <t:errors/>
+                        <input t:type="upload" t:id="plateConfigFileInput" t:value="uploadedPlateConfigFile"/>
+                    </t:form>
+                </p>
+                <t:if t:test="noErrorPlateConfFile">
+
+                    <t:parameter t:name="else">
+                        <p>
+                        <FONT COLOR="red">${errorPlateconfFileMsg}</FONT>
+                    </p>
+                    </t:parameter>
+                </t:if>
+
+                <p>
+                    Upload Screenlog file<br/>
+                    <t:form t:id="screenlogFileUpload">
+                        <t:errors/>
+                        <input t:type="upload" t:id="screenlogFileInput" t:value="uploadedScreenlogFile"/>
+                    </t:form>
+                </p>
+                <t:if t:test="noErrorScreenlogFile">
+
+                    <t:parameter t:name="else">
+                        <p>
+                        <FONT COLOR="red">${errorScreenlogFileMsg}</FONT>
+                    </p>
+                    </t:parameter>
+                </t:if>
+
+            </t:if>
+        </div>
+
+
+        <div id="step4DIV" style="display:none">
+            <p>
+                (Step 4) What type of normalisation would you like to carry out?
+                <t:form t:id="normalTypesForm">
+                    <table id="NORMAL_METHODS">
+                        <t:radiogroup t:id="normalTypesRadioGroup" t:value="normalTypes">
+                            <tr>
+                                <td>
+                                    <strong>Median:</strong>
+                                </td>
+                                <td>Plate effects are corrected by dividing each measurement by the median value across
+                                    wells
+                                    annotated as 'sample' in
+                                </td>
+                                <td width="50px" align="right">
+                                    <t:radio t:id="normalMedian"
+                                             t:mixins="t5components/OnEvent"
+                                             event="click"/>
+
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <strong>Shorth:</strong>
+                                </td>
+
+                                <td>for each plate and replicate, the midpoint of the 'shorth' of the distribution of
+                                    values
+                                    in
+                                    the wells annotated as 'sample' is calculated
+                                </td>
+                                <td width="50px" align="right">
+                                    <t:radio t:id="normalShort"
+                                             t:mixins="t5components/OnEvent"
+                                             event="click"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Mean:</strong>
+                                </td>
+                                <td>the average in the 'sample' wells is considered</td>
+                                <td width="50px" align="right">
+                                    <t:radio t:id="normalMean"
+                                             t:mixins="t5components/OnEvent"
+                                             event="click"/>
+
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Negatives:</strong>
+                                </td>
+                                <td>for each plate and replicate, each measurement is divided by the median of the
+                                    measurements
+                                    on the plate negative controls.
+                                </td>
+                                <td width="50px" align="right">
+                                    <t:radio t:id="normalNegatives"
+                                             t:mixins="t5components/OnEvent"
+                                             event="click"/>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Percent of Control:</strong>
+                                </td>
+
+                                <td>for each plate and replicate, each measurement is divided by the average of the
+                                    measurements on the plate positive controls, and multiplied by 100
+                                </td>
+                                <td width="50px" align="right">
+                                    <t:radio t:id="normalPOC"
+                                             t:mixins="t5components/OnEvent"
+                                             event="click"/>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Normalized Percent Inhibition:</strong>
+                                </td>
+                                <td>each measurement is subtracted from the average of the intensities on the plate
+                                    positive
+                                    controls, and this result is divided by the difference between the means of the
+                                    measurements on the positive and the negative controls.
+                                </td>
+                                <td width="50px" align="right">
+                                    <t:radio t:id="normalNPI"
+                                             t:mixins="t5components/OnEvent"
+                                             event="click"/>
+
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>B Score:</strong>
+                                </td>
+                                <td>for each plate and replicate, the 'B score method' (based on a 2-way median polish)
+                                    is
+                                    applied to remove plate effects and row and column biases.
+                                </td>
+                                <td width="50px" align="right">
+                                    <t:radio t:id="normalBScore"
+                                             t:mixins="t5components/OnEvent"
+                                             event="click"/>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Robust Local Fit Regression:</strong>
+                                </td>
+
+                                <td>for each plate and replicate, spatial effects are removed by fitting a bivariate
+                                    local
+                                    regression (see 'spatial normalization function').
+                                </td>
+                                <td width="50px" align="right">
+                                    <t:radio t:id="normalLocfit"
+                                             t:mixins="t5components/OnEvent"
+                                             event="click"/>
+
+                                </td>
+
+                                <!--<td width="50px" align="right">-->
+                                <!--<t:radio t:id="normalRLFR"/>-->
+                                <!--</td>-->
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Loess Regression:</strong>
+                                </td>
+                                <td>for each plate and replicate, spatial effects are removed by fitting a loess curve
+                                    (see
+                                    'spatial normalization function').
+                                </td>
+                                <td width="50px" align="right">
+                                    <t:radio t:id="normalLoess"
+                                             t:mixins="t5components/OnEvent"
+                                             event="click"/>
+
+                                </td>
+
+                            </tr>
+
+
+                        </t:radiogroup>
+
+                    </table>
+                </t:form>
+            </p>
+
+
+            <t:form t:id="logTransformForm">
+                <p>
+                    (Step 5) Would you like to log transform your values before normalisation?
+                    <table>
+                        <t:radiogroup t:value="logTransform">
+                            <tr>
+                                <td>
+                                    <strong>Yes:</strong>
+                                </td>
+                                <td width="50px" align="right">
+                                    <t:radio t:id="logYes"
+                                             t:mixins="t5components/OnEvent"
+                                             event="click"/>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>No:</strong>
+                                </td>
+                                <td width="50px" align="right">
+                                    <t:radio t:id="logNo"
+                                             t:mixins="t5components/OnEvent"
+                                             event="click"/>
+                                </td>
+                            </tr>
+                        </t:radiogroup>
+                    </table>
+                </p>
+            </t:form>
+
+            <br/>
+            <t:form t:id="normalScalingForm">
+                <p>
+                    (Step 6) Normalization Scaling method?
+                    <table>
+                        <t:radiogroup t:value="normalScaling">
+                            <tr>
+
+                                <td>
+                                    <strong>Additive:</strong>
+                                </td>
+                                <td width="50px" align="right">
+                                    <t:radio t:id="scaleAdditive"
+                                             t:mixins="t5components/OnEvent"
+                                             event="click"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Multiplicative:</strong>
+                                </td>
+                                <td width="50px" align="right">
+                                    <t:radio t:id="scaleMultiplicative"
+                                             t:mixins="t5components/OnEvent"
+                                             event="click"/>
+                                </td>
+                            </tr>
+                        </t:radiogroup>
+                    </table>
+                </p>
+            </t:form>
+            <t:form t:id="resultsScalingForm">
+                <p>
+                    (Step 7) Would you like to apply a z-score to center and scale your results?
+                    <table>
+                        <t:radiogroup t:value="resultsScaling">
+                            <tr>
+
+                                <td>
+                                    <strong>No Scaling:</strong>
+                                </td>
+                                <td>(the score will be the normalised value of each well)</td>
+                                <td width="50px" align="right">
+                                    <t:radio t:id="resultScalingNo"
+                                             t:mixins="t5components/OnEvent"
+                                             event="click"
+                                            />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>By Plate:</strong>
+                                </td>
+                                <td>(the score will be the normalised value of each well divided by the median absolute
+                                    deviation of the plate)
+                                </td>
+
+                                <td width="50px" align="right">
+                                    <t:radio t:id="resultScalingPlate"
+                                             t:mixins="t5components/OnEvent"
+                                             event="click"
+                                            />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>By Batch:</strong>
+                                </td>
+                                <td>plates are split according to assay batches and the individual normalized
+                                    intensities in
+                                    each group of plates (batch) are divided by the per-batch of plates MAD values
+                                    (calculated based on "sample" wells).
+                                </td>
+                                <td width="50px" align="right">
+                                    <t:radio t:id="resultScalingBatch"
+                                             t:mixins="t5components/OnEvent"
+                                             event="click"
+                                            />
+                                </td>
+                            </tr>
+                            <tr>
+
+                                <td>
+                                    <strong>By Experiment:</strong>
+                                </td>
+                                <td>(the score will be the normalised value of each well divided by the median absolute
+                                    deviation of all the samples accross the entire data set)
+                                </td>
+                                <td width="50px" align="right">
+                                    <t:radio t:id="resultScalingExperiment"
+                                             t:mixins="t5components/OnEvent"
+                                             event="click"
+                                            />
+                                </td>
+                            </tr>
+                        </t:radiogroup>
+                    </table>
+                </p>
+            </t:form>
+
+            <t:form t:id="sumRepForm">
+                <p>
+                    (Step 8) How would you like to summarize your replicates?
+                    <table>
+                        <t:radiogroup t:value="sumRep">
+                            <tr>
+                                <td>
+                                    <strong>Mean:</strong>
+                                </td>
+                                <td>(the mean of replicate values is considered )</td>
+                                <td width="50px" align="right">
+                                    <t:radio t:id="sumMean"
+                                             t:mixins="t5components/OnEvent"
+                                             event="click"
+                                            />
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Median:</strong>
+                                </td>
+                                <td>(the median of replicate values is considered)</td>
+                                <td width="50px" align="right">
+                                    <t:radio t:id="sumMedian"
+                                             t:mixins="t5components/OnEvent"
+                                             event="click"
+                                            />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Maximum:</strong>
+                                </td>
+
+                                <td>(the maximum of replicate intensities is taken)</td>
+                                <td width="50px" align="right">
+                                    <t:radio t:id="sumMax"
+                                             t:mixins="t5components/OnEvent"
+                                             event="click"
+                                            />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Minimum:</strong>
+                                </td>
+                                <td>(the minimum of replicate intensities is taken)</td>
+                                <td width="50px" align="right">
+                                    <t:radio t:id="sumMin"
+                                             t:mixins="t5components/OnEvent"
+                                             event="click"
+                                            />
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Root Mean Square:</strong>
+                                </td>
+                                <td>the square root of the mean squared value of the replicates is taken</td>
+                                <!--<td width="50px" align="right">-->
+                                <!--<t:radio t:id="sumRoot"/>-->
+                                <!--</td>-->
+                            </tr>
+                            <tr>
+
+                                <td>
+                                    <strong>Closest To Zero:</strong>
+                                </td>
+                                <td>the value closest to zero is taken as a summary</td>
+                                <td width="50px" align="right">
+                                    <t:radio t:id="sumClosest"
+                                             t:mixins="t5components/OnEvent"
+                                             event="click"
+                                            />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Furthest From Zero:</strong>
+                                </td>
+                                <td>the value furthest from zero is taken</td>
+
+                                <td width="50px" align="right">
+                                    <t:radio t:id="sumFurthest"
+                                             t:mixins="t5components/OnEvent"
+                                             event="click"
+                                            />
+                                </td>
+                            </tr>
+                        </t:radiogroup>
+                    </table>
+                    <!--<t:actionlink t:id="allParamsView">Proceed</t:actionlink>-->
+                </p>
+            </t:form>
+
+            <t:form t:id="viabilityChannelForm">
+                <p>
+                    (Step 9) Use Viability Threshold Function?
+                    <table>
+                        <t:radiogroup t:id="viabilityChannelRadiogroup" t:value="viabilityChannel">
+                            <tr>
+
+                                <td>
+                                    <strong>YES:</strong>
+                                </td>
+                                <td width="50px" align="right">
+                                    <t:radio t:id="viabilityChannelYes"
+                                             t:mixins="t5components/OnEvent"
+                                             event="click"
+                                             onCompleteCallback="onViabilityFunctionButton"
+                                            />
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <strong>NO:</strong>
+                                </td>
+                                <td width="50px" align="right">
+                                    <t:radio t:id="viabilityChannelNo"
+                                             t:mixins="t5components/OnEvent"
+                                             event="click"
+                                             onCompleteCallback="onViabilityFunctionButton"
+                                            />
+                                </td>
+                            </tr>
+                        </t:radiogroup>
+                    </table>
+                </p>
+            </t:form>
+            <!--dont display standard...turn on via js-->
+
+                <div id="viabilityFunctionDIV">
+                        apply viability function
+                        <t:form t:id="viabilityFunctionForm" action="#" t:type="Form">
+                            <p>
+                     <input t:type="TextField"
+                                     t:id="viabilityFunctionTextfield"
+                                     value="viabilityFunction"
+                                     size="20"
+                                     t:mixins="t5components/OnEvent"
+                                     event="blur"/>
+                            </p>
+                    </t:form>
+                </div>
+        </div>
+
+        <!--<t:if t:test="${nextStep5}">-->
+        <div id="step5DIV" style="display:none">
+            <!--Enter email address(required):-->
+            <!--<br/>-->
+            <!--<t:AjaxTextField textFieldValue="emailAddress" regexpType="email"/>-->
+            <!--<br/>-->
+            <p>
+                (Step 10) Upload annotation file:
+                <t:form t:id="annotFileUpload">
+                    <t:errors/>
+                    <input t:type="upload" t:id="annotFileUploadInput" validate="required" t:value="uploadedAnnotFile"/>
+
+                </t:form>
+                <t:if test="noErrorAnnotFile">
+                    <FONT COLOR="blue">Annot file successfully uploaded   </FONT>
+                   <t:actionlink t:id="dropAnnotfile">drop Annotation File</t:actionlink>
+                    <t:parameter t:name="else">
+                        <p>
+                            <FONT COLOR="red">${errorAnnotFileMsg}</FONT>
+                        </p>
+                    </t:parameter>
+                </t:if>
+            </p>
+
+            <p>
+                (Step 11) Upload description file:
+                <t:form t:id="descriptionFileUpload">
+                    <t:errors/>
+                    <input t:type="upload" t:id="descriptionFileUploadInput" validate="required"
+                           t:value="uploadedDescriptionFile"/>
+                </t:form>
+                <t:if test="noErrorDescriptionFile">
+                    <FONT COLOR="blue">Description file successfully uploaded   </FONT>
+                    <t:actionlink t:id="dropDescriptionfile">drop Description File</t:actionlink>
+                    <t:parameter t:name="else">
+                        <FONT COLOR="red">${errorDescriptionFileMsg}</FONT>
+                        <br/>
+                    </t:parameter>
+
+                </t:if>
+            </p>
+            <p>
+                Edit/Create Description Text:
+
+                    <t:beaneditform t:id="updateExperimentDesc" object="experiment"
+                                    exclude="screentype,username"
+                                    model="model">
+                        <!--some datfields need larger description text boxes-->
+                        <t:parameter name="assay">
+                            <t:label for="assay"/>
+                            <t:textarea t:id="assay" t:value="experiment.assay" cols="30" rows="5"/>
+                        </t:parameter>
+
+                        <t:parameter name="assaydesc">
+                            <t:label for="assaydesc"/>
+                            <t:textarea t:id="assaydesc" t:value="experiment.assaydesc" cols="30" rows="5"/>
+                        </t:parameter>
+
+                        <!--the internal version has the field jobID which is a mapping to the title(only to get other description) and will has mandantory inputs-->
+                        <t:parameter name="screenID">
+                            <t:label for="screenID"/>
+                            <!--map the value to the title-->
+                            <t:textarea t:id="screenID" t:value="experiment.screenID" cols="1" rows="1"/>
+                            <!--TODO: if we use the strict screen IDs later on we will comment next line in-->
+                                        <!--validate="required,regexp"/>-->
+                        </t:parameter>
+                    </t:beaneditform>
+                
+            </p>
+
+            <br/>
+            (Step 12)
+            <p>
+
+                <t:if t:test="isEmailMandantory">
+                     email:<br/>
+                    <t:form t:id="emailForm" action="#" t:type="Form">
+                     <input t:type="TextField"
+                                     t:id="emailAddressTextfield"
+                                     value="emailAddress"
+                                     validate="required,regexp" size="20"
+                                     t:mixins="t5components/OnEvent"
+                                     event="blur"/>
+                    </t:form>
+                </t:if>    
+                <!--we add a onclick callback event handler for the startCellHTS2 actionlink so that we can submit the beaneditform from there-->
+
+                <t:actionlink t:id="startCellHTS2"
+                 onclick="clickedStartCellHTS2Link();" 
+                        > Start cellHTS2</t:actionlink>
+            </p>
+            
+            <p>
+                <t:actionlink t:id="newAnalysis">New Analysis</t:actionlink>                
+            </p>
+            <p>
+                <!--we need the eventhandler here too to update the description file/variables before storing in a file-->
+                <t:actionlink t:id="saveSession"
+                 onclick="clickedStartCellHTS2Link();"
+
+                        >save this session</t:actionlink>
+            </p>
+        </div>
+        <br/><br/>
+        <!--this will be shown on every page-->
+        <table border="2">
+            <tr>
+                <td>
+                    [
+                    <t:actionlink t:id="backLink" disabled="backDisable">${backLinkName}</t:actionlink>
+                    ]
+                </td>
+                <td>
+                    [<t:actionlink t:id="nextLink" disabled="nextDisable">${nextLinkName}</t:actionlink>]
+                </td>
+            </tr>
+        </table>
+        <t:if test="errorNextLink">
+            <p>
+                <FONT COLOR="red">Can't proceed: ${nextLinkErrorMsg}</FONT>
+            </p>
+        </t:if>
+
+        <!--google analytics for external version-->
+        <t:if t:test="isEmailMandantory">
+            <script type="text/javascript">
+                var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+                document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+            </script>
+            <script type="text/javascript">
+                try {
+                var pageTracker = _gat._getTracker("UA-3846736-4");
+                pageTracker._trackPageview();
+                } catch(err) {}
+            </script>
+        </t:if>
+        
+    </body>
+    <script type="text/javascript">
+        <!-- //
+
+
+
+        //define an event so we skip the need to use a submit buttons
+        //on uploading stuff
+       function initJSCellHTS() {
+
+        
+            //get browser name and version
+            var browser = BrowserDetect.browser;
+            var version = BrowserDetect.version;
+
+//these are all three browser plus tested versions cellHTS2 was successfully run on
+            if(browser=="Firefox" && version<3) {
+                alert("Your firefox version is too old (<3). Use this program at your own risk");
+            }
+            if(browser=="Explorer" && version<8) {
+             alert("Your Internet Explorer version is too old (<8). Use this program at your own risk");
+            }
+            if(browser=="Safari" && version <3) {
+            alert("Your Safari version is too old (<3). Use this program at your own risk");
+            }
+            //this is the event when clicking the datafile upload button
+            Event.observe($('channel'), 'change', clickedChannelSelectButton.bindAsEventListener());
+
+            Event.observe($('sessionFileUploadInput'), 'change', clickedSessionFileSelectButton.bindAsEventListener());
+            Event.observe($('dataFileUploadInput'), 'change', clickedDataFileSelectButton.bindAsEventListener());
+            if($('platelistFileUploadInput')!=null) {
+                Event.observe($('platelistFileUploadInput'), 'change', clickedPlatelistFileSelectButton.bindAsEventListener());
+            }
+            if($('plateConfigFileInput')!=null) {
+                Event.observe($('plateConfigFileInput'), 'change', clickedPlateConfFileSelectButton.bindAsEventListener());
+            }
+            if($('screenlogFileInput')!=null) {
+             Event.observe($('screenlogFileInput'), 'change', clickedScreenlogFileSelectButton.bindAsEventListener());
+            }
+            Event.observe($('annotFileUploadInput'), 'change', clickedAnnotFileSelectButton.bindAsEventListener());
+            Event.observe($('descriptionFileUploadInput'), 'change',clickedDescriptionFileSelectButton.bindAsEventListener());
+
+            //disable textbox if the use viabilty radiobutton is set to NO
+
+            if(document['forms']['viabilityChannelForm']['viabilityChannelRadiogroup'][0].checked==false) {    //this is the proper way for getting to the radiogroup with protoype
+
+                    toggleDisabled($('viabilityFunctionDIV'),true);
+                
+            }
+
+
+         }
+
+        //js callback function for tapestry js onEvent
+        function onViabilityFunctionButton(response) {
+
+             var yesNo = response.evalJSON().viabilityChannel;
+             if(yesNo=="true") {
+                 toggleDisabled($('viabilityFunctionDIV'),false);
+             }
+             else {
+                 toggleDisabled($('viabilityFunctionDIV'),true);
+             }
+
+
+        }
+
+        function toggleDisabled(el,disabledVar) {
+            try {
+                el.disabled = disabledVar;
+            }
+            catch(E){
+            }
+            if (el.childNodes && el.childNodes.length > 0) {
+                for (var x = 0; x < el.childNodes.length; x++) {
+                    toggleDisabled(el.childNodes[x],disabledVar);
+                }
+            }
+        }
+
+
+        function clickedPlatelistFileSelectButton() {
+        document.platelistFileUpload.submit();
+        }
+        function clickedChannelSelectButton() {
+        document.channelTypes.submit();
+        }
+        function clickedSessionFileSelectButton() {
+        //submit the form dataFileUpload
+        document.sessionFileUpload.submit();
+        }
+        function clickedDataFileSelectButton() {
+        //submit the form dataFileUpload
+        document.dataFileUpload.submit();
+        }
+        function clickedPlateConfFileSelectButton() {
+        //submit the form plateConfig upload button
+        document.plateConfigFileUpload.submit();
+        }
+        function clickedScreenlogFileSelectButton() {
+          document.screenlogFileUpload.submit();
+        }
+        function clickedAnnotFileSelectButton() {
+        //submit the form plateConfig upload button
+        document.annotFileUpload.submit();
+        }
+        function clickedDescriptionFileSelectButton() {
+        //submit the form plateConfig upload button
+        document.descriptionFileUpload.submit();
+        }
+        function clickedStartCellHTS2Link() {
+        //this only works if the beaneditforms id is "form"...which is the standard case when having only one beaneditform
+        //...what happens when we have more than one beaneditform?
+           document.form.submit();
+        }
+// -->       
+    </script>
+</html>

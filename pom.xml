@@ -1,0 +1,380 @@
+<!--
+  ~ //
+  ~ // Copyright (C) 2009 Boutros-Labs(German cancer research center) b110-it@dkfz.de
+  ~ //
+  ~ //
+  ~ //    This program is free software: you can redistribute it and/or modify
+  ~ //    it under the terms of the GNU General Public License as published by
+  ~ //    the Free Software Foundation, either version 3 of the License, or
+  ~ //    (at your option) any later version.
+  ~ //
+  ~ //    This program is distributed in the hope that it will be useful,
+  ~ //    but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ //    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ //
+  ~ //    You should have received a copy of the GNU General Public License
+  ~ //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  ~
+  -->
+
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>cellHTS</groupId>
+    <artifactId>cellHTS-java</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>war</packaging>
+    <name>web cellHTS application</name>
+    <url>http://your.project.url</url>
+    <description>a web-application for the (user-friendly) analysis of cellHTS2 datasets.</description>
+     <scm>
+        <connection>scm:svn:http://b110-cellarray4/svn/cellHTS2-WebTools</connection>
+        <developerConnection>scm:svn:http://b110-cellarray4/svn/cellHTS2-WebTools
+        </developerConnection>
+        <url>scm:svn:http://b110-cellarray4/svn/cellHTS2-WebTools</url>
+    </scm>
+
+    <issueManagement>
+         <system>Trac</system>
+         <url>http://b110-cellarray4/trac/cellHTS2-WebTools</url>
+    </issueManagement>       
+
+    <developers>
+          <developer>
+             <id>olip</id>
+             <name>Oliver Pelz</name>
+             <email>o.pelz@dkfz.de</email>
+             <roles>
+                <role>Project Manager</role>
+                <role>Architect</role>
+             </roles>
+             <organization>www.dkfz.de/signaling</organization>
+             <timezone>-5</timezone>
+           </developer>
+           <developer>
+             <id>moritzg</id>
+             <name>Moritz Gilsdorf</name>
+             <email>m.gilsdorf@dkfz.de</email>
+             <roles>                          
+                <role>Architect</role>
+             </roles>
+             <organization>www.dkfz.de/signaling</organization>
+             <timezone>-5</timezone>
+           </developer>
+    </developers>
+
+
+
+    <dependencies>            
+        <dependency>
+            <groupId>org.apache.tapestry</groupId>
+            <artifactId>tapestry-core</artifactId>
+            <version>${tapestry-release-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ognl</groupId>
+            <artifactId>ognl</artifactId>
+            <version>2.7.3</version>
+        </dependency>
+
+        <!-- A dependency on either JUnit or TestNG is required, or the surefire plugin (which runs the tests)
+will fail, preventing Maven from packaging the WAR. Tapestry includes a large number
+of testing facilities designed for use with TestNG (http://testng.org/), so it's recommended. -->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>5.1</version>
+            <classifier>jdk15</classifier>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>5.1</version>
+            <classifier>jdk15</classifier>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tapestry</groupId>
+            <artifactId>tapestry-upload</artifactId>
+            <version>${tapestry-release-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tapestry</groupId>
+            <artifactId>t5c-commons</artifactId>
+              <version>0.5.18</version>
+          </dependency>
+        <dependency>
+            <groupId>org.apache.tapestry</groupId>
+            <artifactId>tapestry-upload</artifactId>
+            <version>${tapestry-release-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tapestry</groupId>
+            <artifactId>t5c-contrib</artifactId>
+            <version>0.5.15</version>
+        </dependency>
+        <dependency>
+            <groupId>de.dkfz.signaling</groupId>
+            <artifactId>cellhtsTools</artifactId>
+            <version>0.2.2</version>
+        </dependency>
+        <!--we use this to use a jni lib such as the jri interface in maven (normally native libs cannot be loaded from)-->
+        <!--within a jar so we have to use this loader to load the jri c dyn obj-->
+        <dependency>
+        <groupId>com.wapmx.native</groupId>
+            <artifactId>mx-native-loader</artifactId>
+            <version>1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mortbay.jetty</groupId>
+            <artifactId>jetty</artifactId>
+            <version>6.1.10</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mortbay.jetty</groupId>
+            <artifactId>jetty-util</artifactId>
+            <version>6.1.10</version>
+        </dependency>
+        <dependency>
+            <groupId>org.rosuda</groupId>
+            <artifactId>REngine</artifactId>
+            <version>0.6-0</version>
+        </dependency>         
+        <dependency>
+            <groupId>org.rosuda</groupId>
+            <artifactId>JRclient</artifactId>
+            <version>0.6-0</version>
+        </dependency>
+         <dependency>
+             <groupId>javax.mail</groupId>
+                 <artifactId>mail</artifactId>
+             <version>1.4.2</version>
+        </dependency>
+        
+        <dependency>
+           <groupId>jaf</groupId>
+           <artifactId>activation</artifactId>
+           <version>1.0.2</version>
+       </dependency>
+      
+       <!--we need these for unpackign the war file-->
+        <dependency>
+            <groupId>tomcat</groupId>
+            <artifactId>catalina</artifactId>
+            <version>5.5.9</version>
+        </dependency>
+        <dependency>
+            <!--this is needed for the all-in-one-jar as well-->
+        <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.1.1</version>
+       </dependency>
+
+        
+
+    </dependencies>
+    <build>
+        <finalName>cellHTS-java</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                    <optimize>true</optimize>
+                </configuration>
+            </plugin>
+
+            
+            <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <systemProperties>
+            <property>
+              <name>java.library.path</name>
+              <value>/Users/clr/launchpad/ndb-bindings/working/
+java/.libs</value>
+            </property>
+          </systemProperties>
+        </configuration>
+      </plugin>
+
+            <!-- Run the application using "mvn jetty:run" -->
+            <plugin>
+                <groupId>org.mortbay.jetty</groupId>
+                <artifactId>maven-jetty-plugin</artifactId>
+                <version>6.1.9</version>
+                <configuration>
+                    <!-- Log to the console. -->
+                    <requestLog implementation="org.mortbay.jetty.NCSARequestLog">
+                        <!-- This doesn't do anything for cellHTS.Jetty, but is a workaround for a Maven bug
+                             that prevents the requestLog from being set. -->
+                        <append>true</append>
+                    </requestLog>
+                </configuration>
+
+
+            </plugin>
+
+
+            <!-- This changes the WAR file packaging so that what would normally go into WEB-INF/classes
+             is instead packaged as WEB-INF/lib/cellHTS-java.jar.  This is necessary for Tapestry
+             to be able to search for page and component classes at startup. Only
+             certain application servers require this configuration, please see the documentation
+             at the Tapestry 5 project page (http://tapestry.apache.org/tapestry5/). -->
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <!--for deploying on tomcat this has to be set to false-->
+                    <archiveClasses>false</archiveClasses>
+                    <archive>
+                      <manifestEntries>
+                        <Implementation-Build>${buildNumber}</Implementation-Build>
+                        <Implementation-Version>${version}</Implementation-Version>
+                      </manifestEntries>
+                    </archive>
+                </configuration>
+
+                
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>buildnumber-maven-plugin</artifactId>
+                <version>1.0-beta-3-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>create</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <doCheck>false</doCheck>
+                    <doUpdate>false</doUpdate>
+                </configuration>
+            </plugin>
+
+              <!--this is for doing an all-in-one jetty integrated jar file-->
+            <!--build with mvn assembly:assembly-->
+              <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                </configuration>
+            </plugin>
+
+
+            <plugin>
+                <groupId>net.sf.alchim</groupId>
+                <artifactId>winstone-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>embed</goal>
+                        </goals>
+                        <phase>package</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            
+
+
+
+        </plugins>
+
+
+    </build>
+
+    <reporting>
+
+        <!-- Adds a report detailing the components, mixins and base classes defined by this module. -->
+        <plugins>
+            <plugin>
+                <groupId>org.apache.tapestry</groupId>
+                <artifactId>tapestry-component-report</artifactId>
+                <version>${tapestry-release-version}</version>
+                <configuration>
+                    <rootPackage>cellHTS</rootPackage>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jxr-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                    <artifactId>maven-clover-plugin</artifactId>
+            </plugin>
+            <plugin>
+                  <groupId>org.codehaus.mojo</groupId>
+                  <artifactId>changelog-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>taglist-maven-plugin</artifactId>
+                  </plugin>
+            
+
+        </plugins>
+
+
+        
+
+    </reporting>
+
+    <repositories>
+        <!-- This can be commented out when the tapestry-release-version is a not a snapshot.
+ The non-snapshot Tapestry artifacts are distributed through the central
+ repository at ibiblio.     -->
+
+        <repository>
+            <id>tapestry-snapshots</id>
+            <url>http://tapestry.formos.com/maven-snapshot-repository/</url>
+        </repository>
+
+        <repository>
+            <id>codehaus.snapshots</id>
+            <url>http://snapshots.repository.codehaus.org</url>
+        </repository>
+        <repository>
+            <id>OpenQA_Release</id>
+            <name>OpenQA Release Repository</name>
+            <url>http://archiva.openqa.org/repository/releases/</url>
+        </repository>
+              <repository>
+              <id>Nexus</id>
+              <name>B110 Nexus Mirror</name>
+              <url>http://b110-dbserve:8081/nexus/content/groups/public</url>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+
+        <!-- As above, this can be commented out when access to the snapshot version
+of a Tapestry Maven plugin is not required.   -->
+        <pluginRepository>
+            <id>tapestry-snapshots</id>
+            <url>http://tapestry.formos.com/maven-snapshot-repository/</url>
+        </pluginRepository>
+
+
+    </pluginRepositories>
+
+    <properties>
+        <tapestry-release-version>5.0.18</tapestry-release-version>
+    </properties>
+
+
+    
+</project>

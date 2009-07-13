@@ -1,0 +1,234 @@
+DIV.tap5c_tab-set {
+}
+
+DIV.tap5c_tab-set-panel {
+    background: lightgray;
+    color: black;
+    border: 1px solid lightgray;
+    float: left;
+    padding-left: 3px;
+    padding-right: 3px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    margin-left: 2px;
+    cursor: pointer;
+    width: 100px;;
+}
+
+DIV.activated {
+    font-weight: bold;
+}
+
+DIV.tap5c_tab-set-content {
+    clear: left;
+    border-top: 1px solid silver;
+    border-left: 1px solid silver;
+    border-right: 1px solid silver;
+    border-bottom: 1px solid silver;
+    padding: 5px;
+}
+body {
+	font-family: "Lucida Grande", "Verdana", "Arial", "Helvetica";
+    width:800px;
+  	margin-left: auto;
+  	margin-right: auto;
+	font-size : 12px;
+}
+
+#allcontent {
+	width: 800px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#maintext {
+	color : black;
+	background-color : #FFFFFF;
+	font-family : "Lucida Grande", "Verdana", "Arial", "Helvetica";
+	font-size : 12px;
+	line-height : 18px;
+	text-align : justify;
+	margin : 0px;
+	padding : 0px;
+	margin-left : 10px;
+	margin-right : 10px;
+	margin-top : 15px;
+	margin-bottom : 15px;
+	list-style: square inside;
+}
+
+#code {
+	color : black;
+	background-color : #e7e7e7;
+	text-align : left;
+	margin : 0px;
+	padding : 10px;
+	margin-left : 10px;
+	margin-right : 10px;
+	margin-top : 15px;
+	margin-bottom : 15px;
+	font: 12px/14px Courier;
+	border-style: dotted;
+	border-width: 1px;
+}
+
+table.graph {
+	border-style:none;
+}
+
+table {
+	font-family: "Lucida Grande", "Verdana", "Arial", "Helvetica";
+	font-size : 12px;
+	border:  thin solid black;
+	caption-side: bottom;
+	border-collapse: collapse;
+	vertical-align: baseline;
+}
+
+table.search {
+	width:800px;
+}
+
+.table_phen {
+	border:  thin solid #C0C0C0;
+}
+
+td.graph {
+	border-style:none;
+}
+
+td, th {
+	border:  thin dotted gray;
+	padding:  5px;
+}
+
+
+.th1 {
+	background-color: black;
+	color: white;
+	text-align: left;
+}
+
+.th_phen {
+        background-color: #C0C0C0;
+        color: black;
+        text-align: left;
+}
+
+h1 {
+	color : black;
+	font-size : 24px;
+	font-family : "Verdana", "Arial", "Helvetica";
+	background-color : transparent;
+}
+
+a {
+	color : #3C76D4;
+	text-decoration : underline;
+	background-color : transparent;
+}
+a:visited {
+	color : #98B7E8;
+	background-color : transparent;
+}
+a:hover {
+	color : #1A407C;
+	text-decoration : underline;
+	background-color : transparent;
+}
+a:active {
+	color : #1A407C;
+	background-color : transparent;
+}
+a:focus
+{
+	color : #1A407C;
+	text-decoration : underline;
+	background-color : transparent;
+}
+
+TABLE.t-data-grid THEAD TR {
+    color: white;
+    background-color: #a0a0a0;
+}
+
+TABLE.t-data-grid THEAD TR TH {
+    text-align: left;
+    padding: 3px;
+    white-space: nowrap;
+    border-right: 1px solid silver;
+    border-bottom: 1px solid silver;
+}
+
+TABLE.t-data-grid {
+    border-collapse: collapse;
+    border-left: 1px solid silver;
+    border-color:#a0a0a0;
+}
+
+TABLE.t-data-grid TBODY TR TD {
+    border-right: 1px solid silver;
+    border-bottom: 1px solid silver;
+    padding: 2px;
+}
+
+DIV.t-data-grid {
+	font-family: "Lucida Grande", "Verdana", "Arial", "Helvetica";
+}
+
+DIV.t-data-grid-pager {
+    margin: 8px 0px;
+}
+
+DIV.t-data-grid-pager A, DIV.t-data-grid-pager SPAN.current {
+    text-decoration: none;
+    color: black;
+    padding: 2px 5px;
+    font-size: 12px;
+    border: 1px solid silver;
+    margin-right: 5px;
+}
+
+DIV.t-data-grid-pager A:hover {
+    border: 1px solid black;
+}
+
+DIV.t-data-grid-pager SPAN.current {
+    color: white;
+    background-color: #a0a0a0;
+}
+
+TABLE.t-data-grid TR TH A {
+    color: white;
+}
+#progress_bar {
+       width:102px;
+        height:7px;
+       border:1px solid #ccc;
+     padding:0;
+       margin:0;
+       position:relative;
+      background-image:url( "progressbar.gif" );
+     background-repeat:repeat-x;
+   }
+
+#progress_bar div {
+     background-color:#fff;
+  }
+
+#plateTable {
+    border:thin solid black;
+    border-collapse:collapse;
+    caption-side:bottom;
+    font-family:"Lucida Grande","Verdana","Arial","Helvetica";
+    font-size:8px;
+    vertical-align:baseline;
+   }
+
+DIV.t-beaneditor {
+background:#a0a0a0;
+border:1px outset brown;
+display:block;
+font-family:"Trebuchet MS",Arial,sans-serif;
+padding:2px;
+}

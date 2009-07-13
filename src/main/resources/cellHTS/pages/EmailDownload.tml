@@ -1,0 +1,51 @@
+<!--
+  ~ //
+  ~ // Copyright (C) 2009 Boutros-Labs(German cancer research center) b110-it@dkfz.de
+  ~ //
+  ~ //
+  ~ //    This program is free software: you can redistribute it and/or modify
+  ~ //    it under the terms of the GNU General Public License as published by
+  ~ //    the Free Software Foundation, either version 3 of the License, or
+  ~ //    (at your option) any later version.
+  ~ //
+  ~ //    This program is distributed in the hope that it will be useful,
+  ~ //    but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ //    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ //
+  ~ //    You should have received a copy of the GNU General Public License
+  ~ //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  ~
+  -->
+<html t:id="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_0_0.xsd">
+    <head>
+           <title>cellHTS2 WebTool Download Page</title>
+      </head>
+<body>
+        <t:if test="IsAmountDLExceeded">
+              Your maximum amount of downloads of this result file has exceeded. You are not allowed to download this file
+              any longer. If you have any further questions, please get into contact with ${emailAddress}
+        </t:if>
+
+        <t:if test="IsNotFoundIDPath">
+              The specified job ID does not exist. Either you made a mistake copying the link from the email you received or
+              propably you are trying to steal sensitive data which you are not supposed to do! Your IP has been logged!!!
+        </t:if>
+
+        <t:if test="readyToDownload">
+            enter password
+                     <t:form t:id="emailDownloadPasswordForm">
+                         <!--this is just dummy to reload the page-->
+                        <t:textfield t:id="emailDownloadPasswordTextfield" value="emailDownloadPassword" size="20"/>
+                        <input type="submit" value="Submit"/>
+                    </t:form>
+        <t:if test="passwordWrong">
+            The password you entered was wrong.
+            <t:parameter t:name="else">
+                 ${passwordSuccessfully}   
+            </t:parameter>
+        </t:if>
+
+        </t:if>
+</body>
+    </html>
