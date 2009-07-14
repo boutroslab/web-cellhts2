@@ -375,15 +375,12 @@ java/.libs</value>
     </repositories>
 
     <pluginRepositories>
-
         <!-- As above, this can be commented out when access to the snapshot version
 of a Tapestry Maven plugin is not required.   -->
         <pluginRepository>
             <id>tapestry-snapshots</id>
             <url>http://tapestry.formos.com/maven-snapshot-repository/</url>
         </pluginRepository>
-
-
     </pluginRepositories>
 
     <properties>
@@ -392,11 +389,13 @@ of a Tapestry Maven plugin is not required.   -->
      <!---->
     <!--where to deploy/upload the project onto which server-->
     <distributionManagement>
-      <site>
-        <id> website</id>
-        <url> scp://oliver@b110-sandbox:/var/www/cellhts_dox/</url>             
-      </site>
-
+        <!--the place where to deploy the project page-->
+        <site>
+        <id>b110-sandbox</id>
+        <name>Sandbox Server</name>    
+        <url> scp://oliver@b110-sandbox:/var/www/cellhts_dox/</url>
+        </site>
+        
     </distributionManagement>
 
 

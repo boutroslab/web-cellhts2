@@ -20,7 +20,7 @@
 
 <html t:id="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_0_0.xsd">
     <head>
-         <title>cellHTS2 WebTool</title>
+         <title>web cellHTS</title>
     </head>
 
     <body onload="initJSCellHTS();">

@@ -3,12 +3,13 @@
 <project name="Maven xdoc Plugin">
 
   <!-- Page Title -->
-  <title>Maven xdoc Plugin</title>
+  <title>Download page</title>
 
   <body>
 
-    download latest binary all-in-one jetty integrated jar file
-
+    download latest binary all-in-one jetty integrated jar file<br/>
+    run it with java -jar cellHTS-java-standalone.jar<br/>
+    start it in a webbrowser with "http://localhost:8080"<br/>
         <a href="binary/cellHTS-java-standalone.jar">click me</a>
 
 
