@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<project name="Maven xdoc Plugin">
+
+  <!-- Page Title -->
+  <title>Howto install the project on Ubuntu</title>
+
+  <body>
+    this is just the short version:<br/>
+      <br/>
+      0. get the latest "web cellHTS" source code from the svn repo <br/>
+      1. compile the web cellHTS source using "mvn package"    <br/>
+      2. deploy the compiled war file on a tomcat5.5 webserver <br/>
+      3. install R latest version (http://www.r-project.org/)  <br/>
+      4. install R package cellHTS2 (http://www.bioconductor.org/packages/bioc/html/cellHTS2.html) <br/>
+      5. install R package rserve  (http://www.rforge.net/Rserve/doc.html)   <br/>
+
+      6. create /temp under owner root with standard rights drwxr-xr-x on the server <br/>
+      7. create under /temp the folder cellHTS2 with the permissions 777      <br/>
+      8. create a standard ubuntu user "rserve" (without root rights).      <br/>
+
+      9. get uid and gid from rserve user (linux shell: id rserve) e.g.  "uid=1001(rserve) gid=1001(rserve) groups=1001(rserve)"  <br/>
+
+      10. configura Rserve to use that rserve user        <br/>
+      /etc/Rserv.conf:   <br/><br/>
+      -------  <br/>
+      uid  <br/>
+      gid   <br/>
+      ------- <br/>
+                   <br/><br/>
+      e.g.:                  <br/>
+                                  <br/>
+      -----                            <br/><br/>
+      uid 1001                                   <br/>
+      gid 1001                                        <br/>
+      -----                                                <br/>
+
+      11. if you configure your apps.properties for email result sending you also have to install postfix and configure it<br/>
+                                                                                                                               <br/>
+      12. start Rserve as user root(I have also an init script for this if you like)                                                <br/>
+                                                                                                                                         <br/>
+      13. start web cellHTS2 in your browser                                                                                                  <br/>
+                                                                                                                                                  <br/>
+
+
+
+
+  </body>
+</project>

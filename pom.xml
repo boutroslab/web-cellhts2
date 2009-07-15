@@ -393,7 +393,7 @@ of a Tapestry Maven plugin is not required.   -->
         <site>
         <id>b110-sandbox</id>
         <name>Sandbox Server</name>    
-        <url> scp://oliver@b110-sandbox:/var/www/cellhts_dox/</url>
+        <url> scp://opelz@b110-websrv:/var/www/boutroslab/cellHTS</url>
         </site>
         
     </distributionManagement>

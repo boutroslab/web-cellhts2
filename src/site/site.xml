@@ -30,6 +30,10 @@
     </menu>
     
     <menu ref="reports"/>
+
+    <menu name="Documentations">
+      <item name="howto install on ubuntu server" href="install_ubuntu.html"/>
+    </menu>
   </body>
 </project>
 
