@@ -158,15 +158,17 @@ public class EmailDownload {
         propObj = new Properties();
         
         Integer currentDownloads=null;        
+        String zipFileName=null;
         try {
             propObj.load(new FileInputStream(dlPropFile));
             currentDownloads = Integer.parseInt(propObj.getProperty(runID));
             password = propObj.getProperty(runID+"_password");
+            zipFileName = propObj.getProperty(runID+"_RESULT_ZIP");
         }
         catch(Exception e) {
              e.printStackTrace();
         }
-        if(currentDownloads==null) {
+        if(currentDownloads==null||zipFileName==null) {
 
             notFoundIDPath=true;
             return this;
@@ -187,7 +189,7 @@ public class EmailDownload {
         }
 
         readyToDownload=true;
-        streamFile = fullPath.getAbsolutePath()+"/"+runID+".zip";
+        streamFile = zipFileName;
         return this;
     }
 

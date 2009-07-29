@@ -31,7 +31,7 @@
         <connection>scm:svn:https://webcellhts.googlecode.com/svn/trunk/</connection>
         <developerConnection>scm:svn:https://webcellhts.googlecode.com/svn/trunk/
         </developerConnection>
-        <url>scm:svn:https://webcellhts.googlecode.com/svn/trunk/</url>
+        <url>https://webcellhts.googlecode.com/svn/trunk/</url>
     </scm>
 
     <issueManagement>

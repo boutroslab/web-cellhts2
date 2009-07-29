@@ -805,18 +805,23 @@
             </p>
         </t:if>
 
-        <!--google analytics for external version-->
+
         <t:if t:test="isEmailMandantory">
+            <t:if t:test="checkIsGoogleAnalyticsTrackerIDDefined">
+                <!--google analytics for external version-->
             <script type="text/javascript">
+                <!-- //
                 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
                 document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+                // -->
             </script>
             <script type="text/javascript">
                 try {
-                var pageTracker = _gat._getTracker("UA-3846736-4");
+                var pageTracker = _gat._getTracker("${googleAnalyticsTrackerID}");
                 pageTracker._trackPageview();
-                } catch(err) {}
+                } catch(err) {}                      
             </script>
+                </t:if>
         </t:if>
         
     </body>

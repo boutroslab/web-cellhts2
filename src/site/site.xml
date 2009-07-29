@@ -28,6 +28,11 @@
     <menu name="Download">
       <item name="latest binary build" href="binary.html"/>
     </menu>
+
+    <menu ref="information">
+            <item name="Source Repository" href="source-repos.html"/>
+        </menu>
+
     
     <menu ref="reports"/>
 

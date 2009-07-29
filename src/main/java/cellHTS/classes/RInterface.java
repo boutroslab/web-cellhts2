@@ -564,6 +564,8 @@ public class RInterface extends Thread {
             //init a properties file
 
             Properties propObj = new Properties();
+            //set the relation between runname and result zip file
+            propObj.setProperty(runName+"_RESULT_ZIP",resultZipFile);
             //put in the properties file that we downloaded this runid zero times
             propObj.setProperty(runName,"0");
             //generate a password for downloading

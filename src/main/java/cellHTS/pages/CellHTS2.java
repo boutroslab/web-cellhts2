@@ -206,6 +206,9 @@ public class CellHTS2 {
     @Persist
     private String viabilityFunction;
 
+    @Persist
+    private String googleAnalyticsTrackerID;
+
     @InjectPage
     private Results resultPage;
 
@@ -310,8 +313,14 @@ public class CellHTS2 {
             FileParser.lineFeed = osLinefeed;
             FileCreator.lineFeed = osLinefeed;
 
+            googleAnalyticsTrackerID=msg.get("google-analytics-tracker-id");
+            if(googleAnalyticsTrackerID!=null) {
+                if(googleAnalyticsTrackerID.equals("\"\"")|| googleAnalyticsTrackerID.contains("missing")) {
+                  //set to null to check this in the tml
+                  googleAnalyticsTrackerID=null;
+                }
 
-
+            }
             //set the app.properties value of the max parallel runs in the semaphore service
             //this is needed because semaphore is a service which cant inject messages by itself
             int maxRuns = Integer.parseInt(msg.get("max-parallel-runs"));
@@ -878,7 +887,7 @@ public class CellHTS2 {
         }
         noErrorUploadFile = true;
 
-
+        String falseFiles="";
         if (zipErrorMsg[0].equals("false")) {
 
             //add all files uploaded in this round
@@ -894,14 +903,17 @@ public class CellHTS2 {
                     String validPlateFormat = "";
                     for (PlateTypes type : PlateTypes.values()) {
                         int plateFormat = convertPlateTypesToInt(type);
+                        //build this string for error msg's
                         validPlateFormat += " " + plateFormat;
                         if (plateFormat == thisPlateFormat) {
+//                            this.plateFormat = plateFormat;
                             foundvalidFormat = true;
+                            break;
                         }
                     }
                     if (!foundvalidFormat) {
                         noErrorUploadFile = false;
-                        errorDatafileMsg = "you uploaded datafile(s) which do not fit into valid plate formats: " + validPlateFormat + " wells";
+                        errorDatafileMsg = "you uploaded datafile(s) which do not fit into valid plate formats: " + validPlateFormat + " wells. Filename: "+singleFile.getName();
                         break;
                     }
                     //check if plateFormat differs between uploaded files
@@ -909,9 +921,14 @@ public class CellHTS2 {
                         if (plateFormat != thisPlateFormat) {
                             noErrorUploadFile = false;
                             errorDatafileMsg = "you uploaded datafiles which have no equal plateformat: " + thisPlateFormat + " vs " + plateFormat;
+                            //erase the list before because its useless ...which is the correct format?
+                            dataFileList.clear();
                             break;
                         }
 
+                    }
+                    else {
+                        plateFormat = thisPlateFormat;
                     }
                     //check if we have a valid format
                     dataFileList.put(singleFile.getName(), new DataFile(singleFile.getName()));
@@ -933,8 +950,9 @@ public class CellHTS2 {
             errorDatafileMsg = zipErrorMsg[1];
         }
 
-        if (noErrorUploadFile) {
-            plateFormat = thisPlateFormat;
+        if (noErrorUploadFile && dataFileList.size()>0) {
+
+            
             plate = convertIntToPlateTypes(thisPlateFormat);
             //enable goto next page
             activatedPages.put(currentPagePointer, false);
@@ -947,6 +965,7 @@ public class CellHTS2 {
         activatedPages.put(currentPagePointer + 1, false);
         //show enable forward link in the second next page too ..this for the statistics parameterization
         activatedPages.put(currentPagePointer + 2, false);
+
     }
 
 
@@ -3095,5 +3114,16 @@ public class CellHTS2 {
                 clickedWellsAndPlates.get(0).getWellsArray().put(wellID,wellType);
             }
     }
+
+    public String getGoogleAnalyticsTrackerID() {
+        return googleAnalyticsTrackerID;
+    }
+    public boolean getCheckIsGoogleAnalyticsTrackerIDDefined() {
+        if(googleAnalyticsTrackerID==null) {
+            return false;
+        }
+        else return true;
+    }
+
 }
 
