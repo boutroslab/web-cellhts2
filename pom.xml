@@ -299,6 +299,29 @@ java/.libs</value>
                             </resources>
                         </configuration>
                     </execution>
+
+                    <!--copy the sample JOB session for the project site into a site folder too-->
+                    <execution>
+                        <id>copy-job-session-resources</id>                           
+                        <phase>install</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>src/site/resources/binary</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>src/site</directory>
+                                    <includes>
+                                        <include>JOB33761_PERSISTENT</include>
+                                    </includes>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+
+
                 </executions>
             </plugin>
 
@@ -391,9 +414,9 @@ of a Tapestry Maven plugin is not required.   -->
     <distributionManagement>
         <!--the place where to deploy the project page-->
         <site>
-        <id>b110-sandbox</id>
+        <id>b110-websrv</id>
         <name>Sandbox Server</name>    
-        <url> scp://opelz@b110-websrv:/var/www/boutroslab/cellHTS</url>
+        <url> scp://opelz@b110-websrv:/var/www/boutroslab/cellHTS/web-project/</url>
         </site>
         
     </distributionManagement>
