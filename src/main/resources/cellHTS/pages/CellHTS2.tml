@@ -46,8 +46,10 @@
                <a href="http://genomebiology.com/content/pdf/gb-2006-7-7-r66.pdf" title="pdf" target="_parent">[Fulltext]</a>
 
                <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=pubmed&amp;cmd=Retrieve&amp;dopt=AbstractPlus&amp;list_uids=16869968" title="pdf" target="_parent">[Pubmed]</a>
-               <br/><br/>
-           
+               <br/><br/><br/>
+
+               A set of example files can be downloaded from the online tutorial <a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/web+cellHTS2+quickstart+guide" target="_parent">here</a>.<br/>
+               More sample files can be found in the latest cellHTS2 source package (in source folder: inst) <a href="http://www.bioconductor.org/packages/devel/bioc/html/cellHTS2.html" target="_parent">here</a>.<br/>
 
         </div>
             <br/><br/>
@@ -55,7 +57,7 @@
             <br/><br/>
             <!--we use these divs to enable/disable content-->
             Load previous session or start a new session (download example session
-            <a href="http://www.dkfz.de/signaling/cellHTS/web-project/binary/JOB33761_PERSISTENT" target="_parent">[link]</a><br/>
+            <a href="http://www.dkfz.de/signaling/cellHTS/web-project/binary/JOB33761_PERSISTENT" target="_parent">[link]</a>)<br/>
             <t:form t:id="sessionFileUpload">
                 <input t:type="upload" t:id="sessionFileUploadInput" validate="required"
                   t:value="uploadedSessionFile"/>                                                                                                               

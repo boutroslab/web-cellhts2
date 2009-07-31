@@ -16,10 +16,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" readonly="true" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/site/xdoc/binary.xml" afterPath="$PROJECT_DIR$/src/site/xdoc/binary.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/cellHTS/pages/CellHTS2.tml" afterPath="$PROJECT_DIR$/src/main/resources/cellHTS/pages/CellHTS2.tml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/assets/headsection.jpg" afterPath="$PROJECT_DIR$/src/main/webapp/assets/headsection.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/site/JOB33761_PERSISTENT" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cellHTS-java.iws" afterPath="$PROJECT_DIR$/cellHTS-java.iws" />
     </list>
     <ignored path="cellHTS-java.iws" />
@@ -251,7 +249,7 @@
       <file leaf-file-name="CellHTS2.tml" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/resources/cellHTS/pages/CellHTS2.tml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="49" column="145" selection-start="2676" selection-end="2676" vertical-scroll-proportion="0.75481385">
+            <state line="33" column="27" selection-start="1129" selection-end="1129" vertical-scroll-proportion="0.50834405">
               <folding />
             </state>
           </provider>
@@ -260,7 +258,7 @@
       <file leaf-file-name="app.properties" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/app.properties">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="27" column="17" selection-start="870" selection-end="870" vertical-scroll-proportion="0.0">
+            <state line="29" column="18" selection-start="946" selection-end="946" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -1394,13 +1392,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/app.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="27" column="17" selection-start="870" selection-end="870" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state line="304" column="59" selection-start="11987" selection-end="11987" vertical-scroll-proportion="0.0">
@@ -1408,9 +1399,16 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/app.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="29" column="18" selection-start="946" selection-end="946" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/cellHTS/pages/CellHTS2.tml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="49" column="145" selection-start="2676" selection-end="2676" vertical-scroll-proportion="0.75481385">
+        <state line="33" column="27" selection-start="1129" selection-end="1129" vertical-scroll-proportion="0.50834405">
           <folding />
         </state>
       </provider>
