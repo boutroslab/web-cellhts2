@@ -39,14 +39,15 @@
               cellHTS2 is a software package implemented in Bioconductor/R for cell-based high-throughput RNAi screens.
               The cellHTS2 package is an updated version of the cellHTS package,
               offering a broader set of normalization functionality and the integration of multi-channel screens.
-              <br/><br/> 
-              Please cite the following paper when using cellHTS2:
-              Boutros, M., L. Bras, and W. Huber. (2006). Analysis of cell-based RNAi screens. Genome Biology 7:R66.
-               <a href="http://genomebiology.com/2006/7/7/R66" title="abstract" target="_parent">[Abstract]</a>
-               <a href="http://genomebiology.com/content/pdf/gb-2006-7-7-r66.pdf" title="pdf" target="_parent">[Fulltext]</a>
-
-               <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=pubmed&amp;cmd=Retrieve&amp;dopt=AbstractPlus&amp;list_uids=16869968" title="pdf" target="_parent">[Pubmed]</a>
-               <br/><br/><br/>
+              <br/><br/> <br/><br/>
+                 
+              <!--Please cite the following paper when using cellHTS2:-->
+              <!--Boutros, M., L. Bras, and W. Huber. (2006). Analysis of cell-based RNAi screens. Genome Biology 7:R66.-->
+               <!--<a href="http://genomebiology.com/2006/7/7/R66" title="abstract" target="_parent">[Abstract]</a>-->
+               <!--<a href="http://genomebiology.com/content/pdf/gb-2006-7-7-r66.pdf" title="pdf" target="_parent">[Fulltext]</a>-->
+<!---->
+               <!--<a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=pubmed&amp;cmd=Retrieve&amp;dopt=AbstractPlus&amp;list_uids=16869968" title="pdf" target="_parent">[Pubmed]</a>-->
+               <!--<br/><br/><br/>-->
 
                A set of example files can be downloaded from the online tutorial <a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/web+cellHTS2+quickstart+guide" target="_parent">here</a>.<br/>
                More sample files can be found in the latest cellHTS2 source package (in source folder: inst) <a href="http://www.bioconductor.org/packages/devel/bioc/html/cellHTS2.html" target="_parent">here</a>.<br/>

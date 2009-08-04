@@ -17,7 +17,6 @@
   <component name="ChangeListManager">
     <list default="true" readonly="true" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/cellHTS/pages/CellHTS2.tml" afterPath="$PROJECT_DIR$/src/main/resources/cellHTS/pages/CellHTS2.tml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/site/JOB33761_PERSISTENT" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cellHTS-java.iws" afterPath="$PROJECT_DIR$/cellHTS-java.iws" />
     </list>
     <ignored path="cellHTS-java.iws" />
@@ -42,19 +41,6 @@
   <component name="DebuggerManager">
     <line_breakpoints>
       <breakpoint url="file://$PROJECT_DIR$/src/main/java/cellHTS/classes/RInterface.java" line="189" class="cellHTS.classes.RInterface" package="cellHTS.classes">
-        <option name="ENABLED" value="true" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="false" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
-      </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/main/java/cellHTS/pages/Results.java" line="313" class="cellHTS.pages.Results" package="cellHTS.pages">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -237,10 +223,64 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="pom.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pom.xml">
+      <file leaf-file-name="Results.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/cellHTS/pages/Results.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="304" column="59" selection-start="11987" selection-end="11987" vertical-scroll-proportion="0.0">
+            <state line="313" column="0" selection-start="10705" selection-end="10705" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="RInterface.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/cellHTS/classes/RInterface.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="577" column="42" selection-start="26933" selection-end="27627" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="EmailDownload.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/cellHTS/pages/EmailDownload.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="163" column="84" selection-start="4763" selection-end="4886" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Results.tml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/resources/cellHTS/pages/Results.tml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PlateDesigner.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/cellHTS/components/PlateDesigner.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="532" column="33" selection-start="20275" selection-end="20283" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="progressbar.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/resources/cellHTS/pages/progressbar.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="129" column="13" selection-start="4767" selection-end="4767" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="plate.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/resources/cellHTS/components/plate.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="204" column="52" selection-start="9739" selection-end="9747" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -249,16 +289,7 @@
       <file leaf-file-name="CellHTS2.tml" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/resources/cellHTS/pages/CellHTS2.tml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="33" column="27" selection-start="1129" selection-end="1129" vertical-scroll-proportion="0.50834405">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="app.properties" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/app.properties">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="29" column="18" selection-start="946" selection-end="946" vertical-scroll-proportion="0.0">
+            <state line="65" column="23" selection-start="3917" selection-end="3917" vertical-scroll-proportion="0.37894738">
               <folding />
             </state>
           </provider>
@@ -795,6 +826,40 @@
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
+          <option name="myItemId" value="resources" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="cellHTS" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="components" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="cellHTS-java" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="cellHTS-java" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="webcellhts" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="src" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="main" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
           <option name="myItemId" value="java" />
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
         </PATH_ELEMENT>
@@ -1167,7 +1232,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="15" y="56" width="1680" height="945" extended-state="0" />
+    <frame x="0" y="22" width="1680" height="945" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Web Preview" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" />
@@ -1176,7 +1241,7 @@
       <window_info id="Data Sources" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23586744" sideWeight="0.5" order="5" side_tool="false" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32846716" sideWeight="0.5" order="10" side_tool="false" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.329859" sideWeight="0.0" order="0" side_tool="false" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.329859" sideWeight="0.6666667" order="0" side_tool="false" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32722834" sideWeight="0.5" order="3" side_tool="false" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24954017" sideWeight="0.5" order="1" side_tool="false" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="8" side_tool="false" />
@@ -1215,7 +1280,7 @@
     <option name="PERFORM_CHECKOUT_IN_BACKGROUND" value="true" />
     <option name="PERFORM_ADD_REMOVE_IN_BACKGROUND" value="true" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="finished javadocs documentation&#10;fixed some small plate config designer issue" />
+    <option name="LAST_COMMIT_MESSAGE" value="some style and formatting updates" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="REFORMAT_BEFORE_FILE_COMMIT" value="false" />
@@ -1226,7 +1291,6 @@
     <option name="UPDATE_GROUP_BY_CHANGELIST" value="false" />
     <option name="SHOW_FILE_HISTORY_AS_TREE" value="false" />
     <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
-    <MESSAGE value="changes to the project site to build a better page with convenient download page" />
     <MESSAGE value="bugfixes in javascript when clearing complete layout (pressing X)&#10;Email notification changed to password protection send pw via email and now using properties API&#10;&#10;" />
     <MESSAGE value="bugfixing the plate configurator when clicking on X button there was a bug in erasing all wells&#10;changing email notification to password protection and sending pw via email to save infolder space&#10;" />
     <MESSAGE value="added a platelist upload field two revisions ago&#10;bugfixed plate configurator as tina had some problems: screenlog files for dual channels must have a channel column! added an empty wells type in plate configurator because this is not the same as other&#10;added a viability function textfield if you want to add your own function&#10;" />
@@ -1251,6 +1315,7 @@
     <MESSAGE value="some improvements of the new plateConfig algorithm&#10;some code cleansing, documentation and javadocs (still not complete)&#10;&#10;" />
     <MESSAGE value="api docs function update" />
     <MESSAGE value="finished javadocs documentation&#10;fixed some small plate config designer issue" />
+    <MESSAGE value="some style and formatting updates" />
   </component>
   <component name="VssConfiguration">
     <option name="CLIENT_PATH" value="" />
@@ -1301,34 +1366,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/resources/cellHTS/components/plate.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/cellHTS/pages/progressbar.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="147" column="55" selection-start="5356" selection-end="5403" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/site/xdoc/install_ubuntu.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="42" column="151" selection-start="2437" selection-end="2437" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/site/site.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="32" column="69" selection-start="1222" selection-end="1222" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/site/xdoc/source-repos.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state line="4" column="26" selection-start="83" selection-end="102" vertical-scroll-proportion="0.0">
@@ -1350,44 +1387,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cellHTS/components/PlateDesigner.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="337" column="78" selection-start="11259" selection-end="11724" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cellHTS/classes/RInterface.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="567" column="78" selection-start="27051" selection-end="27108" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cellHTS/pages/EmailDownload.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="176" column="34" selection-start="5305" selection-end="5305" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cellHTS/pages/CellHTS2.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="60" column="13" selection-start="2133" selection-end="2133" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/site/xdoc/binary.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state line="19" column="0" selection-start="435" selection-end="435" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cellHTS/pages/Results.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="343" column="60" selection-start="12182" selection-end="12326" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
@@ -1399,6 +1401,13 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/cellHTS/pages/livepipe.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/app.properties">
       <provider selected="true" editor-type-id="text-editor">
         <state line="29" column="18" selection-start="946" selection-end="946" vertical-scroll-proportion="0.0">
@@ -1406,9 +1415,65 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cellHTS/pages/CellHTS2.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="60" column="13" selection-start="2133" selection-end="2133" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cellHTS/pages/Results.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="313" column="0" selection-start="10705" selection-end="10705" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cellHTS/classes/RInterface.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="577" column="42" selection-start="26933" selection-end="27627" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cellHTS/pages/EmailDownload.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="163" column="84" selection-start="4763" selection-end="4886" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/cellHTS/pages/Results.tml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cellHTS/components/PlateDesigner.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="532" column="33" selection-start="20275" selection-end="20283" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/cellHTS/pages/progressbar.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="129" column="13" selection-start="4767" selection-end="4767" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/cellHTS/components/plate.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="204" column="52" selection-start="9739" selection-end="9747" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/cellHTS/pages/CellHTS2.tml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="33" column="27" selection-start="1129" selection-end="1129" vertical-scroll-proportion="0.50834405">
+        <state line="65" column="23" selection-start="3917" selection-end="3917" vertical-scroll-proportion="0.37894738">
           <folding />
         </state>
       </provider>
