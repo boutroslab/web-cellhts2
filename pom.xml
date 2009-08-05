@@ -24,7 +24,7 @@
     <artifactId>cellHTS-java</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>war</packaging>
-    <name>web cellHTS application</name>
+    <name>web cellHTS2 application</name>
     <url>http://web-cellhts2.dkfz.de/</url>
     <description>a web-application for the (user-friendly) analysis of cellHTS2 datasets.</description>
      <scm>

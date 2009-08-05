@@ -20,7 +20,7 @@
 
 <html t:id="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_0_0.xsd">
     <head>
-         <title>web cellHTS</title>
+         <title>web cellHTS2</title>
     </head>
 
     <body onload="initJSCellHTS();">
@@ -31,9 +31,9 @@
         <div id="step1DIV">
              <div>
               <b>Introduction</b> <br/><br/>
-              web cellHTS is a front end for cellHTS2 for an end-to-end analysis of cell-based high-throughput screening experiments.
+              web cellHTS2 is a front end for cellHTS2 for an end-to-end analysis of cell-based high-throughput screening experiments.
               The online version allows to analyse single and dual channel experiments using all features of cellHTS2.
-              web cellHTS guides the user through all analysis options and outputs a HTML including a full quality control report and a ranked hitlist.
+              web cellHTS2 guides the user through all analysis options and outputs a HTML including a full quality control report and a ranked hitlist.
               A downloadable package for local installation can be found <a href="http://www.dkfz.de/signaling/cellHTS/web-project/binary.html" target="_blank">here</a>
               <br/><br/>   
               cellHTS2 is a software package implemented in Bioconductor/R for cell-based high-throughput RNAi screens.
@@ -54,7 +54,7 @@
 
         </div>
             <br/><br/>
-            <b>Start of a web cellHTS session</b>
+            <b>Start of a web cellHTS2 session</b>
             <br/><br/>
             <!--we use these divs to enable/disable content-->
             Load previous session or start a new session (download example session <a href="http://www.dkfz.de/signaling/cellHTS/web-project/binary/JOB33761_PERSISTENT" target="_parent">link</a>)<br/>
