@@ -34,7 +34,7 @@
               web cellHTS is a front end for cellHTS2 for an end-to-end analysis of cell-based high-throughput screening experiments.
               The online version allows to analyse single and dual channel experiments using all features of cellHTS2.
               web cellHTS guides the user through all analysis options and outputs a HTML including a full quality control report and a ranked hitlist.
-              A downloadable package for local installation can be found <a href="http://www.dkfz.de/signaling/cellHTS/web-project/binary.html">here</a>. 
+              A downloadable package for local installation can be found <a href="http://www.dkfz.de/signaling/cellHTS/web-project/binary.html" target="_blank">here</a>
               <br/><br/>   
               cellHTS2 is a software package implemented in Bioconductor/R for cell-based high-throughput RNAi screens.
               The cellHTS2 package is an updated version of the cellHTS package,
@@ -57,8 +57,8 @@
             <b>Start of a web cellHTS session</b>
             <br/><br/>
             <!--we use these divs to enable/disable content-->
-            Load previous session or start a new session (download example session
-            <a href="http://www.dkfz.de/signaling/cellHTS/web-project/binary/JOB33761_PERSISTENT" target="_parent">[link]</a>)<br/>
+            Load previous session or start a new session (download example session <a href="http://www.dkfz.de/signaling/cellHTS/web-project/binary/JOB33761_PERSISTENT" target="_parent">link</a>)<br/>
+            (For more information click <a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/web+cellHTS2+Manual#webcellHTS2Manual-step1" target="_blank">here</a>)
             <t:form t:id="sessionFileUpload">
                 <input t:type="upload" t:id="sessionFileUploadInput" validate="required"
                   t:value="uploadedSessionFile"/>                                                                                                               
@@ -68,6 +68,7 @@
                         <FONT COLOR="red">Error:${sessionFileUploadErrorMsg}</FONT>
                     </p>
                 <t:parameter t:name="else">
+                    <br/><br/>
                     <!--do nothing here-->
                 </t:parameter>
             </t:if>
@@ -140,8 +141,9 @@
         </div>
         <div id="step2DIV" style="display:none">
             <!--<t:if t:test="${nextStep2}">-->
-            (Step 2) Please upload and assign your data files:
-            <p>You can upload csv raw plate result reader files or you can upload text files in cellHTS2 format.</p>
+            (Step 2) Please upload and assign your data files:<br/>
+            (For more information click <a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/web+cellHTS2+Manual#webcellHTS2Manual-uploaddatafiles" target="_blank">here</a>)
+            <p>You can upload csv raw plate result reader files, single text files in cellHTS2 format or ZIP files containing multiple data files.</p>
 
             <t:form t:id="dataFileUpload">
                 <t:errors/>
@@ -161,13 +163,16 @@
                     <p>
                         <FONT COLOR="red">${errorDatafileMsg}</FONT>
                     </p>
+                    <t:parameter t:name="else">
+                        <br/>
+                        </t:parameter>
                 </t:if>
             
                 <br/>
                <!--show pattern if we have at least one datafile accepted-->
                 <t:if test="ognl:dataFileList.isEmpty()" negate="true">
                     <p>
-                    apply regexp
+                    apply regexp (for more information click <a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/web+cellHTS2+Manual#webcellHTS2Manual-regexp" target="_blank">here</a>)<br/>
                      <t:form t:id="updateFileParamsPage">
                          <!--this is just dummy to reload the page-->
                         <t:textfield t:id="fixRegExp" value="fixRegExp" size="20"/>
@@ -186,7 +191,9 @@
                                 <FONT COLOR="red">Error:${errorPlatelistFileMsg}</FONT>
                             </p>
                             <t:parameter t:name="else">
-                                 <!--do nothing here-->
+                                 <t:if test="isUploadedPlatelistFileDefined">
+                                      <FONT COLOR="blue">Platelist File successfully uploaded</FONT>
+                                 </t:if>
                             </t:parameter>
                             </t:if>
 
@@ -208,11 +215,12 @@
 
         <div id="step3DIV" style="display:none">
             <t:if test="hasPlateFormat">
-                (Step 3) Please configure your plate layout
+                (Step 3) Please configure your plate layout<br/>
+                (for more information click <a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/web+cellHTS2+Manual#webcellHTS2Manual-step3" target="_blank">here</a>.)<br/>
                 <t:PlateDesigner plateFormat="plateFormat"  clickedWellsAndPlates="clickedWellsAndPlates"/>
 
                 <p>
-                    Upload Plate Config file<br/>
+                    and/or Upload Plate Config file<br/>
                     <t:form t:id="plateConfigFileUpload">
                         <t:errors/>
                         <input t:type="upload" t:id="plateConfigFileInput" t:value="uploadedPlateConfigFile"/>
@@ -220,6 +228,10 @@
                 </p>
                 <t:if t:test="noErrorPlateConfFile">
 
+                    <t:if t:test="IsUploadedPlateConfigFileDefined">
+                       <FONT COLOR="blue">Plate Config File successfully uploaded</FONT>
+                    </t:if>
+                    
                     <t:parameter t:name="else">
                         <p>
                         <FONT COLOR="red">${errorPlateconfFileMsg}</FONT>
@@ -228,13 +240,17 @@
                 </t:if>
 
                 <p>
-                    Upload Screenlog file<br/>
+                    and/or Upload Screenlog file<br/>
                     <t:form t:id="screenlogFileUpload">
                         <t:errors/>
                         <input t:type="upload" t:id="screenlogFileInput" t:value="uploadedScreenlogFile"/>
                     </t:form>
                 </p>
                 <t:if t:test="noErrorScreenlogFile">
+
+                    <t:if t:test="isUploadedScreenlogFileDefined">
+                       <FONT COLOR="blue">Screenlog File successfully uploaded</FONT>
+                    </t:if>
 
                     <t:parameter t:name="else">
                         <p>
@@ -249,7 +265,8 @@
 
         <div id="step4DIV" style="display:none">
             <p>
-                (Step 4) What type of normalisation would you like to carry out?
+                (Step 4) What type of normalisation would you like to carry out?<br/>
+                (for more information click <a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/web+cellHTS2+Manual#webcellHTS2Manual-step4till9" target="_blank">here</a>)<br/>
                 <t:form t:id="normalTypesForm">
                     <table id="NORMAL_METHODS">
                         <t:radiogroup t:id="normalTypesRadioGroup" t:value="normalTypes">
@@ -692,7 +709,8 @@
             <!--<t:AjaxTextField textFieldValue="emailAddress" regexpType="email"/>-->
             <!--<br/>-->
             <p>
-                (Step 10) Upload annotation file:
+                (Step 10) Upload annotation file:<br/>
+                (for more information click <a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/web+cellHTS2+Manual#webcellHTS2Manual-step10till11" target="_blank">here</a>)<br/>
                 <t:form t:id="annotFileUpload">
                     <t:errors/>
                     <input t:type="upload" t:id="annotFileUploadInput" validate="required" t:value="uploadedAnnotFile"/>

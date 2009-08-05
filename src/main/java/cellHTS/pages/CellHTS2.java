@@ -98,21 +98,25 @@ public class CellHTS2 {
     @Persist
     private String fixRegExp;
 
-    //upload variables, should not be  persistent
-    private UploadedFile uploadedSessionFile;
-
-    private UploadedFile uploadedDataFile;
-
+    //this three must be persist because we check on it later
+    @Persist
+    private UploadedFile uploadedPlatelistFile;
+    @Persist
     private UploadedFile uploadedPlateConfigFile;
-
+    @Persist
     private UploadedFile uploadedScreenlogFile;
+
+    //upload variables, should not be  persistent
+    private UploadedFile uploadedDataFile;
 
     private UploadedFile uploadedAnnotFile;
 
     private UploadedFile uploadedDescriptionFile;
 
-    private UploadedFile uploadedPlatelistFile;
+    private UploadedFile uploadedSessionFile;
 
+
+                                 
     @Persist
     private String errorDatafileMsg; //we need this for the first run to not show msg error found in datafile upload
 
@@ -3124,6 +3128,50 @@ public class CellHTS2 {
         }
         else return true;
     }
+
+    public boolean getIsUploadedPlatelistFileDefined(){
+        if(this.uploadedPlatelistFile==null) {
+            return false;
+        }
+        else {
+            if(this.uploadedPlatelistFile.getFileName()!=null) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        
+    }
+    
+    public boolean getIsUploadedPlateConfigFileDefined(){
+       if(this.uploadedPlateConfigFile==null) {
+            return false;
+        }
+        else {
+            if(this.uploadedPlateConfigFile.getFileName()!=null) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+    }
+    public boolean getIsUploadedScreenlogFileDefined(){
+        if(this.uploadedScreenlogFile==null) {
+            return false;
+        }
+        else {
+            if(this.uploadedScreenlogFile.getFileName()!=null) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+    }
+
+
 
 }
 
