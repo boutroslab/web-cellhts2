@@ -17,8 +17,10 @@
   <component name="ChangeListManager">
     <list default="true" readonly="true" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/site/xdoc/binary.xml" afterPath="$PROJECT_DIR$/src/site/xdoc/binary.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/cellHTS/pages/CellHTS2.tml" afterPath="$PROJECT_DIR$/src/main/resources/cellHTS/pages/CellHTS2.tml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/assets/headsection.jpg" afterPath="$PROJECT_DIR$/src/main/webapp/assets/headsection.jpg" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/site/resources/images/logo_project_page.jpg" afterPath="$PROJECT_DIR$/src/site/resources/images/logo_project_page.jpg" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/site/xdoc/install_ubuntu.xml" afterPath="$PROJECT_DIR$/src/site/xdoc/install_ubuntu.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cellHTS-java.iws" afterPath="$PROJECT_DIR$/cellHTS-java.iws" />
     </list>
     <ignored path=".idea/workspace.xml" />
@@ -225,35 +227,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="CellHTS2.tml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/resources/cellHTS/pages/CellHTS2.tml">
+      <file leaf-file-name="binary.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/site/xdoc/binary.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="923" column="24" selection-start="44441" selection-end="44441" vertical-scroll-proportion="-6.8076925">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="headsection.jpg" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/webapp/assets/headsection.jpg">
-          <provider selected="true" editor-type-id="images">
-            <state />
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="pom.xml" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/pom.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="27" column="7" selection-start="1228" selection-end="1228" vertical-scroll-proportion="0.39575034">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="app.properties" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/app.properties">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="27" column="38" selection-start="891" selection-end="891" vertical-scroll-proportion="0.0">
+            <state line="11" column="55" selection-start="288" selection-end="288" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -262,7 +239,61 @@
       <file leaf-file-name="CellHTS2.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/cellHTS/pages/CellHTS2.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="3159" column="52" selection-start="98620" selection-end="98653" vertical-scroll-proportion="-21.115385">
+            <state line="60" column="13" selection-start="2133" selection-end="2133" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CellHTS2.tml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/resources/cellHTS/pages/CellHTS2.tml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="828" column="47" selection-start="40302" selection-end="40302" vertical-scroll-proportion="-21.846153">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="install_ubuntu.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/site/xdoc/install_ubuntu.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="11" column="33" selection-start="327" selection-end="327" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="source-repos.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/site/xdoc/source-repos.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="8" column="84" selection-start="218" selection-end="253" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="source-repository.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/site/xdoc/source-repository.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="site.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/site/site.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="pom.xml" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/pom.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="169" column="36" selection-start="6288" selection-end="6288" vertical-scroll-proportion="0.39782017">
               <folding />
             </state>
           </provider>
@@ -1002,15 +1033,15 @@
   </component>
   <component name="PropertiesComponent">
     <property name="MemberChooser.copyJavadoc" value="false" />
-    <property name="GoToClass.includeLibraries" value="false" />
     <property name="options.splitter.details.proportions" value="0.2" />
-    <property name="dynamic.classpath" value="false" />
-    <property name="MemberChooser.showClasses" value="true" />
+    <property name="GoToClass.includeLibraries" value="false" />
     <property name="options.splitter.main.proportions" value="0.3" />
-    <property name="MemberChooser.sorted" value="false" />
+    <property name="MemberChooser.showClasses" value="true" />
+    <property name="dynamic.classpath" value="false" />
     <property name="options.searchVisible" value="true" />
-    <property name="GoToFile.includeJavaFiles" value="false" />
+    <property name="MemberChooser.sorted" value="false" />
     <property name="options.lastSelected" value="preferences.pluginManager" />
+    <property name="GoToFile.includeJavaFiles" value="false" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="RunManagerConfig.showSettingsBeforeRunnig" value="false" />
   </component>
@@ -1206,7 +1237,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="22" width="1680" height="945" extended-state="0" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Web Preview" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3296837" sideWeight="0.5" order="1" side_tool="false" />
       <window_info id="Dataflow to this" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" />
@@ -1214,7 +1245,7 @@
       <window_info id="Data Sources" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23586744" sideWeight="0.5" order="5" side_tool="false" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32846716" sideWeight="0.5" order="10" side_tool="false" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.329859" sideWeight="0.5109489" order="0" side_tool="false" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.329859" sideWeight="0.5109489" order="0" side_tool="false" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32722834" sideWeight="0.5" order="3" side_tool="false" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24954017" sideWeight="0.5" order="1" side_tool="false" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="8" side_tool="false" />
@@ -1339,41 +1370,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/site/xdoc/source-repository.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cellHTS/pages/SuccessCellHTS2.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="39" column="13" selection-start="1275" selection-end="1275" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/site/xdoc/binary.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="0" selection-start="435" selection-end="435" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/cellHTS/pages/livepipe.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cellHTS/pages/Results.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="313" column="0" selection-start="10705" selection-end="10705" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/cellHTS/classes/RInterface.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="577" column="42" selection-start="26933" selection-end="27627" vertical-scroll-proportion="0.0">
@@ -1416,11 +1412,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cellHTS/pages/CellHTS2.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="3159" column="52" selection-start="98620" selection-end="98653" vertical-scroll-proportion="-21.115385">
-          <folding />
-        </state>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/assets/headsection.jpg">
+      <provider selected="true" editor-type-id="images">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/app.properties">
@@ -1430,21 +1424,58 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/cellHTS/pages/CellHTS2.tml">
+    <entry file="file://$PROJECT_DIR$/src/site/xdoc/source-repository.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="923" column="24" selection-start="44441" selection-end="44441" vertical-scroll-proportion="-6.8076925">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/webapp/assets/headsection.jpg">
-      <provider selected="true" editor-type-id="images">
-        <state />
+    <entry file="file://$PROJECT_DIR$/src/site/site.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/site/xdoc/install_ubuntu.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="11" column="33" selection-start="327" selection-end="327" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/site/xdoc/source-repos.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="8" column="84" selection-start="218" selection-end="253" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/site/xdoc/binary.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="11" column="55" selection-start="288" selection-end="288" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cellHTS/pages/CellHTS2.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="60" column="13" selection-start="2133" selection-end="2133" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/cellHTS/pages/CellHTS2.tml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="828" column="47" selection-start="40302" selection-end="40302" vertical-scroll-proportion="-21.846153">
+          <folding />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="27" column="7" selection-start="1228" selection-end="1228" vertical-scroll-proportion="0.39575034">
+        <state line="169" column="36" selection-start="6288" selection-end="6288" vertical-scroll-proportion="0.39782017">
           <folding />
         </state>
       </provider>

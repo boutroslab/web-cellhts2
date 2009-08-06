@@ -8,8 +8,8 @@
   <body>
     this is just the short version:<br/>
       <br/>
-      0. get the latest "web cellHTS" source code from the svn repo <br/>
-      1. compile the web cellHTS source using "mvn package"    <br/>
+      0. get the latest "web cellHTS2" source code from the svn repo <br/>
+      1. compile the web cellHTS2 source using "mvn package"    <br/>
       2. deploy the compiled war file on a tomcat5.5 webserver <br/>
       3. install R latest version (http://www.r-project.org/)  <br/>
       4. install R package cellHTS2 (http://www.bioconductor.org/packages/bioc/html/cellHTS2.html) <br/>

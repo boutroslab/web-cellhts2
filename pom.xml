@@ -292,7 +292,7 @@ java/.libs</value>
                                 <resource>
                                     <directory>target</directory>
                                     <includes>
-                                        <include>cellHTS-java-standalone.jar</include>
+                                        <include>web-cellHTS2-standalone.jar</include>
                                     </includes>
                                     <filtering>true</filtering>
                                 </resource>

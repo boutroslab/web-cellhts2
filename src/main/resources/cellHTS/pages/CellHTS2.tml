@@ -34,7 +34,7 @@
               web cellHTS2 is a front end for cellHTS2 for an end-to-end analysis of cell-based high-throughput screening experiments.
               The online version allows to analyse single and dual channel experiments using all features of cellHTS2.
               web cellHTS2 guides the user through all analysis options and outputs a HTML including a full quality control report and a ranked hitlist.
-              A downloadable package for local installation can be found <a href="http://www.dkfz.de/signaling/cellHTS/web-project/binary.html" target="_blank">here</a>
+              A downloadable package for local installation can be found <a href="http://www.dkfz.de/signaling/cellHTS/web-project/binary.html" target="_blank">here</a>.
               <br/><br/>   
               cellHTS2 is a software package implemented in Bioconductor/R for cell-based high-throughput RNAi screens.
               The cellHTS2 package is an updated version of the cellHTS package,
@@ -216,7 +216,7 @@
         <div id="step3DIV" style="display:none">
             <t:if test="hasPlateFormat">
                 (Step 3) Please configure your plate layout<br/>
-                (for more information click <a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/web+cellHTS2+Manual#webcellHTS2Manual-step3" target="_blank">here</a>.)<br/>
+                (for more information click <a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/web+cellHTS2+Manual#webcellHTS2Manual-step3" target="_blank">here</a>)<br/>
                 <t:PlateDesigner plateFormat="plateFormat"  clickedWellsAndPlates="clickedWellsAndPlates"/>
 
                 <p>

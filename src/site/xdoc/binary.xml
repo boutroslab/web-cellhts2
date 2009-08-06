@@ -9,9 +9,9 @@
     <br/>
     <br/>
     download latest binary all-in-one jetty integrated jar file<br/>
-    run it with java -jar cellHTS-java-standalone.jar<br/>
+    run it with "java -jar web-cellHTS2-standalone.jar"<br/>
     start it in a webbrowser with "http://localhost:8080"<br/>
-        <a href="binary/cellHTS-java-standalone.jar">click me</a>
+        <a href="binary/web-cellHTS2-standalone.jar">click me</a>
 
 
 
