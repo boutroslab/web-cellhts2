@@ -1814,6 +1814,8 @@ public class CellHTS2 {
             () {
         sumRep = SummerizeReplicates.min;
     }
+
+
     /**
      *
      *  event handler methods for radio buttons...onEvent mixin style :-)
