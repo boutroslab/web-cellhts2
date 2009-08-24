@@ -16,13 +16,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" readonly="true" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/cellHTS/pages/CellHTS2.tml" afterPath="$PROJECT_DIR$/src/main/resources/cellHTS/pages/CellHTS2.tml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cellHTS/pages/CellHTS2.java" afterPath="$PROJECT_DIR$/src/main/java/cellHTS/pages/CellHTS2.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cellHTS-java.iws" afterPath="$PROJECT_DIR$/cellHTS-java.iws" />
     </list>
-    <ignored path=".idea/workspace.xml" />
     <ignored path="cellHTS-java.iws" />
+    <ignored path=".idea/workspace.xml" />
   </component>
   <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
   <component name="Commander">
@@ -228,19 +226,26 @@
       <file leaf-file-name="CellHTS2.tml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/resources/cellHTS/pages/CellHTS2.tml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="823" column="142" selection-start="41212" selection-end="41218" vertical-scroll-proportion="-9.653846">
+            <state line="818" column="62" selection-start="40807" selection-end="40807" vertical-scroll-proportion="-7.269231">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CellHTS2.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="app.properties" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/app.properties">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="25" column="19" selection-start="851" selection-end="851" vertical-scroll-proportion="0.31558937">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CellHTS2.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/cellHTS/pages/CellHTS2.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="1779" column="28" selection-start="59881" selection-end="59881" vertical-scroll-proportion="0.12616202">
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state line="1797" column="7" selection-start="60306" selection-end="60306" vertical-scroll-proportion="0.0">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -257,7 +262,7 @@
       <file leaf-file-name="pom.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="78" column="8" selection-start="3012" selection-end="3012" vertical-scroll-proportion="-21.576923">
+            <state line="78" column="8" selection-start="3012" selection-end="3012" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -997,15 +1002,15 @@
   </component>
   <component name="PropertiesComponent">
     <property name="MemberChooser.copyJavadoc" value="false" />
-    <property name="GoToClass.includeLibraries" value="false" />
     <property name="options.splitter.details.proportions" value="0.2" />
-    <property name="dynamic.classpath" value="false" />
-    <property name="MemberChooser.showClasses" value="true" />
+    <property name="GoToClass.includeLibraries" value="false" />
     <property name="options.splitter.main.proportions" value="0.3" />
-    <property name="MemberChooser.sorted" value="false" />
+    <property name="MemberChooser.showClasses" value="true" />
+    <property name="dynamic.classpath" value="false" />
     <property name="options.searchVisible" value="true" />
-    <property name="GoToFile.includeJavaFiles" value="false" />
+    <property name="MemberChooser.sorted" value="false" />
     <property name="options.lastSelected" value="preferences.pluginManager" />
+    <property name="GoToFile.includeJavaFiles" value="false" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="RunManagerConfig.showSettingsBeforeRunnig" value="false" />
   </component>
@@ -1200,7 +1205,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="22" width="1680" height="945" extended-state="0" />
+    <frame x="0" y="22" width="1680" height="940" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Web Preview" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3296837" sideWeight="0.5" order="1" side_tool="false" />
@@ -1367,13 +1372,6 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/app.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="27" column="38" selection-start="891" selection-end="891" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/site/xdoc/binary.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state line="11" column="55" selection-start="288" selection-end="288" vertical-scroll-proportion="0.0">
@@ -1416,13 +1414,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="78" column="8" selection-start="3012" selection-end="3012" vertical-scroll-proportion="-21.576923">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/data/SummerizeReplicates.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="29" column="12" selection-start="962" selection-end="962" vertical-scroll-proportion="0.0">
@@ -1430,19 +1421,31 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/cellHTS/pages/CellHTS2.tml">
+    <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="823" column="142" selection-start="41212" selection-end="41218" vertical-scroll-proportion="-9.653846">
+        <state line="78" column="8" selection-start="3012" selection-end="3012" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/cellHTS/pages/CellHTS2.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="1779" column="28" selection-start="59881" selection-end="59881" vertical-scroll-proportion="0.12616202">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state line="1797" column="7" selection-start="60306" selection-end="60306" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/cellHTS/pages/CellHTS2.tml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="818" column="62" selection-start="40807" selection-end="40807" vertical-scroll-proportion="-7.269231">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/app.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="25" column="19" selection-start="851" selection-end="851" vertical-scroll-proportion="0.31558937">
+          <folding />
         </state>
       </provider>
     </entry>

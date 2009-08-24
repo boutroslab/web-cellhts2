@@ -60,7 +60,7 @@
             Load previous session or start a new session (download example session <a href="http://www.dkfz.de/signaling/cellHTS/web-project/binary/JOB33761_PERSISTENT" target="_parent">link</a>)<br/>
             (For more information click <a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/web+cellHTS2+Manual#webcellHTS2Manual-step1" target="_blank">here</a>)
 
-            <div t:type="t5components/Tooltip" clientId="tooltip1"  value="a sessionfile can be used to restore complete former analysis settings.It can be generated at the last step." effect="appear">
+            <div t:type="t5components/Tooltip" clientId="tooltip1"  value="Previously saved session files can be used to restore complete analysis settings." effect="appear">
             <t:form t:id="sessionFileUpload">
                 <input t:type="upload" t:id="sessionFileUploadInput" validate="required"
                   t:value="uploadedSessionFile"/>                                                                                                               
@@ -148,7 +148,7 @@
             (For more information click <a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/web+cellHTS2+Manual#webcellHTS2Manual-uploaddatafiles" target="_blank">here</a>)
             <p>You can upload csv raw plate result reader files, single text files in cellHTS2 format or ZIP files containing multiple data files.</p>
 
-           <div t:type="t5components/Tooltip" clientId="tooltip2" value="if the experiment has a lot of data files, it is best to pack them into a ZIP file and upload it" effect="appear">
+           <div t:type="t5components/Tooltip" clientId="tooltip2" value="If the experiment has a lot of data files, it is best to pack them into a ZIP file and upload it." effect="appear">
             <t:form t:id="dataFileUpload">
                 <t:errors/>
                 <input t:type="upload" t:id="dataFileUploadInput" validate="required" t:value="uploadedDataFile"/>
@@ -178,7 +178,7 @@
                 <t:if test="ognl:dataFileList.isEmpty()" negate="true">
                     <p>
                     apply regexp (for more information click <a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/web+cellHTS2+Manual#webcellHTS2Manual-regexp" target="_blank">here</a>)<br/>
-                  <div t:type="t5components/Tooltip" clientId="tooltip3"  value="use this if the parameters of the uploaded files could not automatically be found. For syntax review the manual" effect="appear">
+                  <div t:type="t5components/Tooltip" clientId="tooltip3"  value="Use this if the parameters of the uploaded files could not automatically be found. For syntax review the manual." effect="appear">
                      <t:form t:id="updateFileParamsPage">
                          <!--this is just dummy to reload the page-->
                         <t:textfield t:id="fixRegExp" value="fixRegExp" size="20"/>
@@ -228,7 +228,7 @@
 
                 <p>
                     and/or Upload Plate Config file<br/>
-                    <div t:type="t5components/Tooltip" clientId="tooltip4"  value="this contains all the positive, negative, other and empty wells" effect="appear">
+                    <div t:type="t5components/Tooltip" clientId="tooltip4"  value="Upload all the positive, negative, other and empty wells information." effect="appear">
                     <t:form t:id="plateConfigFileUpload">
                         <t:errors/>
                         <input t:type="upload" t:id="plateConfigFileInput" t:value="uploadedPlateConfigFile"/>
@@ -250,7 +250,7 @@
 
                 <p>
                     and/or Upload Screenlog file<br/>
-                    <div t:type="t5components/Tooltip" clientId="tooltip5"  value="this contains all the contaminated wells" effect="appear">
+                    <div t:type="t5components/Tooltip" clientId="tooltip5"  value="Upload the contaminated wells information." effect="appear">
 
                     <t:form t:id="screenlogFileUpload">
                         <t:errors/>
@@ -627,7 +627,7 @@
                                 </td>
                                 <td>the square root of the mean squared value of the replicates is taken</td>
                                 <td width="50px" align="right">
-                                <div t:type="t5components/Tooltip" clientId="tooltip6"  value="this method has been disabled because it contains some bugs in cellHTS2." effect="appear">
+                                <div t:type="t5components/Tooltip" clientId="tooltip6"  value="This function is still under construction and will be available soon." effect="appear">
                                     X
                                 </div>
                                 </td>
@@ -763,7 +763,7 @@
                 </t:if>
             </p>
             <p>
-                <div t:type="t5components/Tooltip" clientId="tooltip7"  value="please click on the create/update button to make changes permanent" effect="appear">
+                <div t:type="t5components/Tooltip" clientId="tooltip7"  value="Please click on the create/update button to make changes permanent." effect="appear">
 
                 Edit/Create Description Text:
 
@@ -821,7 +821,7 @@
             </p>
             <p>
                 <!--we need the eventhandler here too to update the description file/variables before storing in a file-->
-                <div t:type="t5components/Tooltip" clientId="tooltip8"  value="session files can be uploaded at the first step" effect="appear">
+                <div t:type="t5components/Tooltip" clientId="tooltip8"  value="Saved session files can be loaded later to restore the complete analysis." effect="appear">
                 <t:actionlink t:id="saveSession"
                  onclick="clickedStartCellHTS2Link();"
 
