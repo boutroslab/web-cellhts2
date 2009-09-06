@@ -448,7 +448,7 @@ public class RInterface extends Thread {
                     //this is for cellHTS2 < 2.7.9
                     //getRengine().voidEval("out = writeReport(cellHTSlist = list(raw = x, normalized = xn, scored = xsc),imageScreenArgs = list(zrange = c(-4, 4)), plotPlateArgs=list(), outdir=Outdir_report, force=TRUE ,progressReport=FALSE)");
                     //this is for the new cellHTS2 >=  2.7.9
-                    cmdString="out = writeReport(raw = x, normalized = xn, scored = xsc,settings = list(zrange = c(-4, 4),xrange = c(0.5,3)), plotPlateArgs=list(), outdir=Outdir_report, force=TRUE )";
+                    cmdString="out = writeReport(raw = x, normalized = xn, scored = xsc,settings = list(zrange = c(-4, 4),xrange = c(0.5,3)), outdir=Outdir_report, force=TRUE )";
                     debugString+=cmdString+"\n";
                     getRengine().voidEval(cmdString);
                     //after we are done...create a zipfile out of the results
