@@ -243,24 +243,6 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MAVEN_REPOSITORY$/tomcat/catalina/5.5.9/catalina-5.5.9.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MAVEN_REPOSITORY$/javax/activation/activation/1.0.2/activation-1.0.2.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
           <root url="jar://$MAVEN_REPOSITORY$/org/apache/tapestry/t5c-commons/0.5.18/t5c-commons-0.5.18.jar!/" />
         </CLASSES>
         <JAVADOC />
@@ -315,7 +297,16 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MAVEN_REPOSITORY$/com/wapmx/native/mx-native-loader/1.2/mx-native-loader-1.2.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/javax/activation/activation/1.0.2/activation-1.0.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MAVEN_REPOSITORY$/tomcat/catalina/5.5.9/catalina-5.5.9.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -325,15 +316,6 @@
       <library>
         <CLASSES>
           <root url="jar://$MAVEN_REPOSITORY$/org/testng/testng/5.1/testng-5.1-jdk15.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MAVEN_REPOSITORY$/de/dkfz/signaling/cellhtsTools/0.2.2/cellhtsTools-0.2.2.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -352,6 +334,15 @@
       <library>
         <CLASSES>
           <root url="jar://$MAVEN_REPOSITORY$/javax/mail/mail/1.4.2/mail-1.4.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MAVEN_REPOSITORY$/org/tuckey/web/filters/urlrewrite/UrlRewriteFilter/2.6.0/UrlRewriteFilter-2.6.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -493,16 +484,6 @@
     <containerElement type="library" level="module">
       <attribute name="method" value="1" />
       <attribute name="URI" value="/WEB-INF/lib" />
-      <url>jar://$MAVEN_REPOSITORY$/tomcat/catalina/5.5.9/catalina-5.5.9.jar!/</url>
-    </containerElement>
-    <containerElement type="library" level="module">
-      <attribute name="method" value="1" />
-      <attribute name="URI" value="/WEB-INF/lib" />
-      <url>jar://$MAVEN_REPOSITORY$/javax/activation/activation/1.0.2/activation-1.0.2.jar!/</url>
-    </containerElement>
-    <containerElement type="library" level="module">
-      <attribute name="method" value="1" />
-      <attribute name="URI" value="/WEB-INF/lib" />
       <url>jar://$MAVEN_REPOSITORY$/org/apache/tapestry/t5c-commons/0.5.18/t5c-commons-0.5.18.jar!/</url>
     </containerElement>
     <containerElement type="library" level="module">
@@ -533,17 +514,17 @@
     <containerElement type="library" level="module">
       <attribute name="method" value="1" />
       <attribute name="URI" value="/WEB-INF/lib" />
-      <url>jar://$MAVEN_REPOSITORY$/com/wapmx/native/mx-native-loader/1.2/mx-native-loader-1.2.jar!/</url>
+      <url>jar://$MAVEN_REPOSITORY$/javax/activation/activation/1.0.2/activation-1.0.2.jar!/</url>
+    </containerElement>
+    <containerElement type="library" level="module">
+      <attribute name="method" value="1" />
+      <attribute name="URI" value="/WEB-INF/lib" />
+      <url>jar://$MAVEN_REPOSITORY$/tomcat/catalina/5.5.9/catalina-5.5.9.jar!/</url>
     </containerElement>
     <containerElement type="library" level="module">
       <attribute name="method" value="0" />
       <attribute name="URI" value="/WEB-INF/lib" />
       <url>jar://$MAVEN_REPOSITORY$/org/testng/testng/5.1/testng-5.1-jdk15.jar!/</url>
-    </containerElement>
-    <containerElement type="library" level="module">
-      <attribute name="method" value="1" />
-      <attribute name="URI" value="/WEB-INF/lib" />
-      <url>jar://$MAVEN_REPOSITORY$/de/dkfz/signaling/cellhtsTools/0.2.2/cellhtsTools-0.2.2.jar!/</url>
     </containerElement>
     <containerElement type="library" level="module">
       <attribute name="method" value="1" />
@@ -554,6 +535,11 @@
       <attribute name="method" value="1" />
       <attribute name="URI" value="/WEB-INF/lib" />
       <url>jar://$MAVEN_REPOSITORY$/javax/mail/mail/1.4.2/mail-1.4.2.jar!/</url>
+    </containerElement>
+    <containerElement type="library" level="module">
+      <attribute name="method" value="1" />
+      <attribute name="URI" value="/WEB-INF/lib" />
+      <url>jar://$MAVEN_REPOSITORY$/org/tuckey/web/filters/urlrewrite/UrlRewriteFilter/2.6.0/UrlRewriteFilter-2.6.0.jar!/</url>
     </containerElement>
     <deploymentDescriptor name="web.xml" url="file://$MODULE_DIR$/src/main/webapp/WEB-INF/web.xml" optional="false" version="2.5" />
     <webroots>
