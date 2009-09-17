@@ -24,16 +24,16 @@
         "http://java.sun.com/dtd/web-app_2_3.dtd">
 <web-app>
     <!--get rid of jsessionids or google crawler will register a invalid jsessionid which will bring the webapp to a halt-->
-    <filter>
-           <filter-name>UrlRewriteFilter</filter-name>
-           <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
-       </filter>
-       <filter-mapping>
-           <filter-name>UrlRewriteFilter</filter-name>
-           <url-pattern>/*</url-pattern>
-           <dispatcher>REQUEST</dispatcher>
-           <dispatcher>FORWARD</dispatcher>
-       </filter-mapping>
+    <!--<filter>-->
+           <!--<filter-name>UrlRewriteFilter</filter-name>-->
+           <!--<filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>-->
+       <!--</filter>-->
+       <!--<filter-mapping>-->
+           <!--<filter-name>UrlRewriteFilter</filter-name>-->
+           <!--<url-pattern>/*</url-pattern>-->
+           <!--<dispatcher>REQUEST</dispatcher>-->
+           <!--<dispatcher>FORWARD</dispatcher>-->
+       <!--</filter-mapping>-->
      
     
     <display-name>cellHTS2-java WebTool</display-name>
