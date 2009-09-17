@@ -557,13 +557,21 @@ public class RInterface extends Thread {
             String runName=this.extractRunName(stringParams.get("runNameDir"));
             //create a recycable downloadlink as well...therefore we have to keep track about how often a file is allowed to be downloaded
             //which we will write into a properties file
-            String dlPropertiesFile = Configuration.UPLOAD_PATH+stringParams.get("jobName")+"/.dlProperties";
+            File dlPropertiesFile = new File(Configuration.UPLOAD_PATH+stringParams.get("jobName")+"/.dlProperties");
             
             String downloadLink = stringParams.get("emailDownloadLink");
 
             //init a properties file
 
             Properties propObj = new Properties();
+            if(dlPropertiesFile.exists()) {
+                try {
+                propObj.load(new FileInputStream(dlPropertiesFile));
+                }catch(Exception e) {
+                    e.printStackTrace();
+                }                
+            }
+
             //set the relation between runname and result zip file
             propObj.setProperty(runName+"_RESULT_ZIP",resultZipFile);
             //put in the properties file that we downloaded this runid zero times
@@ -572,7 +580,7 @@ public class RInterface extends Thread {
             String pw = PasswordGenerator.get(20);
             propObj.setProperty(runName+"_password",pw);
             try {
-                propObj.store(new FileOutputStream(new File(dlPropertiesFile)),"properties file for email Download information");
+                propObj.store(new FileOutputStream(dlPropertiesFile),"properties file for email Download information");
             }catch(Exception e) {
                 e.printStackTrace();
             }
