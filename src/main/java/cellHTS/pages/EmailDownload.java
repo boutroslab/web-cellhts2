@@ -60,7 +60,7 @@ public class EmailDownload {
     @Inject
     private Messages msg;
     @InjectPage
-    private SuccessCellHTS2 successPage;
+    private SuccessPage successPage;
     @Persist
     private String emailAddress;
     //this time we use the component annotation instead of tml component

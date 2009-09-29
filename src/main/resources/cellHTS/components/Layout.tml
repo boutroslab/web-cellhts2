@@ -20,7 +20,7 @@
 
 <html xmlns:t="http://tapestry.apache.org/schema/tapestry_5_0_0.xsd">
     <head>
-        <title>CellHTS2</title>
+        <title>web CellHTS2</title>
              <!--<meta http-equiv="content-type" content="application/xhtml+xml;charset=utf-8" />-->
     </head>
     <body>

@@ -592,31 +592,33 @@ public class RInterface extends Thread {
             int percentage = Integer.parseInt(progressPercentage[0].split("_")[0]);
             String msg = progressPercentage[0].split("_")[1];
             if(percentage==100) {
-                emailMsg+="Dear cellHTS2 user,\n" +
+                emailMsg+="Dear web cellHTS2 user,\n" +
                         "\n" +
-                        "Please download the calculated results from your query from our server (you are allowed to do this "+stringParams.get("allowed-dl-numbers")+" times ) at:\n\n"
-                         +downloadLink+"\n"+" with the password: "+pw+"\n\n"+
-                       // "Please find attached the calculated results from your query. " +
+                        "the calculations have been completed. Please download the report\n" +
+                        "from our server (there is a limit to download the results "+stringParams.get("allowed-dl-numbers")+" times)\n" +
+                        "at:\n\n"+
+                        downloadLink+"\n"+
+                        "Password: "+pw+"\n\n"+
+                        "JOB ID: "+runName+"(for reference purposes)\n\n"+
                         "Save the file and unpack it using an unzip program.\n" +
-                        "The \"index.html\" file can be opened by any web browser for view the analysis results. We have also included a session " +
-                        "that can be used to modify analysis settings.\n" +
-
-
-
-
+                        "The \"index.html\" file can be opened by any web browser for view the  \n" +
+                        "analysis results. We have also included a session file that can be  \n" +
+                        "used to modify analysis settings.\n" +
                         "\n" +
-                        "Do not hesitate to contact us if you have any question or suggestions for improvement.\n" +
+                        "Please do not hesitate to contact us if you have any question or  \n" +
+                        "suggestions for improvement.\n" +
                         "\n" +
                         "Sincerely,\n" +
                         "\n" +
                         "web cellHTS Team\n" +
-                        "Email: "+ this.maintainEmailAddress+"\n" +
-                        "\n" +
+                        "Email: "+ this.maintainEmailAddress+"\n";
+                        /**
                         "Please use the following citation when using cellHTS:\n" +
                         "Boutros, M., L. Bras, and W. Huber. (2006). Analysis of cell-based RNAi screens. Genome Biology 7:R66.\n"+
                         "Abstract: http://genomebiology.com/2006/7/7/R66\n"+
                         "Full Text: http://genomebiology.com/content/pdf/gb-2006-7-7-r66.pdf\n"+
                         "PubMed: http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=pubmed&amp;cmd=Retrieve&amp;dopt=AbstractPlus&amp;list_uids=16869968";
+                         **/
                 file=resultZipFile;
 
             }
@@ -634,7 +636,7 @@ public class RInterface extends Thread {
             String []files = {file,sessionFile};
 
             postMailTools.postMail( emailAddress,
-                                   "cellHTS2 report (\""+runName+"\"):",
+                                   "Your web cellHTS2 report",//"cellHTS2 report (\""+runName+"\"):",
                                     emailMsg,
                                     this.maintainEmailAddress,
                                      null //file  if we want to send the result as file

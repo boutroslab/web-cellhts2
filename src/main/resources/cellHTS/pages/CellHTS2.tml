@@ -735,8 +735,8 @@
 
                 </t:form>
                 <t:if test="noErrorAnnotFile">
-                    <FONT COLOR="blue">Annot file successfully uploaded   </FONT>
-                   <t:actionlink t:id="dropAnnotfile">drop Annotation File</t:actionlink>
+                    <FONT COLOR="blue">Annotation file was succesfully uploaded (</FONT>
+                   <t:actionlink t:id="dropAnnotfile">drop Annotation File</t:actionlink>).
                     <t:parameter t:name="else">
                         <p>
                             <FONT COLOR="red">${errorAnnotFileMsg}</FONT>
@@ -753,8 +753,8 @@
                            t:value="uploadedDescriptionFile"/>
                 </t:form>
                 <t:if test="noErrorDescriptionFile">
-                    <FONT COLOR="blue">Description file successfully uploaded   </FONT>
-                    <t:actionlink t:id="dropDescriptionfile">drop Description File</t:actionlink>
+                    <FONT COLOR="blue">Description file was successfully uploaded (</FONT>
+                    <t:actionlink t:id="dropDescriptionfile">drop Description File</t:actionlink>).
                     <t:parameter t:name="else">
                         <FONT COLOR="red">${errorDescriptionFileMsg}</FONT>
                         <br/>
@@ -799,7 +799,7 @@
             <p>
 
                 <t:if t:test="isEmailMandantory">
-                     email:<br/>
+                     Please enter your Email address for receiving the analysis report:<br/>
                     <t:form t:id="emailForm" action="#" t:type="Form">
                      <input t:type="TextField"
                                      t:id="emailAddressTextfield"
@@ -810,14 +810,6 @@
                     </t:form>
                 </t:if>    
                 <!--we add a onclick callback event handler for the startCellHTS2 actionlink so that we can submit the beaneditform from there-->
-
-                <t:actionlink t:id="startCellHTS2"
-                 onclick="clickedStartCellHTS2Link();" 
-                        > Start cellHTS2</t:actionlink>
-            </p>
-            
-            <p>
-                <t:actionlink t:id="newAnalysis">New Analysis</t:actionlink>                
             </p>
             <p>
                 <!--we need the eventhandler here too to update the description file/variables before storing in a file-->
@@ -825,8 +817,18 @@
                 <t:actionlink t:id="saveSession"
                  onclick="clickedStartCellHTS2Link();"
 
-                >save this session</t:actionlink>
+                >Save this Session</t:actionlink>
                 </div>
+
+            </p>
+            
+            <p>                  <t:actionlink t:id="startCellHTS2"
+                 onclick="clickedStartCellHTS2Link();"
+                        > Start analysis run</t:actionlink>
+
+            </p>
+            <p>
+                <t:actionlink t:id="newAnalysis">Start new Analysis</t:actionlink>  
             </p>
         </div>
         <br/><br/>
