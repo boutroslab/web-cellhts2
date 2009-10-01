@@ -126,6 +126,15 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
+          <root url="jar://$MAVEN_REPOSITORY$/org/tuckey/web/filters/urlrewrite/UrlRewriteFilter/3.2.0/UrlRewriteFilter-3.2.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
           <root url="jar://$MAVEN_REPOSITORY$/org/apache/tapestry/t5c-contrib/0.5.15/t5c-contrib-0.5.15.jar!/" />
         </CLASSES>
         <JAVADOC />
@@ -339,15 +348,6 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MAVEN_REPOSITORY$/org/tuckey/web/filters/urlrewrite/UrlRewriteFilter/2.6.0/UrlRewriteFilter-2.6.0.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
   </component>
   <component name="WebModuleBuildComponent">
     <setting name="EXPLODED_URL" value="file://$MODULE_DIR$/target/cellHTS-java" />
@@ -415,6 +415,11 @@
       <attribute name="method" value="1" />
       <attribute name="URI" value="/WEB-INF/lib" />
       <url>jar://$MAVEN_REPOSITORY$/org/mortbay/jetty/servlet-api-2.5/6.1.10/servlet-api-2.5-6.1.10.jar!/</url>
+    </containerElement>
+    <containerElement type="library" level="module">
+      <attribute name="method" value="1" />
+      <attribute name="URI" value="/WEB-INF/lib" />
+      <url>jar://$MAVEN_REPOSITORY$/org/tuckey/web/filters/urlrewrite/UrlRewriteFilter/3.2.0/UrlRewriteFilter-3.2.0.jar!/</url>
     </containerElement>
     <containerElement type="library" level="module">
       <attribute name="method" value="1" />
@@ -535,11 +540,6 @@
       <attribute name="method" value="1" />
       <attribute name="URI" value="/WEB-INF/lib" />
       <url>jar://$MAVEN_REPOSITORY$/javax/mail/mail/1.4.2/mail-1.4.2.jar!/</url>
-    </containerElement>
-    <containerElement type="library" level="module">
-      <attribute name="method" value="1" />
-      <attribute name="URI" value="/WEB-INF/lib" />
-      <url>jar://$MAVEN_REPOSITORY$/org/tuckey/web/filters/urlrewrite/UrlRewriteFilter/2.6.0/UrlRewriteFilter-2.6.0.jar!/</url>
     </containerElement>
     <deploymentDescriptor name="web.xml" url="file://$MODULE_DIR$/src/main/webapp/WEB-INF/web.xml" optional="false" version="2.5" />
     <webroots>

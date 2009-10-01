@@ -35,6 +35,7 @@ import org.apache.tapestry5.services.BeanModelSource;
 import org.apache.tapestry5.services.Request;
 import org.apache.tapestry.commons.components.InPlaceCheckbox;
 
+
 import java.io.*;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -448,6 +449,7 @@ public class CellHTS2 {
         errorNextLink = false;
         //default:no error msg
         nextLinkErrorMsg = "";
+        resetErrorMsgs();
 
         if (currentPagePointer > 1) {
             currentPagePointer--;
@@ -484,6 +486,9 @@ public class CellHTS2 {
                 nextLinkErrorMsg = "if you select dual channel you have to provide some names for them";
             }
             if(!errorNextLink) {
+                //if we had uploaded a wrong file but instead clicked successfully on next, let the session file upload dissapear
+                errorSessionFileUpload = false;
+                resetErrorMsgs();
                 //TODO: page refresh doesnt work properly at the moment (there are some browser incompatibelites..have to wait till tapestry development fixed it)
                 activatedPages.put(currentPagePointer + 1, false);
             }
@@ -536,6 +541,8 @@ public class CellHTS2 {
                 //now this is an important step:
                 //init the platesNWell datastructure to work with
                     initalizePlateNWellMap();
+                    resetErrorMsgs();
+                    
                 }
             }
         }
@@ -552,7 +559,9 @@ public class CellHTS2 {
 
             if(otherWellAmount >0) {
                errorNextLink = false;
-                    nextLinkErrorMsg = "";
+               resetErrorMsgs();
+                
+                
             }
         }
 
@@ -575,6 +584,8 @@ public class CellHTS2 {
         if (!errorNextLink) {
             experiment.setDualChannel(isDualChannel);
             currentPagePointer++;
+            resetErrorMsgs();
+            
         }
     }
 
@@ -650,9 +661,15 @@ public class CellHTS2 {
      * @param label
      */
     @OnEvent(component = "emailAddressTextfield", value = "blur")
-    public void onEmailAddressTextfield(String label) {
+    public JSONObject onEmailAddressTextfield(String label) {
        emailAddress=label;
+        //use this to lose the focus of the textfield because we want to jump to the head of the page
+        JSONObject json = new JSONObject();
+        json.put("loseFocus","true");
+        return json;
     }
+
+
     
     /**
      *
@@ -936,6 +953,9 @@ public class CellHTS2 {
                     }
                     //check if we have a valid format
                     dataFileList.put(singleFile.getName(), new DataFile(singleFile.getName()));
+                    //we reset this 
+                    errorNextLink=false;
+                    
 
                 } else {
                     //if error occured erase the uploaded file
@@ -998,9 +1018,10 @@ public class CellHTS2 {
         dataFileList.clear();
         excludeFilesFromParsing.clear();
         noErrorUploadFile=false;
-        errorDatafileMsg ="";
-        errorPlatelistFileUpload=false;
+        errorDatafileMsg ="";             
         errorPlatelistFileMsg="";
+        //if we drop all the datafiles the uploaded plate list file should dissapear too
+        this.uploadedPlatelistFile=null;
         //worschd
         //explicitly disable the next button if we cleared the list
         //activatedPages.put(currentPagePointer, true);
@@ -1453,14 +1474,12 @@ public class CellHTS2 {
 
     /**
      *
-     *   make a new analysis...therefore most of the page obj have to be killed
+     *   start a new analysis...therefore most of the page obj have to be killed
      *
      */
     public void onActionFromNewAnalysis() {
         //reset everything and restart it
         notNewRun = false;
-
-
     }
 
 
@@ -2521,6 +2540,17 @@ public class CellHTS2 {
             plateListFile = null;
             plateConfFile = null;
 
+
+
+    uploadedPlatelistFile=null;
+    uploadedPlateConfigFile=null;
+    uploadedScreenlogFile=null;
+    uploadedDataFile=null;
+    uploadedAnnotFile=null;
+    uploadedDescriptionFile=null;
+    uploadedSessionFile=null;
+
+
             emailAddress=null;
 
             isDualChannel = false;
@@ -2566,7 +2596,7 @@ public class CellHTS2 {
             errorNextLink = false;
             nextLinkErrorMsg = "";
             fixRegExp="";
-
+            
 
             jobNameDir=null;
         
@@ -3171,6 +3201,17 @@ public class CellHTS2 {
                 return false;
             }
         }
+    }
+    public void resetErrorMsgs() {
+        sessionFileUploadErrorMsg="";
+        errorDatafileMsg="";
+        errorPlatelistFileMsg="";
+        nextLinkErrorMsg = "";
+        errorPlateconfFileMsg= "";
+        errorScreenlogFileMsg = "";
+        errorAnnotFileMsg="";
+        errorDescriptionFileMsg = "";
+        
     }
 
 

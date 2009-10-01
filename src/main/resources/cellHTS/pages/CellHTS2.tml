@@ -20,64 +20,129 @@
 
 <html t:id="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_0_0.xsd">
     <head>
-         <title>web cellHTS2</title>
+        <title>web cellHTS2</title>
     </head>
 
     <body onload="initJSCellHTS();">
+<!--this anchor will be used to jump to the top everytime-->
+        <a href="#TOPJUMP"></a>         
 
-
-
-            <!--${browser}-->
-        <div id="step1DIV">
-             <div>
-              <b>Introduction</b> <br/><br/>
-              web cellHTS2 is a front end for cellHTS2 for an end-to-end analysis of cell-based high-throughput screening experiments.
-              The online version allows to analyse single and dual channel experiments using all features of cellHTS2.
-              web cellHTS2 guides the user through all analysis options and outputs a HTML including a full quality control report and a ranked hitlist.
-              A downloadable package for local installation can be found <a href="http://www.dkfz.de/signaling/cellHTS/web-project/binary.html" target="_blank">here</a>.
-              <br/><br/>   
-              cellHTS2 is a software package implemented in Bioconductor/R for cell-based high-throughput RNAi screens.
-              The cellHTS2 package is an updated version of the cellHTS package,
-              offering a broader set of normalization functionality and the integration of multi-channel screens.
-              <br/><br/> <br/><br/>
-                 
-              <!--Please cite the following paper when using cellHTS2:-->
-              <!--Boutros, M., L. Bras, and W. Huber. (2006). Analysis of cell-based RNAi screens. Genome Biology 7:R66.-->
-               <!--<a href="http://genomebiology.com/2006/7/7/R66" title="abstract" target="_parent">[Abstract]</a>-->
-               <!--<a href="http://genomebiology.com/content/pdf/gb-2006-7-7-r66.pdf" title="pdf" target="_parent">[Fulltext]</a>-->
-<!---->
-               <!--<a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=pubmed&amp;cmd=Retrieve&amp;dopt=AbstractPlus&amp;list_uids=16869968" title="pdf" target="_parent">[Pubmed]</a>-->
-               <!--<br/><br/><br/>-->
-
-               A set of example files can be downloaded from the online tutorial <a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/web+cellHTS2+quickstart+guide" target="_parent">here</a>.<br/>
-               More sample files can be found in the latest cellHTS2 source package (in source folder: inst) <a href="http://www.bioconductor.org/packages/devel/bioc/html/cellHTS2.html" target="_parent">here</a>.<br/>
-
-        </div>
-            <br/><br/>
-            <b>Start of a web cellHTS2 session</b>
-            <br/><br/>
-            <!--we use these divs to enable/disable content-->
-            Load previous session or start a new session (download example session <a href="http://www.dkfz.de/signaling/cellHTS/web-project/binary/JOB33761_PERSISTENT" target="_parent">link</a>)<br/>
-            (For more information click <a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/web+cellHTS2+Manual#webcellHTS2Manual-step1" target="_blank">here</a>)
-
-            <div t:type="t5components/Tooltip" clientId="tooltip1"  value="Previously saved session files can be used to restore complete analysis settings." effect="appear">
-            <t:form t:id="sessionFileUpload">
-                <input t:type="upload" t:id="sessionFileUploadInput" validate="required"
-                  t:value="uploadedSessionFile"/>                                                                                                               
-            </t:form>
-            </div>
+        <div id="errorDIV">
             <t:if test="errorSessionFileUpload">
-                     <p>
-                        <FONT COLOR="red">Error:${sessionFileUploadErrorMsg}</FONT>
-                    </p>
+                <p>
+                    <FONT COLOR="red">${sessionFileUploadErrorMsg}</FONT>
+                </p>
+            </t:if>
+            <t:if test="noErrorUploadFile" negate="true">
+                <p>
+                    <FONT COLOR="red">${errorDatafileMsg}</FONT>
+                </p>
+            </t:if>
+            <t:if test="errorPlatelistFileUpload">
+                <p>
+                    <FONT COLOR="red">${errorPlatelistFileMsg}</FONT>
+                </p>
                 <t:parameter t:name="else">
-                    <br/><br/>
-                    <!--do nothing here-->
+                    <t:if test="isUploadedPlatelistFileDefined">
+                        <FONT COLOR="blue">Platelist File successfully uploaded</FONT>
+                    </t:if>
                 </t:parameter>
             </t:if>
+            <t:if t:test="noErrorPlateConfFile" negate="true">
+                <p>
+                    <FONT COLOR="red">${errorPlateconfFileMsg}</FONT>
+                </p>
+            </t:if>
+
+            <t:if t:test="noErrorScreenlogFile" negate="true">
+                <p>
+                    <FONT COLOR="red">${errorScreenlogFileMsg}</FONT>
+                </p>
+            </t:if>
+            <t:if test="noErrorAnnotFile" negate="true">
+                <p>
+                    <FONT COLOR="red">${errorAnnotFileMsg}</FONT>
+                </p>
+            </t:if>
+            <t:if test="noErrorDescriptionFile" negate="true">
+                <FONT COLOR="red">${errorDescriptionFileMsg}</FONT>
+            </t:if>
+            <t:if test="errorNextLink">
+                <p>
+                    <FONT COLOR="red">Can't proceed: ${nextLinkErrorMsg}</FONT>
+                </p>
+            </t:if>
+
+        </div>
 
 
-            <b>Step 1:</b> What type of of screen should be analysed?
+        <!--${browser}-->
+        <div id="step1DIV">
+            <div>
+                <b>Introduction</b>
+                <br/>
+                <br/>
+                web cellHTS2 is a front end for cellHTS2 for an end-to-end analysis of cell-based high-throughput
+                screening experiments.
+                The online version allows to analyse single and dual channel experiments using all features of cellHTS2.
+                web cellHTS2 guides the user through all analysis options and outputs a HTML including a full quality
+                control report and a ranked hitlist.
+                A downloadable package for local installation can be found <a
+                    href="http://www.dkfz.de/signaling/cellHTS/web-project/binary.html" target="_blank">here</a>.
+                <br/>
+                <br/>
+                cellHTS2 is a software package implemented in Bioconductor/R for cell-based high-throughput RNAi
+                screens.
+                The cellHTS2 package is an updated version of the cellHTS package,
+                offering a broader set of normalization functionality and the integration of multi-channel screens.
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+
+                <!--Please cite the following paper when using cellHTS2:-->
+                <!--Boutros, M., L. Bras, and W. Huber. (2006). Analysis of cell-based RNAi screens. Genome Biology 7:R66.-->
+                <!--<a href="http://genomebiology.com/2006/7/7/R66" title="abstract" target="_parent">[Abstract]</a>-->
+                <!--<a href="http://genomebiology.com/content/pdf/gb-2006-7-7-r66.pdf" title="pdf" target="_parent">[Fulltext]</a>-->
+                <!---->
+                <!--<a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=pubmed&amp;cmd=Retrieve&amp;dopt=AbstractPlus&amp;list_uids=16869968" title="pdf" target="_parent">[Pubmed]</a>-->
+                <!--<br/><br/><br/>-->
+
+                A set of example files can be downloaded from the online tutorial <a
+                    href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/web+cellHTS2+quickstart+guide"
+                    target="_parent">here</a>.
+                <br/>
+                More sample files can be found in the latest cellHTS2 source package (in source folder: inst) <a
+                    href="http://www.bioconductor.org/packages/devel/bioc/html/cellHTS2.html" target="_parent">here</a>.
+                <br/>
+
+            </div>
+            <br/>
+            <br/>
+            <b>Start of a web cellHTS2 session</b>
+            <br/>
+            <br/>
+            <!--we use these divs to enable/disable content-->
+            Load previous session or start a new session (download example session <a
+                href="http://www.dkfz.de/signaling/cellHTS/web-project/binary/JOB33761_PERSISTENT" target="_parent">
+            link</a>)
+            <br/>
+            (For more information click <a
+                href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/web+cellHTS2+Manual#webcellHTS2Manual-step1"
+                target="_blank">here</a>)
+
+            <div t:type="t5components/Tooltip" clientId="tooltip1"
+                 value="Previously saved session files can be used to restore complete analysis settings."
+                 effect="appear">
+                <t:form t:id="sessionFileUpload">
+                    <input t:type="upload" t:id="sessionFileUploadInput" validate="required"
+                           t:value="uploadedSessionFile"/>
+                </t:form>
+            </div>
+
+
+            <b>Step 1:</b>
+            What type of of screen should be analysed?
             <t:form t:id="channelTypes">
 
 
@@ -109,11 +174,11 @@
                                 </td>
                                 <td width="130px">
                                     <input t:type="TextField"
-                                     t:id="channel1Textfield"
-                                     value="channelLabel1"
-                                     validate="required,regexp" size="20"
-                                     t:mixins="t5components/OnEvent"
-                                     event="blur"/>
+                                           t:id="channel1Textfield"
+                                           value="channelLabel1"
+                                           validate="required,regexp" size="20"
+                                           t:mixins="t5components/OnEvent"
+                                           event="blur"/>
 
                                 </td>
                                 <td width="80px" align="center">
@@ -121,11 +186,11 @@
                                 </td>
                                 <td width="130px">
                                     <input t:type="TextField"
-                                     t:id="channel2Textfield"
-                                     value="channelLabel2"
-                                     validate="required,regexp" size="20"
-                                     t:mixins="t5components/OnEvent"
-                                     event="blur"/>
+                                           t:id="channel2Textfield"
+                                           value="channelLabel2"
+                                           validate="required,regexp" size="20"
+                                           t:mixins="t5components/OnEvent"
+                                           event="blur"/>
 
 
                                 </td>
@@ -144,70 +209,64 @@
         </div>
         <div id="step2DIV" style="display:none">
             <!--<t:if t:test="${nextStep2}">-->
-            (Step 2) Please upload and assign your data files:<br/>
-            (For more information click <a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/web+cellHTS2+Manual#webcellHTS2Manual-uploaddatafiles" target="_blank">here</a>)
-            <p>You can upload csv raw plate result reader files, single text files in cellHTS2 format or ZIP files containing multiple data files.</p>
+            (Step 2) Please upload and assign your data files:
+            <br/>
+            (For more information click <a
+                href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/web+cellHTS2+Manual#webcellHTS2Manual-uploaddatafiles"
+                target="_blank">here</a>)
+            <p>You can upload csv raw plate result reader files, single text files in cellHTS2 format or ZIP files
+                containing multiple data files.
+            </p>
 
-           <div t:type="t5components/Tooltip" clientId="tooltip2" value="If the experiment has a lot of data files, it is best to pack them into a ZIP file and upload it." effect="appear">
-            <t:form t:id="dataFileUpload">
-                <t:errors/>
-                <input t:type="upload" t:id="dataFileUploadInput" validate="required" t:value="uploadedDataFile"/>
-            </t:form>
-               </div>
+            <div t:type="t5components/Tooltip" clientId="tooltip2"
+                 value="If the experiment has a lot of data files, it is best to pack them into a ZIP file and upload it."
+                 effect="appear">
+                <t:form t:id="dataFileUpload">
+
+                    <input t:type="upload" t:id="dataFileUploadInput" validate="required" t:value="uploadedDataFile"/>
+                </t:form>
+            </div>
             Filename Parsing:
             <input type="checkbox" t:type="commons/InPlaceCheckbox" context="literal:10" value="parseFileParams"
                    onCompleteCallback="onCompleteFunction"/>
             <!--target element for the servers side results-->
             <!--if successful upload show grid component-->
-         
-                <t:UploadedFileGrid dataFileList="dataFileList" excludeFilesFromParsing="excludeFilesFromParsing" showTable="true" parseFileParams="parseFileParams" fixRegExp="fixRegExp"/>
-                <t:actionlink t:id="dropDataFileList">Drop all entries</t:actionlink>
-                <!--if unsuccessful upload show error message-->
-                <br/>
-                <t:if test="noErrorUploadFile" negate="true">
-                    <p>
-                        <FONT COLOR="red">${errorDatafileMsg}</FONT>
-                    </p>
-                    <t:parameter t:name="else">
-                        <br/>
-                        </t:parameter>
-                </t:if>
-            
-                <br/>
-               <!--show pattern if we have at least one datafile accepted-->
-                <t:if test="ognl:dataFileList.isEmpty()" negate="true">
-                    <p>
-                    apply regexp (for more information click <a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/web+cellHTS2+Manual#webcellHTS2Manual-regexp" target="_blank">here</a>)<br/>
-                  <div t:type="t5components/Tooltip" clientId="tooltip3"  value="Use this if the parameters of the uploaded files could not automatically be found. For syntax review the manual." effect="appear">
-                     <t:form t:id="updateFileParamsPage">
-                         <!--this is just dummy to reload the page-->
-                        <t:textfield t:id="fixRegExp" value="fixRegExp" size="20"/>
-                        <input type="submit" value="Update parameters"/>
+
+            <t:UploadedFileGrid dataFileList="dataFileList" excludeFilesFromParsing="excludeFilesFromParsing"
+                                showTable="true" parseFileParams="parseFileParams" fixRegExp="fixRegExp"/>
+            <t:actionlink t:id="dropDataFileList">Drop all entries</t:actionlink>
+            <!--if unsuccessful upload show error message-->
+            <br/>
+
+            <!--show pattern if we have at least one datafile accepted-->
+            <t:if test="ognl:dataFileList.isEmpty()" negate="true">
+                <p>
+                    apply regexp (for more information click <a
+                        href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/web+cellHTS2+Manual#webcellHTS2Manual-regexp"
+                        target="_blank">here</a>)
+                    <br/>
+                    <div t:type="t5components/Tooltip" clientId="tooltip3"
+                         value="Use this if the parameters of the uploaded files could not automatically be found. For syntax review the manual."
+                         effect="appear">
+                        <t:form t:id="updateFileParamsPage">
+                            <!--this is just dummy to reload the page-->
+                            <t:textfield t:id="fixRegExp" value="fixRegExp" size="20"/>
+                            <input type="submit" value="Update parameters"/>
+                        </t:form>
+                    </div>
+                </p>
+                <p>
+                    Platelist File Upload
+                    <t:form t:id="platelistFileUpload">
+                        <input t:type="upload" t:id="platelistFileUploadInput" validate="required"
+                               t:value="uploadedPlatelistFile"/>
+
                     </t:form>
-                        </div>
-                    </p>
-                    <p>
-                        Platelist File Upload
-                        <t:form t:id="platelistFileUpload">
-                            <input t:type="upload" t:id="platelistFileUploadInput" validate="required"
-                                t:value="uploadedPlatelistFile"/>
 
-                        </t:form>                        
-                            <t:if test="errorPlatelistFileUpload">
-                            <p>
-                                <FONT COLOR="red">Error:${errorPlatelistFileMsg}</FONT>
-                            </p>
-                            <t:parameter t:name="else">
-                                 <t:if test="isUploadedPlatelistFileDefined">
-                                      <FONT COLOR="blue">Platelist File successfully uploaded</FONT>
-                                 </t:if>
-                            </t:parameter>
-                            </t:if>
 
-                    </p>
+                </p>
 
-                 </t:if>
-
+            </t:if>
 
 
             <!--<t:actionlink t:id="fileView">Proceed</t:actionlink>-->
@@ -222,53 +281,53 @@
 
         <div id="step3DIV" style="display:none">
             <t:if test="hasPlateFormat">
-                (Step 3) Please configure your plate layout<br/>
-                (for more information click <a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/web+cellHTS2+Manual#webcellHTS2Manual-step3" target="_blank">here</a>)<br/>
-                <t:PlateDesigner plateFormat="plateFormat"  clickedWellsAndPlates="clickedWellsAndPlates"/>
+                (Step 3) Please configure your plate layout
+                <br/>
+                (for more information click <a
+                    href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/web+cellHTS2+Manual#webcellHTS2Manual-step3"
+                    target="_blank">here</a>)
+                <br/>
+                <t:PlateDesigner plateFormat="plateFormat" clickedWellsAndPlates="clickedWellsAndPlates"/>
 
                 <p>
-                    and/or Upload Plate Config file<br/>
-                    <div t:type="t5components/Tooltip" clientId="tooltip4"  value="Upload all the positive, negative, other and empty wells information." effect="appear">
-                    <t:form t:id="plateConfigFileUpload">
-                        <t:errors/>
-                        <input t:type="upload" t:id="plateConfigFileInput" t:value="uploadedPlateConfigFile"/>
-                    </t:form>
+                    and/or Upload Plate Config file
+                    <br/>
+                    <div t:type="t5components/Tooltip" clientId="tooltip4"
+                         value="Upload all the positive, negative, other and empty wells information." effect="appear">
+                        <t:form t:id="plateConfigFileUpload">
+                            <t:errors/>
+                            <input t:type="upload" t:id="plateConfigFileInput" t:value="uploadedPlateConfigFile"/>
+                        </t:form>
                     </div>
                 </p>
                 <t:if t:test="noErrorPlateConfFile">
 
                     <t:if t:test="IsUploadedPlateConfigFileDefined">
-                       <FONT COLOR="blue">Plate Config File successfully uploaded</FONT>
+                        <FONT COLOR="blue">Plate Config File successfully uploaded</FONT>
                     </t:if>
-                    
-                    <t:parameter t:name="else">
-                        <p>
-                        <FONT COLOR="red">${errorPlateconfFileMsg}</FONT>
-                    </p>
-                    </t:parameter>
+
+
                 </t:if>
 
                 <p>
-                    and/or Upload Screenlog file<br/>
-                    <div t:type="t5components/Tooltip" clientId="tooltip5"  value="Upload the contaminated wells information." effect="appear">
+                    and/or Upload Screenlog file
+                    <br/>
+                    <div t:type="t5components/Tooltip" clientId="tooltip5"
+                         value="Upload the contaminated wells information." effect="appear">
 
-                    <t:form t:id="screenlogFileUpload">
-                        <t:errors/>
-                        <input t:type="upload" t:id="screenlogFileInput" t:value="uploadedScreenlogFile"/>
-                    </t:form>
+                        <t:form t:id="screenlogFileUpload">
+
+                            <input t:type="upload" t:id="screenlogFileInput" t:value="uploadedScreenlogFile"/>
+                        </t:form>
                     </div>
                 </p>
                 <t:if t:test="noErrorScreenlogFile">
 
                     <t:if t:test="isUploadedScreenlogFileDefined">
-                       <FONT COLOR="blue">Screenlog File successfully uploaded</FONT>
+                        <FONT COLOR="blue">Screenlog File successfully uploaded</FONT>
                     </t:if>
 
-                    <t:parameter t:name="else">
-                        <p>
-                        <FONT COLOR="red">${errorScreenlogFileMsg}</FONT>
-                    </p>
-                    </t:parameter>
+
                 </t:if>
 
             </t:if>
@@ -277,8 +336,12 @@
 
         <div id="step4DIV" style="display:none">
             <p>
-                (Step 4) What type of normalisation would you like to carry out?<br/>
-                (for more information click <a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/web+cellHTS2+Manual#webcellHTS2Manual-step4till9" target="_blank">here</a>)<br/>
+                (Step 4) What type of normalisation would you like to carry out?
+                <br/>
+                (for more information click <a
+                    href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/web+cellHTS2+Manual#webcellHTS2Manual-step4till9"
+                    target="_blank">here</a>)
+                <br/>
                 <t:form t:id="normalTypesForm">
                     <table id="NORMAL_METHODS">
                         <t:radiogroup t:id="normalTypesRadioGroup" t:value="normalTypes">
@@ -627,9 +690,11 @@
                                 </td>
                                 <td>the square root of the mean squared value of the replicates is taken</td>
                                 <td width="50px" align="right">
-                                <div t:type="t5components/Tooltip" clientId="tooltip6"  value="This function is still under construction and will be available soon." effect="appear">
-                                    X
-                                </div>
+                                    <div t:type="t5components/Tooltip" clientId="tooltip6"
+                                         value="This function is still under construction and will be available soon."
+                                         effect="appear">
+                                        X
+                                    </div>
                                 </td>
 
                                 <!--<td width="50px" align="right">-->
@@ -705,19 +770,19 @@
             </t:form>
             <!--dont display standard...turn on via js-->
 
-                <div id="viabilityFunctionDIV">
-                        apply viability function
-                        <t:form t:id="viabilityFunctionForm" action="#" t:type="Form">
-                            <p>
-                     <input t:type="TextField"
-                                     t:id="viabilityFunctionTextfield"
-                                     value="viabilityFunction"
-                                     size="20"
-                                     t:mixins="t5components/OnEvent"
-                                     event="blur"/>
-                            </p>
-                    </t:form>
-                </div>
+            <div id="viabilityFunctionDIV">
+                apply viability function
+                <t:form t:id="viabilityFunctionForm" action="#" t:type="Form">
+                    <p>
+                        <input t:type="TextField"
+                               t:id="viabilityFunctionTextfield"
+                               value="viabilityFunction"
+                               size="20"
+                               t:mixins="t5components/OnEvent"
+                               event="blur"/>
+                    </p>
+                </t:form>
+            </div>
         </div>
 
         <!--<t:if t:test="${nextStep5}">-->
@@ -727,45 +792,43 @@
             <!--<t:AjaxTextField textFieldValue="emailAddress" regexpType="email"/>-->
             <!--<br/>-->
             <p>
-                (Step 10) Upload annotation file:<br/>
-                (for more information click <a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/web+cellHTS2+Manual#webcellHTS2Manual-step10till11" target="_blank">here</a>)<br/>
+                (Step 10) Upload annotation file:
+                <br/>
+                (for more information click <a
+                    href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/web+cellHTS2+Manual#webcellHTS2Manual-step10till11"
+                    target="_blank">here</a>)
+                <br/>
                 <t:form t:id="annotFileUpload">
-                    <t:errors/>
+
                     <input t:type="upload" t:id="annotFileUploadInput" validate="required" t:value="uploadedAnnotFile"/>
 
                 </t:form>
                 <t:if test="noErrorAnnotFile">
                     <FONT COLOR="blue">Annotation file was succesfully uploaded (</FONT>
-                   <t:actionlink t:id="dropAnnotfile">drop Annotation File</t:actionlink>).
-                    <t:parameter t:name="else">
-                        <p>
-                            <FONT COLOR="red">${errorAnnotFileMsg}</FONT>
-                        </p>
-                    </t:parameter>
+                    <t:actionlink t:id="dropAnnotfile">drop Annotation File</t:actionlink>).
+
                 </t:if>
             </p>
 
             <p>
                 (Step 11) Upload description file:
                 <t:form t:id="descriptionFileUpload">
-                    <t:errors/>
+
                     <input t:type="upload" t:id="descriptionFileUploadInput" validate="required"
                            t:value="uploadedDescriptionFile"/>
                 </t:form>
                 <t:if test="noErrorDescriptionFile">
                     <FONT COLOR="blue">Description file was successfully uploaded (</FONT>
                     <t:actionlink t:id="dropDescriptionfile">drop Description File</t:actionlink>).
-                    <t:parameter t:name="else">
-                        <FONT COLOR="red">${errorDescriptionFileMsg}</FONT>
-                        <br/>
-                    </t:parameter>
+
 
                 </t:if>
             </p>
             <p>
-                <div t:type="t5components/Tooltip" clientId="tooltip7"  value="Please click on the create/update button to make changes permanent." effect="appear">
+                <div t:type="t5components/Tooltip" clientId="tooltip7"
+                     value="Please click on the create/update button to make changes permanent." effect="appear">
 
-                Edit/Create Description Text:
+                    Edit/Create Description Text:
 
                     <t:beaneditform t:id="updateExperimentDesc" object="experiment"
                                     exclude="screentype,username"
@@ -787,11 +850,11 @@
                             <!--map the value to the title-->
                             <t:textarea t:id="screenID" t:value="experiment.screenID" cols="1" rows="1"/>
                             <!--TODO: if we use the strict screen IDs later on we will comment next line in-->
-                                        <!--validate="required,regexp"/>-->
+                            <!--validate="required,regexp"/>-->
                         </t:parameter>
                     </t:beaneditform>
                 </div>
-                
+
             </p>
 
             <br/>
@@ -799,39 +862,45 @@
             <p>
 
                 <t:if t:test="isEmailMandantory">
-                     Please enter your Email address for receiving the analysis report:<br/>
-                    <t:form t:id="emailForm" action="#" t:type="Form">
-                     <input t:type="TextField"
-                                     t:id="emailAddressTextfield"
-                                     value="emailAddress"
-                                     validate="required,regexp" size="20"
-                                     t:mixins="t5components/OnEvent"
-                                     event="blur"/>
+                    Please enter your Email address for receiving the analysis report:
+                    <br/>
+                    <t:form t:id="emailForm" t:type="Form">
+                        <input t:type="TextField"
+                               t:id="emailAddressTextfield"
+                               value="emailAddress"                                           
+                               t:mixins="t5components/OnEvent"
+                               onCompleteCallback="onLoseFocusOnEmailTextfield"
+                               event="blur"/>
                     </t:form>
-                </t:if>    
+                </t:if>
                 <!--we add a onclick callback event handler for the startCellHTS2 actionlink so that we can submit the beaneditform from there-->
             </p>
             <p>
                 <!--we need the eventhandler here too to update the description file/variables before storing in a file-->
-                <div t:type="t5components/Tooltip" clientId="tooltip8"  value="Saved session files can be loaded later to restore the complete analysis." effect="appear">
-                <t:actionlink t:id="saveSession"
-                 onclick="clickedStartCellHTS2Link();"
+                <div t:type="t5components/Tooltip" clientId="tooltip8"
+                     value="Saved session files can be loaded later to restore the complete analysis." effect="appear">
+                    <t:actionlink t:id="saveSession"
+                                  onclick="clickedStartCellHTS2Link();"
 
-                >Save this Session</t:actionlink>
+                            >Save this Session
+                    </t:actionlink>
                 </div>
 
             </p>
-            
-            <p>                  <t:actionlink t:id="startCellHTS2"
-                 onclick="clickedStartCellHTS2Link();"
-                        > Start analysis run</t:actionlink>
+
+            <p>
+                <t:actionlink t:id="startCellHTS2"
+                              onclick="clickedStartCellHTS2Link();"
+                        >Start analysis run
+                </t:actionlink>
 
             </p>
             <p>
-                <t:actionlink t:id="newAnalysis">Start new Analysis</t:actionlink>  
+                <t:actionlink t:id="newAnalysis">Start new Analysis</t:actionlink>
             </p>
         </div>
-        <br/><br/>
+        <br/>
+        <br/>
         <!--this will be shown on every page-->
         <table border="2">
             <tr>
@@ -845,31 +914,26 @@
                 </td>
             </tr>
         </table>
-        <t:if test="errorNextLink">
-            <p>
-                <FONT COLOR="red">Can't proceed: ${nextLinkErrorMsg}</FONT>
-            </p>
-        </t:if>
-
+        <a name="TOPJUMP"></a>
 
         <t:if t:test="isEmailMandantory">
             <t:if t:test="checkIsGoogleAnalyticsTrackerIDDefined">
                 <!--google analytics for external version-->
-            <script type="text/javascript">
-                <!-- //
-                var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-                document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-                // -->
-            </script>
-            <script type="text/javascript">
-                try {
-                var pageTracker = _gat._getTracker("${googleAnalyticsTrackerID}");
-                pageTracker._trackPageview();
-                } catch(err) {}                      
-            </script>
-                </t:if>
+                <script type="text/javascript">
+                    <!-- //
+                   var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+                   document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+                   // -->
+                </script>
+                <script type="text/javascript">
+                    try {
+                    var pageTracker = _gat._getTracker("${googleAnalyticsTrackerID}");
+                    pageTracker._trackPageview();
+                    } catch(err) {}
+                </script>
+            </t:if>
         </t:if>
-        
+
     </body>
     <script type="text/javascript">
         <!-- //
@@ -910,8 +974,7 @@
              Event.observe($('screenlogFileInput'), 'change', clickedScreenlogFileSelectButton.bindAsEventListener());
             }
             Event.observe($('annotFileUploadInput'), 'change', clickedAnnotFileSelectButton.bindAsEventListener());
-            Event.observe($('descriptionFileUploadInput'), 'change',clickedDescriptionFileSelectButton.bindAsEventListener());
-
+            Event.observe($('descriptionFileUploadInput'), 'change',clickedDescriptionFileSelectButton.bindAsEventListener());               
             //disable textbox if the use viabilty radiobutton is set to NO
 
             if(document['forms']['viabilityChannelForm']['viabilityChannelRadiogroup'][0].checked==false) {    //this is the proper way for getting to the radiogroup with protoype
@@ -935,6 +998,10 @@
              }
 
 
+        }
+        //lose the focus of the email textfield
+        function onLoseFocusOnEmailTextfield(response) {
+            //$('emailAddressTextfield').blur();
         }
 
         function toggleDisabled(el,disabledVar) {
@@ -985,6 +1052,6 @@
         //...what happens when we have more than one beaneditform?
            document.form.submit();
         }
-// -->       
+// -->
     </script>
 </html>
