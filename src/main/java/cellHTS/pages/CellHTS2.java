@@ -479,11 +479,11 @@ public class CellHTS2 {
             //check if we have not set up "please select" in the drop down menue
             if (channel == null) {
                 errorNextLink = true;
-                nextLinkErrorMsg = "please select either single or dual channel in the drop down menue";
+                nextLinkErrorMsg = "Error: please select either single or dual channel in the drop down menue";
             }
             if (channelLabel1.equals("") || channelLabel2.equals("")) {
                 errorNextLink = true;
-                nextLinkErrorMsg = "if you select dual channel you have to provide some names for them";
+                nextLinkErrorMsg = "Error: if you select dual channel you have to provide some names for them";
             }
             if(!errorNextLink) {
                 //if we had uploaded a wrong file but instead clicked successfully on next, let the session file upload dissapear
@@ -502,7 +502,7 @@ public class CellHTS2 {
 
             if (dataFileList.isEmpty()) {
                 errorNextLink = true;
-                nextLinkErrorMsg = "no valid files were uploaded";
+                nextLinkErrorMsg = "Error: no valid files were uploaded";
             } else {
                 Iterator fileIterator = dataFileList.keySet().iterator();
 
@@ -514,12 +514,12 @@ public class CellHTS2 {
                         //check if all mandantory file params are there
                         if (file.getPlateNumber() == null || file.getReplicate() == null) {
                             errorNextLink = true;
-                            nextLinkErrorMsg = "mandantory file parameters plate number or replicate missing";
+                            nextLinkErrorMsg = "Error: mandantory file parameters plate number or replicate missing";
                         }
                     } else {
                         if (file.getPlateNumber() == null || file.getReplicate() == null || file.getChannel() == null) {
                             errorNextLink = true;
-                            nextLinkErrorMsg = "mandantory file parameters plate number, replicate or channel number missing";
+                            nextLinkErrorMsg = "Error: mandantory file parameters plate number, replicate or channel number missing";
                         }
                         if (file.getChannel() == null) {
                             //do nothing
@@ -534,7 +534,7 @@ public class CellHTS2 {
                 //channel amount must be equal
                 if (channel1Amount != channel2Amount) {
                     errorNextLink = true;
-                    nextLinkErrorMsg = "there must be equal channel1 and 2 amount";
+                    nextLinkErrorMsg = "Error: there must be equal channel1 and 2 amount";
                 }
 
                 if(!errorNextLink) {
@@ -550,7 +550,7 @@ public class CellHTS2 {
         //(step3) we can only carry on if at least one positive well was selected in the all plate
         else if (currentPagePointer == 3) {
             errorNextLink = true;
-            nextLinkErrorMsg = "please define at least one well position at all";
+            nextLinkErrorMsg = "Error: please define at least one well position at all";
 
             posWellAmount = getWellTypeAmountOfAllPlates("pos");
             negWellAmount = getWellTypeAmountOfAllPlates("neg");
@@ -571,11 +571,11 @@ public class CellHTS2 {
             //some of the normalization methods MUST have negatives
             if (negWellAmount == 0 && (normalTypes.equals(NormalizationTypes.negatives) || normalTypes.equals(NormalizationTypes.NPI))) {
                 errorNextLink = true;
-                nextLinkErrorMsg = "Missing negative wells when using normalization method Negatives or NPI ";
+                nextLinkErrorMsg = "Error: Missing negative wells when using normalization method Negatives or NPI ";
             }
             if (logTransform.equals(LogTransform.YES) && normalScaling.equals(NormalScalingTypes.additive)) {
                 errorNextLink = true;
-                nextLinkErrorMsg = "If normalization scaling method is Additive, log transform can only be set to NO";
+                nextLinkErrorMsg = "Error: If normalization scaling method is Additive, log transform can only be set to NO";
             }
 
         }
@@ -693,11 +693,11 @@ public class CellHTS2 {
         String errorMsg[]=FileParser.parsePlatelistFile(headerPattern,bodyPattern,copied,resultMap);
         if (errorMsg[0].equals("false")) {
             errorPlatelistFileUpload = true;
-            errorPlatelistFileMsg = errorMsg[1];
+            errorPlatelistFileMsg = "Error: "+errorMsg[1];
         }
         else if (resultMap.size() == 0) {
             errorPlatelistFileUpload = true;
-            errorPlatelistFileMsg ="cannot find platelist entry at all";
+            errorPlatelistFileMsg ="Error: cannot find platelist entry at all";
         }
         else {
             for(String singleFile : resultMap.keySet()) {
@@ -759,10 +759,10 @@ public class CellHTS2 {
         ArrayList<File> files = ShellEnvironment.unzip(errorMsg, newFilePath, jobNameDir.getAbsolutePath());
         if (errorMsg[0].equals("true")) {
             errorSessionFileUpload = true;
-            sessionFileUploadErrorMsg = errorMsg[1];
+            sessionFileUploadErrorMsg = "Error: "+errorMsg[1];
         } else if (files.size() == 0) {
             errorSessionFileUpload = true;
-            sessionFileUploadErrorMsg = "empty zip file";
+            sessionFileUploadErrorMsg = "Error: empty zip file";
         } else {
 
             //search for the session file in the dir
@@ -778,7 +778,7 @@ public class CellHTS2 {
             }
             if(sessionFile==null) {
                 errorSessionFileUpload = true;
-                sessionFileUploadErrorMsg = "zipfile does not content persistent file";
+                sessionFileUploadErrorMsg = "Error: zipfile does not content persistent file";
                 //dont go any further
                 return;
             }
@@ -793,17 +793,17 @@ public class CellHTS2 {
                 in.close();
                 if(persistentCellHTS2==null) {
                     errorSessionFileUpload = true;
-                    sessionFileUploadErrorMsg = "cannot read persistence data...maybe you used an older cellHTS2 version which is not compatible (check build/version number)";
+                    sessionFileUploadErrorMsg = "Error: cannot read persistence data...maybe you used an older cellHTS2 version which is not compatible (check build/version number)";
                 }
             }
             catch (IOException ex) {
                 errorSessionFileUpload = true;
-                sessionFileUploadErrorMsg = "cannot read persistence data...maybe you used an older cellHTS2 version which is not compatible (check build/version number)";
+                sessionFileUploadErrorMsg = "Error: cannot read persistence data...maybe you used an older cellHTS2 version which is not compatible (check build/version number)";
                 ex.printStackTrace();
             }
             catch (ClassNotFoundException ex) {
                 errorSessionFileUpload = true;
-                sessionFileUploadErrorMsg = "cannot read persistence data...maybe you used an older cellHTS2 version which is not compatible (check build/version number)";
+                sessionFileUploadErrorMsg = "Error: cannot read persistence data...maybe you used an older cellHTS2 version which is not compatible (check build/version number)";
                 ex.printStackTrace();
             }
         }
@@ -934,14 +934,14 @@ public class CellHTS2 {
                     }
                     if (!foundvalidFormat) {
                         noErrorUploadFile = false;
-                        errorDatafileMsg = "you uploaded datafile(s) which do not fit into valid plate formats: " + validPlateFormat + " wells. Filename: "+singleFile.getName();
+                        errorDatafileMsg = "Error: you uploaded datafile(s) which do not fit into valid plate formats: " + validPlateFormat + " wells. Filename: "+singleFile.getName();
                         break;
                     }
                     //check if plateFormat differs between uploaded files
                     if (plateFormat != null) {
                         if (plateFormat != thisPlateFormat) {
                             noErrorUploadFile = false;
-                            errorDatafileMsg = "you uploaded datafiles which have no equal plateformat: " + thisPlateFormat + " vs " + plateFormat;
+                            errorDatafileMsg = "Error: you uploaded datafiles which have no equal plateformat: " + thisPlateFormat + " vs " + plateFormat;
                             //erase the list before because its useless ...which is the correct format?
                             dataFileList.clear();
                             break;
@@ -1057,7 +1057,7 @@ public class CellHTS2 {
 
             if(tempParseResult.size()==0) {
                 result[0]="false";
-                result[1]="cannot find Plate Config file entry at all";
+                result[1]="Error: cannot find Plate Config file entry at all";
             }
 
             //add them to sampleWellMap (the first plate)  and all the other plates
@@ -1125,7 +1125,7 @@ public class CellHTS2 {
                 plate = convertIntToPlateTypes(wells[0]);
             } else {
                 result[0] = "false";
-                result[1] = "unknown wells format " + wells + " allowed types are " + allowedTypes;
+                result[1] = "Error: unknown wells format " + wells + " allowed types are " + allowedTypes;
             }
         }
 
@@ -1175,7 +1175,7 @@ public class CellHTS2 {
 
              if(contaminatedData.size()<1) {
                 noErrorScreenlogFile = false;
-                errorScreenlogFileMsg = "no entry found in Screenlogfile";
+                errorScreenlogFileMsg = "Error: no entry found in Screenlogfile";
                 return;
              }
 
@@ -1282,7 +1282,7 @@ public class CellHTS2 {
             if(!FileParser.parseDescriptionFile(copied,experiment))  {
                 //somethings wrong while parsing
                 noErrorDescriptionFile = false;
-                errorDescriptionFileMsg = "error parsing description file";
+                errorDescriptionFileMsg = "Error: error parsing description file";
                 return;
             }
 
@@ -1314,28 +1314,28 @@ public class CellHTS2 {
     public void onFailureFromDataFileUpload
             () {
         noErrorUploadFile = false;
-        errorDatafileMsg = "could not upload the file, maybe its too big to upload";
+        errorDatafileMsg = "Error: could not upload the file, maybe its too big to upload";
 
     }
 
     public void onFailureFromPlateConfigFileUpload
             () {
         noErrorUploadFile = false;
-        errorDatafileMsg = "could not upload the file, maybe its too big to upload";
+        errorDatafileMsg = "Error: could not upload the file, maybe its too big to upload";
 
     }
 
     public void onFailureFromAnnotFileUpload
             () {
         noErrorUploadFile = false;
-        errorDatafileMsg = "could not upload the file, maybe its too big to upload";
+        errorDatafileMsg = "Error: could not upload the file, maybe its too big to upload";
 
     }
 
     public void onFailureFromDescriptionFileUpload
             () {
         noErrorUploadFile = false;
-        errorDatafileMsg = "could not upload the file, maybe its too big to upload";
+        errorDatafileMsg = "Error: could not upload the file, maybe its too big to upload";
 
     }
 
@@ -1381,7 +1381,7 @@ public class CellHTS2 {
 
         //step1 check
         if (isDualChannel && (channelLabel1.equals("") || channelLabel2.equals(""))) {
-            nextLinkErrorMsg += " Step1: channel labels mustnt be empty\n ";
+            nextLinkErrorMsg += " Error: Step1: channel labels mustnt be empty\n ";
             errorNextLink = true;
 
         }
@@ -1396,7 +1396,7 @@ public class CellHTS2 {
             Matcher m = p.matcher(emailAddress);
              if(!m.find()) {
                  errorNextLink = true;
-                 nextLinkErrorMsg += " Missing valid email address ";
+                 nextLinkErrorMsg += "Error: please provide a valid email address";
                  return cellHTS2Page;
              }
         }
@@ -2952,7 +2952,7 @@ public class CellHTS2 {
         okFile = FileCreator.createPlatelistFile(dataFileList, pListTempFile);
 
         if (!okFile) {
-            errorMsg[0] += "Step2:could not create PlateList.txt file. Most likely:<br/> you forgot to set plate Number or replicate number"
+            errorMsg[0] += "Error: Step2: could not create PlateList.txt file. Most likely:<br/> you forgot to set plate Number or replicate number"
                     + " for each plate file or upload no datafile at all<br/>";
             finalTestFail = true;
         } else {
@@ -2971,7 +2971,7 @@ public class CellHTS2 {
 
         okFile = FileCreator.createPlateConfigFile(newPConfFilePath, newScreenlogFilePath, clickedWellsAndPlates, plateFormat,isDualChannel);
         if (!okFile) {
-            errorMsg[0] += "Step3:could not create PlateConf.txt file. Most likely:<br/> you forgot to set define any wells at all<br/>";
+            errorMsg[0] += "Error: Step3: could not create PlateConf.txt file. Most likely:<br/> you forgot to set define any wells at all<br/>";
             finalTestFail = true;
         } else {
             plateConfFile = newPConfFile;

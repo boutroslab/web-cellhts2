@@ -860,19 +860,18 @@
             <br/>
             (Step 12)
             <p>
-
+                <t:form t:id="emailForm" t:type="Form">
                 <t:if t:test="isEmailMandantory">
                     Please enter your Email address for receiving the analysis report:
-                    <br/>
-                    <t:form t:id="emailForm" t:type="Form">
                         <input t:type="TextField"
                                t:id="emailAddressTextfield"
                                value="emailAddress"                                           
                                t:mixins="t5components/OnEvent"
                                onCompleteCallback="onLoseFocusOnEmailTextfield"
                                event="blur"/>
+                    </t:if>
                     </t:form>
-                </t:if>
+
                 <!--we add a onclick callback event handler for the startCellHTS2 actionlink so that we can submit the beaneditform from there-->
             </p>
             <p>
