@@ -384,7 +384,7 @@ public class CellHTS2 {
             initNewRun();
 
 
-            jobNameDir = createNewJobnameDir();
+            jobNameDir = getNewJobnameDir();
 
 
 
@@ -743,13 +743,15 @@ public class CellHTS2 {
         //now that our session file contains all generated data files in the zip we will make a new job id
         //create a jobname and files and everything
 
-        jobNameDir = this.createNewJobnameDir();
+        jobNameDir = this.getNewJobnameDir();
         File newJobNameDir = jobNameDir;
         
         //upload the file to a specific path on the server
         String newFilePath = jobNameDir.getAbsolutePath() + "/" + filename;
         File copied = new File(newFilePath);
-        uploadedSessionFile.write(copied);
+        //uploadedSessionFile.write(copied);
+        // check if the jobnamedir does exist and create it in case of not
+        writeFileProxy(uploadedSessionFile,copied);
 
         PersistentCellHTS2 persistentCellHTS2 = null;
         //unpack the file...
@@ -889,7 +891,10 @@ public class CellHTS2 {
 
 
         File copied = new File(newFilePath);
-        uploadedDataFile.write(copied);
+        //uploadedDataFile.write(copied);
+        //check if the jobnamedir does exist and if not create it now
+        writeFileProxy(uploadedDataFile,copied);
+
 
         //all files to add..single file vs. multifilearchives
         ArrayList<File> filesToCheck = new ArrayList<File>();
@@ -2991,7 +2996,7 @@ public class CellHTS2 {
      *
      * @return
      */
-    private File createNewJobnameDir() {
+    private File getNewJobnameDir() {
         String jobNamePath;
         try {
         String jobName  = File.createTempFile("JOB", "/",new File(Configuration.UPLOAD_PATH)).getName();
@@ -3000,8 +3005,8 @@ public class CellHTS2 {
         jobNamePath = Configuration.UPLOAD_PATH+jobName;
         //delete the file,we dont need it we will create a dir with this name
         (new File(jobNamePath)).delete();
-        //finally create the dir
-        new File(jobNamePath).mkdirs();
+        
+        //new File(jobNamePath).mkdirs();   //dont create it yet ... create it only if someone uploads a file
         }catch(IOException e) {
             e.printStackTrace();
             return null;
@@ -3212,6 +3217,21 @@ public class CellHTS2 {
         errorAnnotFileMsg="";
         errorDescriptionFileMsg = "";
         
+    }
+    //this is a proxy for the uploaded files write method
+    //because due to the permanent polling of google and msn bots
+    //we should only create the jobnamedir when we are writing the first
+    //file AND NOT when someone loads the page  ...google bots are polling the site every 3 minutes so it
+    //would create a directory every so interval
+
+    //this is the prox for  uploadedPlatelistFile.write(copied);
+    public void writeFileProxy(UploadedFile file, File copied)  {
+        //if the directory of the file does not exist
+        File dir = new File(copied.getParent());
+        if(!dir.exists()) {
+            dir.mkdirs();
+        }
+        file.write(copied);
     }
 
 

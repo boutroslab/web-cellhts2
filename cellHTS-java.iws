@@ -16,12 +16,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" readonly="true" name="Default" comment="some style and formatting updates">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/cellHTS/pages/CellHTS2.tml" afterPath="$PROJECT_DIR$/src/main/resources/cellHTS/pages/CellHTS2.tml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/app.properties" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/app.properties" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cellHTS/pages/CellHTS2.java" afterPath="$PROJECT_DIR$/src/main/java/cellHTS/pages/CellHTS2.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cellHTS/components/Layout.java" afterPath="$PROJECT_DIR$/src/main/java/cellHTS/components/Layout.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cellHTS-java.iws" afterPath="$PROJECT_DIR$/cellHTS-java.iws" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/cellHTS/pages/SuccessPage.tml" afterPath="$PROJECT_DIR$/src/main/resources/cellHTS/pages/SuccessPage.tml" />
     </list>
-    <ignored path="cellHTS-java.iws" />
     <ignored path=".idea/workspace.xml" />
+    <ignored path="cellHTS-java.iws" />
   </component>
   <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
   <component name="Commander">
@@ -54,7 +56,7 @@
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/main/java/cellHTS/pages/CellHTS2.java" line="1039" class="cellHTS.pages.CellHTS2" package="cellHTS.pages">
+      <breakpoint url="file://$PROJECT_DIR$/src/main/java/cellHTS/pages/CellHTS2.java" line="1044" class="cellHTS.pages.CellHTS2" package="cellHTS.pages">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -80,7 +82,7 @@
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/main/java/cellHTS/pages/CellHTS2.java" line="1154" class="cellHTS.pages.CellHTS2" package="cellHTS.pages">
+      <breakpoint url="file://$PROJECT_DIR$/src/main/java/cellHTS/pages/CellHTS2.java" line="1159" class="cellHTS.pages.CellHTS2" package="cellHTS.pages">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -224,28 +226,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="CellHTS2.tml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/resources/cellHTS/pages/CellHTS2.tml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="153" column="40" selection-start="7082" selection-end="7095" vertical-scroll-proportion="-27.846153">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="pom.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pom.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="104" column="17" selection-start="4129" selection-end="4129" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="CellHTS2.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="CellHTS2.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/cellHTS/pages/CellHTS2.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="692" column="36" selection-start="22091" selection-end="22101" vertical-scroll-proportion="0.33333334">
+            <state line="894" column="69" selection-start="30902" selection-end="30902" vertical-scroll-proportion="-10.038462">
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -253,37 +237,37 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="UploadedFileGrid.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/cellHTS/components/UploadedFileGrid.java">
+      <file leaf-file-name="app.properties" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/app.properties">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="56" column="19" selection-start="1731" selection-end="1731" vertical-scroll-proportion="0.0">
+            <state line="22" column="17" selection-start="795" selection-end="795" vertical-scroll-proportion="0.25581396">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ShellEnvironment.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/cellHTS/classes/ShellEnvironment.java">
+      <file leaf-file-name="CellHTS2.tml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/resources/cellHTS/pages/CellHTS2.tml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="43" column="13" selection-start="1284" selection-end="1284" vertical-scroll-proportion="0.0">
+            <state line="153" column="40" selection-start="7082" selection-end="7095" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="AppModule.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/cellHTS/services/AppModule.java">
+      <file leaf-file-name="Layout.tml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/resources/cellHTS/components/Layout.tml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="68" column="117" selection-start="2795" selection-end="2795" vertical-scroll-proportion="0.0">
+            <state line="28" column="32" selection-start="1191" selection-end="1191" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="divEnabler.js" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/resources/cellHTS/pages/divEnabler.js">
+      <file leaf-file-name="Layout.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/cellHTS/components/Layout.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="20" column="41" selection-start="816" selection-end="817" vertical-scroll-proportion="0.0">
+            <state line="71" column="35" selection-start="2117" selection-end="2117" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -1268,7 +1252,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="6" y="60" width="1590" height="940" extended-state="0" />
+    <frame x="33" y="22" width="1590" height="940" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Web Preview" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3296837" sideWeight="0.5" order="1" side_tool="false" />
@@ -1402,37 +1386,9 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/resources/cellHTS/pages/EmailDownload.tml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="14" selection-start="795" selection-end="967" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cellHTS/classes/RInterface.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="222" column="18" selection-start="8397" selection-end="8403" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/cellHTS/components/Layout.tml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="28" column="32" selection-start="1191" selection-end="1191" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/cellHTS/pages/EmailDownload.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="233" column="129" selection-start="6725" selection-end="6725" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/cellHTS/pages/SuccessPage.tml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="24" selection-start="303" selection-end="303" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
@@ -1458,37 +1414,16 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/app.properties">
+    <entry file="file://$PROJECT_DIR$/src/main/java/cellHTS/pages/SuccessCellHTS2.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="63" column="39" selection-start="2071" selection-end="2071" vertical-scroll-proportion="0.0">
+        <state line="39" column="13" selection-start="1275" selection-end="1275" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
+    <entry file="file://$PROJECT_DIR$/src/main/resources/cellHTS/pages/SuccessPage.tml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="104" column="17" selection-start="4129" selection-end="4129" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cellHTS/services/AppModule.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="68" column="117" selection-start="2795" selection-end="2795" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/cellHTS/pages/divEnabler.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="20" column="41" selection-start="816" selection-end="817" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/cellHTS/pages/CellHTS2.tml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="153" column="40" selection-start="7082" selection-end="7095" vertical-scroll-proportion="-27.846153">
+        <state line="5" column="118" selection-start="293" selection-end="293" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
@@ -1507,12 +1442,61 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cellHTS/services/AppModule.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="68" column="117" selection-start="2795" selection-end="2795" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/cellHTS/pages/divEnabler.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="20" column="41" selection-start="816" selection-end="817" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="278" column="20" selection-start="10576" selection-end="10583" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/cellHTS/pages/CellHTS2.tml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="153" column="40" selection-start="7082" selection-end="7095" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/cellHTS/components/Layout.tml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="28" column="32" selection-start="1191" selection-end="1191" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cellHTS/components/Layout.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="71" column="35" selection-start="2117" selection-end="2117" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/cellHTS/pages/CellHTS2.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="692" column="36" selection-start="22091" selection-end="22101" vertical-scroll-proportion="0.33333334">
+        <state line="894" column="69" selection-start="30902" selection-end="30902" vertical-scroll-proportion="-10.038462">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/app.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="22" column="17" selection-start="795" selection-end="795" vertical-scroll-proportion="0.25581396">
+          <folding />
         </state>
       </provider>
     </entry>

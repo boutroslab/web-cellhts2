@@ -66,10 +66,10 @@ public class Layout {
         public void init() {
             //do this only once
             if (!initOnce) {
+                initOnce = true;
                 build="";
                 version="";
-                cellHTS2Version="";
-                initOnce = true;
+                cellHTS2Version="";                   
                 String path = applicationGlobals.getServletContext().getRealPath("/");
                //this will actually start and end a rserver instance 
                 RInterface rInterface = new RInterface();
