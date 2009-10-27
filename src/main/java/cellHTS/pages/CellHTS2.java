@@ -33,7 +33,7 @@ import org.apache.tapestry5.json.JSONObject;
 import org.apache.tapestry5.beaneditor.BeanModel;
 import org.apache.tapestry5.services.BeanModelSource;
 import org.apache.tapestry5.services.Request;
-import org.apache.tapestry.commons.components.InPlaceCheckbox;
+import org.chenillekit.tapestry.core.components.InPlaceCheckbox;
 
 
 import java.io.*;
@@ -600,7 +600,12 @@ public class CellHTS2 {
      * @param type the string of the channel drop down either single or dual
      */
     @OnEvent(component = "channel", value = "change")
-    public void onChangeChannelEvent(String type) {
+    public JSONObject onChangeChannelEvent(String type) {
+        //this first select has to be executed so we will check here if the request was ajax enabled
+        if(!request.isXHR()) {
+            throw new TapestryException("your browser cannot handle AJAX XHR requests. Talk to your ISP to configure the proxy accordingly",null);
+        }
+
         if (type.equals("single")) {
             channel = ChannelTypes.single;
             isDualChannel = true;
@@ -618,6 +623,7 @@ public class CellHTS2 {
             //instead we will activate it as well:
             activatedPages.put(currentPagePointer, false);
         }
+        return new JSONObject().put("dummy", "dummy");
     }
     
     /**
@@ -627,8 +633,12 @@ public class CellHTS2 {
      * @param label the submitted textstring
      */
     @OnEvent(component = "channel1Textfield", value = "blur")
-    public void onChannel1Textfield(String label) {
-       channelLabel1=label; 
+    public JSONObject onChannel1Textfield(String label) {
+        if(!request.isXHR()) {
+            throw new TapestryException("your browser cannot handle AJAX XHR requests. Talk to your ISP to configure the proxy accordingly",null);
+        }
+       channelLabel1=label;
+        return new JSONObject().put("dummy", "dummy");
     }
 
     /**
@@ -638,8 +648,9 @@ public class CellHTS2 {
      * @param label
      */
     @OnEvent(component = "channel2Textfield", value = "blur")
-    public void onChannel2Textfield(String label) {
-       channelLabel2=label; 
+    public JSONObject onChannel2Textfield(String label) {
+       channelLabel2=label;
+        return new JSONObject().put("dummy", "dummy");
     }
 
     /**
@@ -649,8 +660,9 @@ public class CellHTS2 {
      * @param function
      */
     @OnEvent(component = "viabilityFunctionTextfield", value = "blur")
-    public void onViabilityFunctionTextfield(String function) {
+    public JSONObject onViabilityFunctionTextfield(String function) {
        viabilityFunction=function;
+        return new JSONObject().put("dummy", "dummy");
     }
 
 
@@ -681,7 +693,7 @@ public class CellHTS2 {
         errorPlatelistFileMsg="";
         String filename = uploadedPlatelistFile.getFileName();
         //upload the file to a specific path on the server
-        String newFilePath = jobNameDir.getAbsolutePath() + "/" + filename;
+        String newFilePath = jobNameDir.getAbsolutePath() + File.separator + filename;
         File copied = new File(newFilePath);
         uploadedPlatelistFile.write(copied);
         Pattern headerPattern = Configuration.PLATELIST_HEADER_PATTERN;
@@ -747,7 +759,7 @@ public class CellHTS2 {
         File newJobNameDir = jobNameDir;
         
         //upload the file to a specific path on the server
-        String newFilePath = jobNameDir.getAbsolutePath() + "/" + filename;
+        String newFilePath = jobNameDir.getAbsolutePath() + File.separator + filename;
         File copied = new File(newFilePath);
         //uploadedSessionFile.write(copied);
         // check if the jobnamedir does exist and create it in case of not
@@ -887,7 +899,7 @@ public class CellHTS2 {
         String filename = uploadedDataFile.getFileName();
 
         //upload the file to a specific path on the server
-        String newFilePath = jobNameDir.getAbsolutePath() + "/" + filename;
+        String newFilePath = jobNameDir.getAbsolutePath() + File.separator + filename;
 
 
         File copied = new File(newFilePath);
@@ -1006,9 +1018,10 @@ public class CellHTS2 {
      * @param checked if checked or not
      */
     @OnEvent(component = "inplacecheckbox", value = InPlaceCheckbox.EVENT_NAME)
-    void inPlaceCheckbox(String id, boolean checked) {
+    public JSONObject inPlaceCheckbox(String id, boolean checked) {
 
         parseFileParams = checked;
+        return new JSONObject().put("dummy", "dummy");
     }
 
     //
@@ -1045,7 +1058,7 @@ public class CellHTS2 {
         String filename = uploadedPlateConfigFile.getFileName();
 
         //upload the file to a specific path on the server
-        String newFilePath = jobNameDir + "/" + filename;
+        String newFilePath = jobNameDir + File.separator + filename;
 
         File copied = new File(newFilePath);
         uploadedPlateConfigFile.write(copied);
@@ -1160,7 +1173,7 @@ public class CellHTS2 {
         String filename = uploadedScreenlogFile.getFileName();
 
         //upload the file to a specific path on the server
-        String newFilePath = jobNameDir + "/" + filename;
+        String newFilePath = jobNameDir + File.separator + filename;
 
         File copied = new File(newFilePath);
         uploadedScreenlogFile.write(copied);
@@ -1248,7 +1261,7 @@ public class CellHTS2 {
         String filename = uploadedAnnotFile.getFileName();
 
         //upload the file to a specific path on the server
-        String newFilePath = jobNameDir + "/" + filename;
+        String newFilePath = jobNameDir + File.separator + filename;
 
         File copied = new File(newFilePath);
         uploadedAnnotFile.write(copied);
@@ -1275,7 +1288,7 @@ public class CellHTS2 {
     public void onSuccessFromDescriptionFileUpload() {
         String filename = uploadedDescriptionFile.getFileName();
         //upload the file to a specific path on the server
-        String newFilePath = jobNameDir + "/" + filename;
+        String newFilePath = jobNameDir + File.separator + filename;
 
         File copied = new File(newFilePath);
         uploadedDescriptionFile.write(copied);
@@ -1526,8 +1539,8 @@ public class CellHTS2 {
      * @return the session file
      */
     public File createSessionFile() {
-        String filename = jobNameDir.getAbsolutePath()+"/" +jobNameDir.getName()+ "_PERSISTENT.PST";
-        String zipFile = jobNameDir.getAbsolutePath()+"/" + jobNameDir.getName() +"_PERSISTENT.ZIP";
+        String filename = jobNameDir.getAbsolutePath()+File.separator +jobNameDir.getName()+ "_PERSISTENT.PST";
+        String zipFile = jobNameDir.getAbsolutePath()+File.separator + jobNameDir.getName() +"_PERSISTENT.ZIP";
 
 //make a new Persistant obj
         PersistentCellHTS2 persistentObj = new PersistentCellHTS2(
@@ -1604,19 +1617,19 @@ public class CellHTS2 {
 
         //add all the uploaded datafiles
         for(String file : dataFileList.keySet()) {
-            fileNames.add(jobNameDir.getAbsolutePath()+"/"+file);
+            fileNames.add(jobNameDir.getAbsolutePath()+File.separator+file);
             filePathes.add(null);
         }
         String []tmpArr = {plateListFile,plateConfFile,screenLogFile,descriptionFile};
         for(String iterateVal: tmpArr ) {
-           fileNames.add(jobNameDir.getAbsolutePath()+"/"+iterateVal);
+           fileNames.add(jobNameDir.getAbsolutePath()+File.separator+iterateVal);
 
             filePathes.add(null);
         }
 
         //annot file is optional
         if(annotFile!=null) {
-            fileNames.add(jobNameDir.getAbsolutePath()+"/"+annotFile);
+            fileNames.add(jobNameDir.getAbsolutePath()+File.separator+annotFile);
             filePathes.add(null);
         }
 
@@ -1637,9 +1650,10 @@ public class CellHTS2 {
      *
      */
     @OnEvent(component = "normalMedian", value = "click")
-    public void setNormalMedian
+    public JSONObject setNormalMedian
             () {
         normalTypes = NormalizationTypes.median;
+        return new JSONObject().put("dummy", "dummy");
     }
     /**
      *
@@ -1647,9 +1661,10 @@ public class CellHTS2 {
      *
      */
     @OnEvent(component = "normalShort", value = "click")
-    public void setNormalShort
+    public JSONObject setNormalShort
             () {
         normalTypes = NormalizationTypes.shorth;
+        return new JSONObject().put("dummy", "dummy");
     }
     /**
      *
@@ -1657,9 +1672,10 @@ public class CellHTS2 {
      *
      */
     @OnEvent(component = "normalMean", value = "click")
-    public void setNormalMean
+    public JSONObject setNormalMean
             () {
         normalTypes = NormalizationTypes.mean;
+        return new JSONObject().put("dummy", "dummy");
     }
     /**
      *
@@ -1667,9 +1683,10 @@ public class CellHTS2 {
      *
      */
     @OnEvent(component = "normalNegatives", value = "click")
-    public void setNormalNegatives
+    public JSONObject setNormalNegatives
             () {
         normalTypes = NormalizationTypes.negatives;
+        return new JSONObject().put("dummy", "dummy");
     }
     /**
      *
@@ -1677,9 +1694,10 @@ public class CellHTS2 {
      *
      */
     @OnEvent(component = "normalPOC", value = "click")
-    public void setNormalPOC
+    public JSONObject setNormalPOC
             () {
         normalTypes = NormalizationTypes.POC;
+        return new JSONObject().put("dummy", "dummy");
     }
     /**
      *
@@ -1687,9 +1705,10 @@ public class CellHTS2 {
      *
      */
     @OnEvent(component = "normalNPI", value = "click")
-    public void setNormalNPI
+    public JSONObject setNormalNPI
             () {
         normalTypes = NormalizationTypes.NPI;
+        return new JSONObject().put("dummy", "dummy");
     }
     /**
      *
@@ -1697,9 +1716,10 @@ public class CellHTS2 {
      *
      */
     @OnEvent(component = "normalBScore", value = "click")
-    public void setNormalBScore
+    public JSONObject setNormalBScore
             () {
         normalTypes = NormalizationTypes.Bscore;
+        return new JSONObject().put("dummy", "dummy");
     }
     /**
      *
@@ -1707,9 +1727,10 @@ public class CellHTS2 {
      *
      */
     @OnEvent(component = "normalLocfit", value = "click")
-    public void setNormalLocfit
+    public JSONObject setNormalLocfit
             () {
         normalTypes = NormalizationTypes.locfit;
+        return new JSONObject().put("dummy", "dummy");
     }
     /**
      *
@@ -1717,9 +1738,10 @@ public class CellHTS2 {
      *
      */
     @OnEvent(component = "normalLoess", value = "click")
-    public void setNormalLoess
+    public JSONObject setNormalLoess
             () {
         normalTypes = NormalizationTypes.loess;
+        return new JSONObject().put("dummy", "dummy");
     }
     /**
      *
@@ -1727,9 +1749,10 @@ public class CellHTS2 {
      *
      */
     @OnEvent(component = "logYes", value = "click")
-    public void setLogYes
+    public JSONObject setLogYes
             () {
         logTransform = LogTransform.YES;
+        return new JSONObject().put("dummy", "dummy");
     }
     /**
      *
@@ -1737,9 +1760,10 @@ public class CellHTS2 {
      *
      */
     @OnEvent(component = "logNo", value = "click")
-    public void setLogNo
+    public JSONObject setLogNo
             () {
         logTransform = LogTransform.NO;
+        return new JSONObject().put("dummy", "dummy");
     }
     /**
      *
@@ -1747,9 +1771,10 @@ public class CellHTS2 {
      *
      */
     @OnEvent(component = "scaleAdditive", value = "click")
-    public void setScaleAdditive
+    public JSONObject setScaleAdditive
             () {
         normalScaling = NormalScalingTypes.additive;
+        return new JSONObject().put("dummy", "dummy");
     }
     /**
      *
@@ -1757,9 +1782,10 @@ public class CellHTS2 {
      *
      */
     @OnEvent(component = "scaleMultiplicative", value = "click")
-    public void setScaleMultiplicative
+    public JSONObject setScaleMultiplicative
             () {
         normalScaling = NormalScalingTypes.multiplicative;
+        return new JSONObject().put("dummy", "dummy");
     }
     /**
      *
@@ -1767,9 +1793,10 @@ public class CellHTS2 {
      *
      */
     @OnEvent(component = "resultScalingNo", value = "click")
-    public void setResultScalingNo
+    public JSONObject setResultScalingNo
             () {
         resultsScaling = ResultsScalingTypes.none;
+        return new JSONObject().put("dummy", "dummy");
     }
     /**
      *
@@ -1777,15 +1804,17 @@ public class CellHTS2 {
      *
      */
     @OnEvent(component = "resultScalingPlate", value = "click")
-    public void setResultScalingPlate
+    public JSONObject setResultScalingPlate
             () {
         resultsScaling = ResultsScalingTypes.byPlate;
+        return new JSONObject().put("dummy", "dummy");
     }
 
     @OnEvent(component = "resultScalingBatch", value = "click")
-    public void setResultScalingBatch
+    public JSONObject setResultScalingBatch
             () {
         resultsScaling = ResultsScalingTypes.byBatch;
+        return new JSONObject().put("dummy", "dummy");
     }
     /**
      *
@@ -1793,9 +1822,10 @@ public class CellHTS2 {
      *
      */
     @OnEvent(component = "resultScalingExperiment", value = "click")
-    public void setResultScalingExperiment
+    public JSONObject setResultScalingExperiment
             () {
         resultsScaling = ResultsScalingTypes.byExperiment;
+        return new JSONObject().put("dummy", "dummy");
     }
 
     /**
@@ -1804,9 +1834,10 @@ public class CellHTS2 {
      *
      */
     @OnEvent(component = "sumMean", value = "click")
-    public void setSumMean
+    public JSONObject setSumMean
             () {
         sumRep = SummerizeReplicates.mean;
+        return new JSONObject().put("dummy", "dummy");
     }
     /**
      *
@@ -1814,9 +1845,10 @@ public class CellHTS2 {
      *
      */
     @OnEvent(component = "sumMedian", value = "click")
-    public void setSumMedian
+    public JSONObject setSumMedian
             () {
         sumRep = SummerizeReplicates.median;
+        return new JSONObject().put("dummy", "dummy");
     }
     /**
      *
@@ -1824,9 +1856,10 @@ public class CellHTS2 {
      *
      */
     @OnEvent(component = "sumMax", value = "click")
-    public void setSumMax
+    public JSONObject setSumMax
             () {
         sumRep = SummerizeReplicates.max;
+        return new JSONObject().put("dummy", "dummy");
     }
     /**
      *
@@ -1834,9 +1867,10 @@ public class CellHTS2 {
      *
      */
     @OnEvent(component = "sumMin", value = "click")
-    public void setSumMin
+    public JSONObject setSumMin
             () {
         sumRep = SummerizeReplicates.min;
+        return new JSONObject().put("dummy", "dummy");
     }
 
 
@@ -1846,9 +1880,10 @@ public class CellHTS2 {
      *
      */
     @OnEvent(component = "sumClosest", value = "click")
-    public void setSumClosest
+    public JSONObject setSumClosest
             () {
         sumRep = SummerizeReplicates.closestToZero;
+        return new JSONObject().put("dummy", "dummy");
     }
     /**
      *
@@ -1856,9 +1891,10 @@ public class CellHTS2 {
      *
      */
     @OnEvent(component = "sumFurthest", value = "click")
-    public void setSumFurthest
+    public JSONObject setSumFurthest
             () {
         sumRep = SummerizeReplicates.furthestFromZero;
+        return new JSONObject().put("dummy", "dummy");
     }
 
     /**
@@ -2927,11 +2963,11 @@ public class CellHTS2 {
     public String createOrupdateDescriptionFile() {
         if (descriptionFile == null) {
             descriptionFile = "Description.txt";
-            FileCreator.createDescriptionFile(experiment, jobNameDir.getAbsolutePath() + "/" + descriptionFile);
+            FileCreator.createDescriptionFile(experiment, jobNameDir.getAbsolutePath() + File.separator + descriptionFile);
         }
         else {
 
-            FileCreator.editDescriptionFile(experiment, jobNameDir.getAbsolutePath() + "/" + descriptionFile);
+            FileCreator.editDescriptionFile(experiment, jobNameDir.getAbsolutePath() + File.separator + descriptionFile);
         }
         return descriptionFile;
     }
@@ -2951,7 +2987,7 @@ public class CellHTS2 {
 
          //step2 check and create a platelist file
         String newPListFile = "Platelist.txt";
-        String newPListFilePath = jobNameDir.getAbsolutePath() + "/" + "Platelist.txt";
+        String newPListFilePath = jobNameDir.getAbsolutePath() + File.separator + "Platelist.txt";
         //TODO:check if dual channel we need channel info in the grid to proceed
         File pListTempFile = new File(newPListFilePath);
         okFile = FileCreator.createPlatelistFile(dataFileList, pListTempFile);
@@ -2965,12 +3001,12 @@ public class CellHTS2 {
         }
         //Step3 create a plate configuration file
         String newPConfFile = "PlateConfig.txt";
-        String newPConfFilePath = jobNameDir.getAbsolutePath() + "/" + newPConfFile;
+        String newPConfFilePath = jobNameDir.getAbsolutePath() + File.separator + newPConfFile;
         File pConfTempFile = new File(newPConfFilePath);
 
         //create screenlog file as well
         String newScreenlogFile = "Screenlog.txt";
-        String newScreenlogFilePath = jobNameDir.getAbsolutePath() + "/" + newScreenlogFile;
+        String newScreenlogFilePath = jobNameDir.getAbsolutePath() + File.separator + newScreenlogFile;
         File pScreenlogFile = new File(newScreenlogFilePath);
 
 
@@ -2999,7 +3035,7 @@ public class CellHTS2 {
     private File getNewJobnameDir() {
         String jobNamePath;
         try {
-        String jobName  = File.createTempFile("JOB", "/",new File(Configuration.UPLOAD_PATH)).getName();
+        String jobName  = File.createTempFile("JOB", File.separator,new File(Configuration.UPLOAD_PATH)).getName();
        
             
         jobNamePath = Configuration.UPLOAD_PATH+jobName;
@@ -3234,7 +3270,7 @@ public class CellHTS2 {
         file.write(copied);
     }
 
-
+    
 
 }
 

@@ -139,7 +139,7 @@ public class EmailDownload {
         
 
 
-        dlPropFile =  new File(fullPath.getAbsolutePath()+"/"+".dlProperties");
+        dlPropFile =  new File(fullPath.getAbsolutePath()+File.separator+".dlProperties");
         if(dlPropFile.exists()) {
 
              notFoundIDPath=false;

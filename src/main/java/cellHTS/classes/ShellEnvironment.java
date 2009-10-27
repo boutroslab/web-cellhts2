@@ -124,7 +124,7 @@ public class ShellEnvironment {
                     //skip the mac meta data
                     continue;
                 }
-                String dirString=pathToExtract + "/"+entry.getName();
+                String dirString=pathToExtract + File.separator+entry.getName();
                 boolean isDir=false;
                 if(!entry.isDirectory()) {
                     dirString = (new File(dirString)).getParent();
@@ -138,8 +138,8 @@ public class ShellEnvironment {
                     dir.mkdirs();
                 }
                 if(!isDir) {
-                    String fullName = pathToExtract + "/" + entry.getName();
-                    returnFiles.add(new File(pathToExtract + "/" + entry.getName()));
+                    String fullName = pathToExtract + File.separator + entry.getName();
+                    returnFiles.add(new File(pathToExtract + File.separator + entry.getName()));
                     copyInputStream(zipFile.getInputStream(entry),
                         new BufferedOutputStream(new FileOutputStream(fullName)));
                 }
@@ -184,11 +184,11 @@ public class ShellEnvironment {
                     //skip the mac meta data
                     continue;
                 }
-                String[]tmpArr=entry.getName().split("/");
+                String[]tmpArr=entry.getName().split(File.separator);
                 String entryName=tmpArr[tmpArr.length-1];
 
-                String fullName = pathToExtract + "/" + entryName;
-                returnFiles.add(new File(pathToExtract + "/" + entryName));
+                String fullName = pathToExtract + File.separator + entryName;
+                returnFiles.add(new File(pathToExtract + File.separator + entryName));
                 copyInputStream(zipFile.getInputStream(entry),
                 new BufferedOutputStream(new FileOutputStream(fullName)));
 
@@ -245,8 +245,8 @@ public class ShellEnvironment {
                 String[] tmpArr = f.getAbsolutePath().split(rootDir);
                 String path = tmpArr[1];
 
-                path = path.replaceFirst("/", "");
-                String newPath = rootDir + "/" + path;
+                path = path.replaceFirst(File.separator, "");
+                String newPath = rootDir + File.separator + path;
 
                 ZipEntry anEntry = new ZipEntry(newPath);
                 //place the zip entry in the ZipOutputStream object
@@ -289,10 +289,10 @@ public class ShellEnvironment {
                     // Eintrag für neue Datei anlegen
 
                     //cut off directory structure
-                    String[]filesArr = files[i].split("/");
+                    String[]filesArr = files[i].split(File.separator);
                     String pureFilename = filesArr[filesArr.length-1];
                     if(zipDirs[i]!=null) {
-                        pureFilename=zipDirs[i]+"/"+pureFilename;
+                        pureFilename=zipDirs[i]+File.separator+pureFilename;
                     }
                     ZipEntry entry = new ZipEntry(pureFilename);
                     in = new FileInputStream(files[i]);

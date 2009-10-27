@@ -101,19 +101,9 @@ of testing facilities designed for use with TestNG (http://testng.org/), so it's
         </dependency>
         <dependency>
             <groupId>org.apache.tapestry</groupId>
-            <artifactId>t5c-commons</artifactId>
-              <version>0.5.18</version>
-          </dependency>
-        <dependency>
-            <groupId>org.apache.tapestry</groupId>
             <artifactId>tapestry-upload</artifactId>
             <version>${tapestry-release-version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.tapestry</groupId>
-            <artifactId>t5c-contrib</artifactId>
-            <version>0.5.15</version>
-        </dependency>          
         <dependency>
             <groupId>org.mortbay.jetty</groupId>
             <artifactId>jetty</artifactId>
@@ -163,6 +153,11 @@ of testing facilities designed for use with TestNG (http://testng.org/), so it's
             <artifactId>UrlRewriteFilter</artifactId>
             <version>3.2.0</version>
        </dependency>
+        <dependency>
+            <groupId>org.chenillekit</groupId>
+            <artifactId>chenillekit-tapestry</artifactId>
+            <version>${chenillekit-release-version}</version>
+        </dependency>
         
 
     </dependencies>
@@ -379,7 +374,13 @@ java/.libs</value>
         <!-- This can be commented out when the tapestry-release-version is a not a snapshot.
  The non-snapshot Tapestry artifacts are distributed through the central
  repository at ibiblio.     -->
-
+        <repository>
+            <id>chenillekit</id>
+            <url>http://www.chenillekit.org/mvnrepo/release</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
         <repository>
             <id>tapestry-snapshots</id>
             <url>http://tapestry.formos.com/maven-snapshot-repository/</url>
@@ -411,7 +412,9 @@ of a Tapestry Maven plugin is not required.   -->
     </pluginRepositories>
 
     <properties>
-        <tapestry-release-version>5.0.18</tapestry-release-version>
+        <tapestry-release-version>5.1.0.5</tapestry-release-version>
+        <!--<tapestry-release-version>5.0.18</tapestry-release-version>-->
+        <chenillekit-release-version>1.1.0</chenillekit-release-version>
     </properties>
      <!---->
     <!--where to deploy/upload the project onto which server-->

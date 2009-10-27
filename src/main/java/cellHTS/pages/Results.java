@@ -292,7 +292,7 @@ public class Results {
                 String jobName = jobNameDir.getName();
                 //use jobname as the heading in the html result file
                 paramMap.put("htmlResultName",jobName);
-                runNameDir = File.createTempFile(jobName+"_RUN", "/", new File(Configuration.UPLOAD_PATH));
+                runNameDir = File.createTempFile(jobName+"_RUN", File.separator, new File(Configuration.UPLOAD_PATH));
                 
                 //del the dir...we want to create a file instead
                 runNameDir.delete();
@@ -323,7 +323,7 @@ public class Results {
                  }
              }
 
-            resultZipFile = jobNameDir+"/" + runName+".zip";
+            resultZipFile = jobNameDir+File.separator + runName+".zip";
         //only show progress bar etc if we are not running at email notification
         if (!emailNotification) {
             //create a link for the javascript polling...this will be the java method in this obj here which will be called from js

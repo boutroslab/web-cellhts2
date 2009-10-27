@@ -758,7 +758,7 @@ public class RInterface extends Thread {
              //we have to give the root dir ...this is a limitation of the zipDir function
 
 
-            String[]tmpDirs = zipDir.split("/");
+            String[]tmpDirs = zipDir.split(File.separator);
 
              String rootDir = tmpDirs[tmpDirs.length-1];
 

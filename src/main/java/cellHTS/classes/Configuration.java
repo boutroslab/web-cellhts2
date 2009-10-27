@@ -80,7 +80,7 @@ public class Configuration {
     public static final Pattern DESCRIPTIONFILE_HEADER_PATTERN = Pattern.compile("^\\[[\\w\\s]+\\]");
     public static final Pattern DESCRIPTIONFILE_BODY_PATTERN = Pattern.compile("[\\w\\n ]*");
      //this is the pattern to find errors in the datafile linewise with  (note datafiles do not have a header)
-    public static final Pattern DATAFILE_PATTERN =Pattern.compile("[\\w+\\.\\+]+\\t[\\w+\\.\\+]+"); //  \\t[\\w+\\,.\\+]+$");
+    public static final Pattern DATAFILE_PATTERN =Pattern.compile("[\\w+\\.\\+]+\\t[\\w+\\.\\+]+\\t"); //  \\t[\\w+\\,.\\+]+$");
 
     public static final Pattern PLATECONFIG_HEADER_PATTERN = Pattern.compile("\\D+(\\d+)\\D+(\\d+)");
 

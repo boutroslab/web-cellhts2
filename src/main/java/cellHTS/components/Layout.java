@@ -70,7 +70,7 @@ public class Layout {
                 build="";
                 version="";
                 cellHTS2Version="";                   
-                String path = applicationGlobals.getServletContext().getRealPath("/");
+                String path = applicationGlobals.getServletContext().getRealPath(File.separator);
                //this will actually start and end a rserver instance 
                 RInterface rInterface = new RInterface();
                 cellHTS2Version = rInterface.getCellHTS2Version();
