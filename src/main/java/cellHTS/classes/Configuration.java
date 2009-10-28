@@ -48,9 +48,6 @@ public class Configuration {
 
     //this is for the R scripts
     public static final String scoreReplicates = "zscore";   //none,NPI
-
-    public static final String UPLOAD_PATH = "/temp/cellHTS2/";
-
     public final static HashMap<Pattern, DataFileParameter[]> DATAFILE_PATTERNS =new HashMap<Pattern, DataFileParameter[]>();
 
  	static

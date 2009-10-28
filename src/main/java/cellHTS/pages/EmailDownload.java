@@ -84,7 +84,8 @@ public class EmailDownload {
     private String runID;
     @Persist
     private File dlPropFile;
-
+    @Persist
+    private String uploadPath;
 
     /**
      *
@@ -95,7 +96,26 @@ public class EmailDownload {
      * @return the pageobject
      */
     public Object onActivate(String jobID,String runID) {
+
+
+//this is for providing a temp path for the tool...either via command line or via app.properties file
+        if(System.getProperty("upload-path")!=null) {
+
+            //get from command line
+            uploadPath=System.getProperty("upload-path");
+            if(!uploadPath.endsWith(File.separator)) {
+                uploadPath=uploadPath+File.separator;
+            }
+
+        }
+        else {
+            //else get from properties file
+            uploadPath=msg.get("upload-path");
+        }
+
+
         this.runID=runID;
+
 
         String hostName =  request.getHeader("Host");
         for(String test : request.getHeaderNames()) {
@@ -115,7 +135,6 @@ public class EmailDownload {
 
          emailAddress= msg.get("notification-email");
 
-         String uploadPath = Configuration.UPLOAD_PATH;
          Integer maxDownloads = Integer.parseInt(msg.get("allowed-dl-numbers"));
 
          if(maxDownloads==null) {

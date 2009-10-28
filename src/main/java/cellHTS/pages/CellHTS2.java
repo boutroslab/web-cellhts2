@@ -300,6 +300,9 @@ public class CellHTS2 {
     @Persist
     private String osLinefeed;
 
+    @Persist
+    private String uploadPath;
+
 
     /**
      *
@@ -311,6 +314,22 @@ public class CellHTS2 {
         //do a lot of init stuff...and do it only once as long as the whole java app lives!!!!
         if (!notFirstRun) {
             //never come in here again!!!
+
+            //this is for providing a temp path for the tool...either via command line or via app.properties file
+            if(System.getProperty("upload-path")!=null) {
+
+                //get from command line
+                uploadPath=System.getProperty("upload-path");
+                if(!uploadPath.endsWith(File.separator)) {
+                    uploadPath=uploadPath+File.separator;
+                }
+
+            }
+            else {
+                //else get from properties file
+                uploadPath=msg.get("upload-path");
+            }
+
             notFirstRun = true;
 
 
@@ -3099,17 +3118,21 @@ public class CellHTS2 {
         String jobNamePath="";
 	String jobName="";
         try {
-        jobName  = File.createTempFile("JOB", File.separator,new File(Configuration.UPLOAD_PATH)).getName();
-	System.out.println("JOBNAMEDIR:"+jobName);
+        System.out.println("Upload path:"+uploadPath);
+        jobName  = File.createTempFile("JOB", File.separator,new File(uploadPath)).getName();
+	    System.out.println("JOBNAME:"+jobName);
        
             
-        jobNamePath = Configuration.UPLOAD_PATH+jobName;
+        jobNamePath = uploadPath+jobName;
+
+        System.out.println("JOBNAMEPATH:"+jobNamePath); 
+
         //delete the file,we dont need it we will create a dir with this name
         (new File(jobNamePath)).delete();
         
         //new File(jobNamePath).mkdirs();   //dont create it yet ... create it only if someone uploads a file
         }catch(IOException e) {
-	    System.out.println("JOBNAMEDIR:"+Configuration.UPLOAD_PATH);
+
             e.printStackTrace();
             return null;
         }

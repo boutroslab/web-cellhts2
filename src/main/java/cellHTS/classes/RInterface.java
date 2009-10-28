@@ -82,6 +82,7 @@ public class RInterface extends Thread {
     private String hostname;
     //send notification mails to the maintainer(s) of this tool in case of error
     private String maintainEmailAddress;
+    private String uploadPath;
 
     /**
      *
@@ -97,7 +98,7 @@ public class RInterface extends Thread {
      * @param maintainEmailAddress  email adress which occurs in the email in the from section and where to send questions etc to
      * @param sendErrorEmail should a email sent to the developer if Rserve reported a error?
      */
-    public RInterface(HashMap<String, String> map, String[] progressPercentage,Boolean [] successBool,String resultZipFile,Semaphore semaphore,boolean eMailNotification,String emailAddress,String maintainEmailAddress,boolean sendErrorEmail) {
+    public RInterface(HashMap<String, String> map, String[] progressPercentage,Boolean [] successBool,String resultZipFile,Semaphore semaphore,boolean eMailNotification,String emailAddress,String maintainEmailAddress,boolean sendErrorEmail,String uploadPath) {
 
         this.stringParams = map;
         this.progressPercentage = progressPercentage;
@@ -108,7 +109,7 @@ public class RInterface extends Thread {
         this.resultZipFile=resultZipFile;
         this.emailAddress=emailAddress;
         this.sendErrorEmail=sendErrorEmail;
-
+        this.uploadPath = uploadPath;
          if(this.emailNotification) {
               postMailTools = new MailTools();
              try {
@@ -211,15 +212,15 @@ public class RInterface extends Thread {
                 debugString+=cmdString+"\n";
                 getRengine().voidEval(cmdString);
                 //first we have to change to the Indir in order to make the R cellHTS script working
-                cmdString= "setwd(\""+Configuration.UPLOAD_PATH+stringParams.get("jobName")+"\")";                   
+                cmdString= "setwd(\""+uploadPath+stringParams.get("jobName")+"\")";
                 debugString+=cmdString+"\n";
                 getRengine().voidEval(cmdString);
 
                 //assign java variables to our R interface
 
-                cmdString="Indir=\""+Configuration.UPLOAD_PATH+stringParams.get("jobName")+"\"" ;
+                cmdString="Indir=\""+uploadPath+stringParams.get("jobName")+"\"" ;
                 debugString+=cmdString+"\n";
-                getRengine().assign("Indir", Configuration.UPLOAD_PATH+stringParams.get("jobName"));
+                getRengine().assign("Indir", uploadPath+stringParams.get("jobName"));
                 //create a outputfile for the results  under the "root" out dir ..thats the only location where it is sure
                 //that we have rite permissions!
                 
@@ -557,7 +558,7 @@ public class RInterface extends Thread {
             String runName=this.extractRunName(stringParams.get("runNameDir"));
             //create a recycable downloadlink as well...therefore we have to keep track about how often a file is allowed to be downloaded
             //which we will write into a properties file
-            File dlPropertiesFile = new File(Configuration.UPLOAD_PATH+stringParams.get("jobName")+"/.dlProperties");
+            File dlPropertiesFile = new File(uploadPath+stringParams.get("jobName")+"/.dlProperties");
             
             String downloadLink = stringParams.get("emailDownloadLink");
 

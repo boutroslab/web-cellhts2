@@ -144,7 +144,8 @@ public class Results {
     //this is important for some init stuff
     @Persist
     private boolean notFirstRun;
-
+    @Persist
+    private String uploadPath;
 
     /**
      * this method should be started when starting a new R cellHTS2 run ..
@@ -152,6 +153,22 @@ public class Results {
      */
     public void initNewRun() {
         if(!notFirstRun) {
+
+
+            if(System.getProperty("upload-path")!=null) {
+
+            //get from command line
+            uploadPath=System.getProperty("upload-path");
+            if(!uploadPath.endsWith(File.separator)) {
+                uploadPath=uploadPath+File.separator;
+            }
+
+        }
+        else {
+            //else get from properties file
+            uploadPath=prop.get("upload-path");
+        }
+
             //never go in here again
             notFirstRun=true;
 
@@ -292,7 +309,7 @@ public class Results {
                 String jobName = jobNameDir.getName();
                 //use jobname as the heading in the html result file
                 paramMap.put("htmlResultName",jobName);
-                runNameDir = File.createTempFile(jobName+"_RUN", File.separator, new File(Configuration.UPLOAD_PATH));
+                runNameDir = File.createTempFile(jobName+"_RUN", File.separator, new File(uploadPath));
                 
                 //del the dir...we want to create a file instead
                 runNameDir.delete();
@@ -373,7 +390,7 @@ public class Results {
         if(prop.get("send-exception-notification-mails").equals("YES")) {
             sendErrorEmail = true;
         }
-        rInterface = new RInterface(paramMap,progressPercentage,rSuccessStatus,resultZipFile,semaphore,emailNotification,emailAddress,maintainersMail,sendErrorEmail);
+        rInterface = new RInterface(paramMap,progressPercentage,rSuccessStatus,resultZipFile,semaphore,emailNotification,emailAddress,maintainersMail,sendErrorEmail,uploadPath);
 
         //run it in a seperate thread...the progressPercentage arr will be updated and is
         //visible outside (in here) through a call by reference
