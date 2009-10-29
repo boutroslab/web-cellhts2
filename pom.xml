@@ -415,7 +415,8 @@ of a Tapestry Maven plugin is not required.   -->
         <site>
         <id>b110-websrv</id>
         <name>Sandbox Server</name>    
-        <url> scp://opelz@b110-websrv:/var/www/boutroslab/cellHTS/web-project/</url>
+        <url> scp://opelz@b110-websrv:/home/opelz/site</url>
+            <!--/var/www/boutroslab/cellHTS/web-project/</url>-->
         </site>
         
     </distributionManagement>

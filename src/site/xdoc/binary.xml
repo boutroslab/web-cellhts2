@@ -11,6 +11,20 @@
     download latest binary all-in-one jetty integrated jar file<br/>
     run it with "java -jar web-cellHTS2-standalone.jar"<br/>
     start it in a webbrowser with "http://localhost:8080"<br/>
+    <br/>
+    <br/>
+    Please note: if you want to change the folder for uploading your temp files<br/>
+    use property : upload-path<br/>
+    e.g. java -Dupload-path=/tmp/cellTMP -jar web-cellHTS2-standalone.jar<br/>
+    <br/>
+    <br/>
+    Please Note second:<br/>
+    It should be possible to run the standalone version  on a windows machine too such as<br/>
+    java -Dupload-path=C:/temp -jar web-cellHTS2-standalone.jar <br/>
+    The web Interface loads fine on a windows machine<br/>
+    but we never installed R and Rserve on a Windows machine (but it should be possible too)<br/>
+    <br/>
+
         <a href="binary/web-cellHTS2-standalone.jar">click me</a>
 
 
