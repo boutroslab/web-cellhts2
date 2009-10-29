@@ -159,16 +159,16 @@ public class Results {
 
             //get from command line
             uploadPath=System.getProperty("upload-path");
-            if(!uploadPath.endsWith(File.separator)) {
-                uploadPath=uploadPath+File.separator;
-            }
+
 
         }
         else {
             //else get from properties file
             uploadPath=prop.get("upload-path");
         }
-
+        if(!uploadPath.endsWith(File.separator)) {
+                uploadPath=uploadPath+File.separator;
+        }
             //never go in here again
             notFirstRun=true;
 

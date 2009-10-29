@@ -41,12 +41,7 @@
             <t:if test="errorPlatelistFileUpload">
                 <p>
                     <FONT COLOR="red">${errorPlatelistFileMsg}</FONT>
-                </p>
-                <t:parameter t:name="else">
-                    <t:if test="isUploadedPlatelistFileDefined">
-                        <FONT COLOR="blue">Platelist File successfully uploaded</FONT>
-                    </t:if>
-                </t:parameter>
+                </p>                   
             </t:if>
             <t:if t:test="noErrorPlateConfFile" negate="true">
                 <p>
@@ -266,6 +261,12 @@
 
                     </t:form>
 
+                    <t:if test="errorPlatelistFileUpload" negate="true">
+                    <t:if test="isUploadedPlatelistFileDefined">
+                        <FONT COLOR="blue">Platelist File successfully uploaded</FONT>
+                    </t:if>
+                    </t:if>
+                   
 
                 </p>
 

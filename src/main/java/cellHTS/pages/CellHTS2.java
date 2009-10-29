@@ -320,14 +320,16 @@ public class CellHTS2 {
 
                 //get from command line
                 uploadPath=System.getProperty("upload-path");
-                if(!uploadPath.endsWith(File.separator)) {
-                    uploadPath=uploadPath+File.separator;
-                }
+
 
             }
             else {
                 //else get from properties file
                 uploadPath=msg.get("upload-path");
+            }
+
+            if(!uploadPath.endsWith(File.separator)) {
+                    uploadPath=uploadPath+File.separator;
             }
 
             notFirstRun = true;
