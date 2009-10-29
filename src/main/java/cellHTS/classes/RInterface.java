@@ -322,7 +322,7 @@ public class RInterface extends Thread {
                     debugString+=cmdString+"\n";
                     getRengine().voidEval(cmdString);
                     progressPercentage[0]="25_configuring layout";
-                    cmdString="x=configure(x, descripFile=Description, confFile=Plateconf, logFile=Screenlog)";
+                    cmdString="x=configure(x, descripFile=Description, confFile=Plateconf, logFile=Screenlog,,path=Indir)";
                     debugString+=cmdString+"\n";
                     getRengine().voidEval(cmdString);
                     progressPercentage[0]="45_normalizing plates";
@@ -388,7 +388,7 @@ public class RInterface extends Thread {
                     getRengine().voidEval(cmdString);
 
                     progressPercentage[0]="25_configuring layout";
-                    cmdString="x = configure(x , descripFile=Description, confFile=Plateconf, logFile=Screenlog)";
+                    cmdString="x = configure(x , descripFile=Description, confFile=Plateconf, logFile=Screenlog,path=Indir)";
                     debugString+=cmdString+"\n";
                     getRengine().voidEval(cmdString);
 
