@@ -99,6 +99,9 @@ public class CellHTS2 {
     @Persist
     private String fixRegExp;
 
+    @Persist
+    private Boolean isFlashValid;
+
     //this three must be persist because we check on it later
     @Persist
     private UploadedFile uploadedPlatelistFile;
@@ -3361,7 +3364,19 @@ public class CellHTS2 {
         file.write(copied);
     }
 
-    
+    public void onClickWellEvent() {
+               System.exit(1);
 
+    }
+
+    public Boolean getIsFlashValid() {
+        return isFlashValid;
+    }
+
+    public void setIsFlashValid(Boolean flashValid) {
+        isFlashValid = flashValid;
+    }
+
+   
 }
 

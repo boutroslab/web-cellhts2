@@ -94,6 +94,7 @@
                 <br/>
                 <br/>
                 <br/>
+                
 
                 <!--Please cite the following paper when using cellHTS2:-->
                 <!--Boutros, M., L. Bras, and W. Huber. (2006). Analysis of cell-based RNAi screens. Genome Biology 7:R66.-->
@@ -220,7 +221,6 @@
                  value="If the experiment has a lot of data files, it is best to pack them into a ZIP file and upload it."
                  effect="appear">
                 <t:form t:id="dataFileUpload">
-
                     <input t:type="upload" t:id="dataFileUploadInput" validate="required" t:value="uploadedDataFile"/>
                 </t:form>
             </div>
@@ -1089,4 +1089,7 @@
         }
 // -->
     </script>
+    <noscript>
+      <h1><FONT COLOR="red">Your browser does not support Javascript, cannot proceed!</FONT></h1>
+    </noscript>
 </html>

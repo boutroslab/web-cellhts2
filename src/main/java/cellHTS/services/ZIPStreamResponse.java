@@ -33,28 +33,28 @@ import java.io.IOException;
  * Time: 15:26:50
  * To change this template use File | Settings | File Templates.
  */
-public class ZIPStreamResponse  implements StreamResponse {
-        private InputStream is;
-        private String filename="default";
+    public class ZIPStreamResponse  implements StreamResponse {
+            private InputStream is;
+            private String filename="default";
 
-        public ZIPStreamResponse(InputStream is, String filename) {
-                this.is = is;
-                this.filename = filename;
+            public ZIPStreamResponse(InputStream is, String filename) {
+                    this.is = is;
+                    this.filename = filename;
 
-        }
+            }
 
-        public String getContentType() {
-                return "application/zip";
-        }
+            public String getContentType() {
+                    return "application/zip";
+            }
 
-        public InputStream getStream() throws IOException {
-                return is;
-        }
+            public InputStream getStream() throws IOException {
+                    return is;
+            }
 
-        public void prepareResponse(Response arg0) {
-                arg0.setHeader("Content-Disposition", "attachment; filename="
-                                + filename);
-        }
-}
+            public void prepareResponse(Response arg0) {
+                    arg0.setHeader("Content-Disposition", "attachment; filename="
+                                    + filename);
+            }
+    }
 
 
