@@ -23,6 +23,12 @@
 
  </head>
   <body>
-       
+      <div t:type="signaling/MultiplefileUploader" t:id="multipleUploadOne" t:uploadPath="uploadPath"/>
+      <br/>
+      <t:actionlink id="go on">Go on</t:actionlink>
+      <t:ExportCSV t:filesToProcess="tempDebugFiles"/>
+      <t:if test="convertedAllFiles">
+        <t:FileImporter filesToProcess="filesToImport" headsToFind="headsToFind" showHeadline="showHeadline"/>
+      </t:if>
  </body>
 </html>

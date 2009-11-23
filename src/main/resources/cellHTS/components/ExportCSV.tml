@@ -1,0 +1,47 @@
+<html xmlns:t="http://tapestry.apache.org/schema/tapestry_5_0_0.xsd">
+    <head>
+
+    </head>
+
+    <body>
+     <div id="${uniqueID}">
+        a. Choose filetype
+      <t:form>
+        <t:select t:id="fileType" model="fileTypeModel"
+                          t:blankOption="always"
+                          t:blankLabel="please select"
+                          t:mixins="ck/OnEvent"
+                          onCompleteCallback="onCompleteFileTypeChangeEvent"
+                          event="change"/>
+      </t:form>
+      <br/>
+       <t:form t:id="bigForm">
+            <t:label for="sheetNumber"/>:
+            <t:textfield t:id="sheetNumber" size="2" disabled="false"/>
+           <br/>
+            <t:label for="csvDelimter"/>:
+            <t:textfield t:id="csvDelimter" size="1" disabled="true"/>
+           <input t:type="submit" value="format data"/>
+       </t:form>
+        <t:if test="errorFound">
+           ${errorMsg}
+        </t:if>
+        </div>                                                                                                          
+         </body>
+    <script type="text/javascript">
+        <!-- //
+
+        function onCompleteFileTypeChangeEvent(response) {
+           var yesNo = response.fileType;
+           if(yesNo=="csv") {
+               document.getElementById('csvDelimter').disabled=false;
+               document.getElementById('sheetNumber').disabled=true;
+           }
+           else if(yesNo=="excel") {
+              document.getElementById('csvDelimter').disabled=true;
+              document.getElementById('sheetNumber').disabled=false;
+           }
+        }
+        //-->
+    </script>
+    </html>

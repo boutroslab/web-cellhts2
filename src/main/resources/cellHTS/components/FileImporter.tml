@@ -4,26 +4,7 @@
     </head>
 
     <body>
-        a. Choose filetype
-      <t:form>
-        <t:select t:id="fileType" model="fileTypeModel"
-                          t:blankOption="always"
-                          t:blankLabel="please select"
-                          t:mixins="ck/OnEvent"
-                          onCompleteCallback="onCompleteFileTypeChangeEvent"
-                          event="change"/>
-      </t:form>
-       <t:form t:id="form1">
-            <t:label for="csvDelimter"/>:
-            <t:textfield t:id="csvDelimter" size="1" disabled="true"/>
-           <input t:type="submit" value="format data"/>
-       </t:form>
-        <t:if test="errorFound">
-
-
-        </t:if>
-
-        <t:if test="activateGrid">
+          <div id="${uniqueID}">
             <t:if test="showHeadline">
             <!--show grid with example data-->
             Filename: ${firstDataFile}
@@ -48,82 +29,26 @@
 						</t:loop>
                     </tr>
             </table>
-            </t:if>
+                </t:if>
             
             <!--now show the config opportunity for plate data files-->
             <t:form t:id="bigForm1">
             <table>
-
+                        <t:loop source="selectedColumns" value="selectedColumn">
 						<tr>
-							<th id="tcon">Plate:</th>
+							<th id="tcon">${selectedColumn.columnName}</th>
 							<td align="center" width="160px">
 								<!--<input t:type="TextField" t:id="plateh" size="11" />-->
-                                <t:select t:id="selectedPlateColumn" model="plateDataModel"/>
+                                <t:select t:value="selectedColumn.mappedToColumn" model="plateDataModel"/>
 
 							</td>
 						</tr>
-
-						<tr>
-							<th id="tcon">Well:</th>
-							<td align="center" width="160px">
-								<!--<input t:type="TextField" t:id="plateh" size="11" />-->
-                                <t:select t:id="selectedWellColumn" model="plateDataModel"/>
-
-							</td>
-						</tr>
-                        <tr>
-							<th id="tcon">Value:</th>
-							<td align="center" width="160px">
-								<!--<input t:type="TextField" t:id="plateh" size="11" />-->
-                                <t:select t:id="selectedValueColumn" model="plateDataModel"/>
-
-							</td>
-						</tr>
+                        </t:loop>
 
 					</table>
+                <input t:type="submit" value="format data"/>
             </t:form>
-
-            <t:actionlink t:id="filesContainPlateConfigData" zone="plateConfigZone">The uploaded files contain plate config data</t:actionlink>
-            <!--the plate config stuff in a data file is optional so make an ajax block here-->
-            <t:zone t:id="plateConfigZone"/>
-            <t:block id="plateConfigBlock">
-            <t:form t:id="bigForm2">
-            <table>
-
-						<tr>
-							<th id="tcon">Content:</th>
-							<td align="center" width="160px">
-								<!--<input t:type="TextField" t:id="plateh" size="11" />-->
-                                <t:select t:id="selectedPlateConfigContentColumn" model="plateDataModel"/>
-
-							</td>
-						</tr>
-
-            </table>
-            </t:form>
-
-            </t:block>
-
-
-        </t:if>
-
-
-        b. choose plate reader data columns
-
-
+        </div>
     </body>
-    <script type="text/javascript">
-        <!-- //
 
-        function onCompleteFileTypeChangeEvent(response) {
-           var yesNo = response.fileType;
-           if(yesNo=="csv") {
-               document.getElementById('csvDelimter').disabled=false;
-           }
-           else {
-              document.getElementById('csvDelimter').disabled=true;
-           }
-        }
-        //-->
-    </script>
 </html>

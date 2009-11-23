@@ -6,6 +6,9 @@ import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.json.JSONObject;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.Block;
+import org.apache.tapestry5.ComponentEventCallback;
+import org.apache.tapestry5.ComponentResources;
+import org.apache.tapestry5.RenderSupport;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -25,21 +28,24 @@ public class FileImporter {
 //parameters ----------------------------------------------------------------------------
     @Parameter(required=true)
     private ArrayList<String> filesToProcess;
-
     @Parameter(required=true)
-    private String[] inputColumns;
-
-    @Parameter(required=true)
-    private LinkedHashMap<String,Integer> outputColumns;
-
+    private ArrayList<String> headsToFind;
     @Parameter(required=true)
     private boolean showHeadline;
+
+
 //parameters end ----------------------------------------------------------------------------
 
+     private String loopVariable;
     
-    @Persist
-    private String plateDataModel;
-
+     @Persist
+     private boolean errorFound;
+     @Persist
+     private String errorMsg;
+     @Persist
+     private String plateDataModel;
+     @Persist
+     private String csvDelimter;
 
 
     
@@ -50,66 +56,56 @@ public class FileImporter {
     @Persist
     private String[] firstLineFields;
     private String firstLineField;
+
+    
     @Persist
     private String firstDataFile;
     @Persist
-    private String selectedPlateColumn;
-    @Persist
-    private String selectedWellColumn;
-    @Persist
-    private String selectedValueColumn;
-    @Persist
-    private String selectedPlateConfigContentColumn;
+    private String DROPDOWNDELIMTER;
 
+    
+    @Persist
+    private boolean init;
+    @Persist
+    private SelectedColumn[] selectedColumns;
+    private SelectedColumn selectedColumn;
+
+    @Persist
+    private String EVENTNAME;
+    @Persist
+    private String uniqueID;
 
     @Inject
-    private Block plateConfigBlock;
+    private ComponentResources componentResources;
+     @Inject
+    private RenderSupport renderSupport;
 
-
-
-
-
-    public void onSubmitFromForm1() {
-        if(filesToProcess.size()<1) {
-            return;
-        }
-
-
-        //show an grid
-        if(fileType.equals("excel")) {
-                //get the header and first line for displaying
-                getHeaderLineItemsCSV(new File(filesToProcess.get(0)));
-                //show header and first line in grid
-                activateGrid=true;
-
-        }
-        else if (fileType.equals("csv")) {
-                //get the header and first line for displaying
-                getHeaderLineItemsCSV(new File(filesToProcess.get(0)));
-                //generate the models for selecting approperiate plate data columns
-                plateDataModel=generateCSNumberList(headerFields);
-                initPlateDataDropDown();
-
-
-                //show header and first line in grid
-                activateGrid=true;
+   public void setupRender() {
+        if(!init) {
+            init=true;
+            csvDelimter="\t";
+            selectedColumns=new SelectedColumn[headsToFind.size()];
+            int i=0;
+            for(String headToFind : headsToFind) {
+                selectedColumns[i++]  = new SelectedColumn(headToFind);
+            }
+            File firstDataFileObj = new File(filesToProcess.get(0));
+            firstDataFile=firstDataFileObj.getName();
+            //all file headers must be equal to go on
+            if(compareHeadersCSV()&&showHeadline) {
+                 getHeaderLineItemsCSV(firstDataFileObj);
+            }
+            DROPDOWNDELIMTER=":";
+            EVENTNAME="onSuccessfullySetupColumns";
+            uniqueID = renderSupport.allocateClientId(componentResources);
 
         }
+   }
 
 
-    }
 
 
-    //AJAX event handlers
-
-    @OnEvent(component = "fileType", value = "change")
-    public JSONObject onFileTypeChangeEvent(String type) {
-          fileType = type;
-          if(fileType.equals("excel")) {
-             // csvDelimter="\\t";
-          }
-          return new JSONObject().put("fileType", fileType);
-    }
+  
 
 
    public boolean compareHeadersCSV() {
@@ -132,9 +128,6 @@ public class FileImporter {
 
        return true;
    }
-   public boolean compareHeadersExcel() {
-       return true;
-   }
    public void getHeaderLineItemsCSV(File copied) {
        try {
 			BufferedReader reader = new BufferedReader(new FileReader(copied));
@@ -144,7 +137,8 @@ public class FileImporter {
 			reader.close();
 			headerFields = headerLine.split(csvDelimter);
             firstLineFields = headerLine.split(csvDelimter);
-
+            plateDataModel="";
+            plateDataModel=generateCSNumberList(headerFields);
 
        }catch(IOException e) {
            setError("cannot read header or first line of file: "+copied.getName());
@@ -187,42 +181,48 @@ public class FileImporter {
           int count=1;
           for(String value: values) {
               if(returnString.equals("")) {
-                  returnString=count+":"+value;
+                  returnString=count+DROPDOWNDELIMTER+value;
               }
               else {
-                  returnString+=","+count+":"+value;
+                  returnString+=","+count+DROPDOWNDELIMTER+value;
               }
               count++;
           }
         return returnString;
 
    }
-    public void initPlateDataDropDown() {
-        selectedPlateColumn="";
-        selectedWellColumn="";
-        selectedValueColumn="";
-        if(firstLineFields[0]!=null) {
-           selectedPlateColumn="1:"+firstLineFields[0];
-        }
-        if(firstLineFields[1]!=null) {
-           selectedWellColumn="2:"+firstLineFields[1];
-        }
-        if(firstLineFields[2]!=null) {
-           selectedValueColumn="3:"+firstLineFields[2];
-        }
-        if(firstLineFields[3]!=null) {
-           selectedPlateConfigContentColumn="4:"+firstLineFields[2];
+
+    //we use this inner class to keep track of the changed values in the drop down
+    //we need this to build it dynamically
+    public class SelectedColumn {
+        private String columnName;
+        private String mappedToColumn;
+        private Integer mappedToColumnNumber;
+
+        public SelectedColumn(String columnName) {
+            this.columnName = columnName;
         }
 
+        public String getColumnName() {
+            return columnName;
+        }
 
+        public void setColumnName(String columnName) {
+            this.columnName = columnName;
+
+        }
+
+        public String getMappedToColumn() {
+            return mappedToColumn;
+        }
+
+        public void setMappedToColumn(String mappedToColumn) {
+            this.mappedToColumn = mappedToColumn;
+            mappedToColumnNumber = Integer.parseInt(mappedToColumn.split(DROPDOWNDELIMTER)[0]);
+        }
     }
-    public Block onActionFromFilesContainPlateConfigData() {
-         return plateConfigBlock;
-    }
 
-//getters and setters -----------------------------------------------------------------------------
-
-    public void setError(String msg) {
+     public void setError(String msg) {
         errorFound=true;
         errorMsg=msg;
     }
@@ -230,43 +230,39 @@ public class FileImporter {
         errorFound=false;
         errorMsg="";
     }
-    public String getFileType() {
-        return fileType;
+    public Object[] selectedColumnsToObjects() {
+        Object[] returnObjs = new Object[selectedColumns.length*2];
+        int i=0;
+        for(SelectedColumn tempColumn : selectedColumns) {
+             returnObjs[i++]=tempColumn.getColumnName();
+             returnObjs[i++]=tempColumn.getMappedToColumn();
+        }
+        return returnObjs;
     }
+    public void onSuccessFromBigForm1() {
+         triggerSuccessEvent();
 
-    public void setFileType(String fileType) {
-        this.fileType = fileType;
     }
+    public void triggerSuccessEvent() {
+            //trigger an event that everything has been converted successfully and
+            //parameters are the converted files
+            ComponentEventCallback callback = new ComponentEventCallback() {
+                public boolean handleResult(Object result) {
+                    return true;
+                }
+            };
 
-    public String getCsvDelimter() {
-        return csvDelimter;
+                Object[] objs =selectedColumnsToObjects();
+
+                componentResources.triggerEvent(EVENTNAME, objs, callback);
     }
+//getters and setters -----------------------------------------------------------------------------
 
-    public void setCsvDelimter(String csvDelimter) {
-        this.csvDelimter = csvDelimter;
-    }
-
-    public String getFileTypeModel() {
-        return fileTypeModel;
-    }
-
-    public void setFileTypeModel(String fileTypeModel) {
-        this.fileTypeModel = fileTypeModel;
-    }
-
-    public Boolean getActivateGrid() {
-        return activateGrid;
-    }
-
-    public void setActivateGrid(Boolean activateGrid) {
-        this.activateGrid = activateGrid;
-    }
-
-    public Boolean getErrorFound() {
+    public boolean getErrorFound() {
         return errorFound;
     }
 
-    public void setErrorFound(Boolean errorFound) {
+    public void setErrorFound(boolean errorFound) {
         this.errorFound = errorFound;
     }
 
@@ -278,12 +274,36 @@ public class FileImporter {
         this.errorMsg = errorMsg;
     }
 
-    public String[] getHeaderFields() {
-        return headerFields;
+    public ArrayList<String> getFilesToProcess() {
+        return filesToProcess;
     }
 
-    public void setHeaderFields(String[] headerFields) {
-        this.headerFields = headerFields;
+    public void setFilesToProcess(ArrayList<String> filesToProcess) {
+        this.filesToProcess = filesToProcess;
+    }
+
+    public String getLoopVariable() {
+        return loopVariable;
+    }
+
+    public void setLoopVariable(String loopVariable) {
+        this.loopVariable = loopVariable;
+    }
+
+    public ArrayList<String> getHeadsToFind() {
+        return headsToFind;
+    }
+
+    public void setHeadsToFind(ArrayList<String> headsToFind) {
+        this.headsToFind = headsToFind;
+    }
+
+    public String getPlateDataModel() {
+        return plateDataModel;
+    }
+
+    public void setPlateDataModel(String plateDataModel) {
+        this.plateDataModel = plateDataModel;
     }
 
     public String getHeaderField() {
@@ -292,6 +312,14 @@ public class FileImporter {
 
     public void setHeaderField(String headerField) {
         this.headerField = headerField;
+    }
+
+    public String[] getHeaderFields() {
+        return headerFields;
+    }
+
+    public void setHeaderFields(String[] headerFields) {
+        this.headerFields = headerFields;
     }
 
     public String[] getFirstLineFields() {
@@ -311,61 +339,46 @@ public class FileImporter {
     }
 
     public String getFirstDataFile() {
-        if(filesToProcess.size()<1) {
-            return "<NO FILE AVAILABLE>";
-        }
-        return new File(filesToProcess.get(0)).getName();
+        return firstDataFile;
     }
 
     public void setFirstDataFile(String firstDataFile) {
         this.firstDataFile = firstDataFile;
     }
 
-    public String getPlateDataModel() {
-        return plateDataModel;
+    public SelectedColumn[] getSelectedColumns() {
+        return selectedColumns;
     }
 
-    public void setPlateDataModel(String plateDataModel) {
-        this.plateDataModel = plateDataModel;
+    public void setSelectedColumns(SelectedColumn[] selectedColumns) {
+        this.selectedColumns = selectedColumns;
     }
 
-    public String getSelectedPlateColumn() {
-        return selectedPlateColumn;
+    public SelectedColumn getSelectedColumn() {
+        return selectedColumn;
     }
 
-    public void setSelectedPlateColumn(String selectedPlateColumn) {
-        this.selectedPlateColumn = selectedPlateColumn;
+    public void setSelectedColumn(SelectedColumn selectedColumn) {
+        this.selectedColumn = selectedColumn;
     }
 
-    public String getSelectedWellColumn() {
-        return selectedWellColumn;
+    public boolean isShowHeadline() {
+        return showHeadline;
     }
 
-    public void setSelectedWellColumn(String selectedWellColumn) {
-        this.selectedWellColumn = selectedWellColumn;
+    public void setShowHeadline(boolean showHeadline) {
+        this.showHeadline = showHeadline;
     }
 
-    public String getSelectedValueColumn() {
-        return selectedValueColumn;
+    public String getUniqueID() {
+        return uniqueID;
     }
 
-    public void setSelectedValueColumn(String selectedValueColumn) {
-        this.selectedValueColumn = selectedValueColumn;
+    public void setUniqueID(String uniqueID) {
+        this.uniqueID = uniqueID;
     }
+//end of setters---------------------------------------------------
 
-    public Block getPlateConfigBlock() {
-        return plateConfigBlock;
-    }
 
-    public void setPlateConfigBlock(Block plateConfigBlock) {
-        this.plateConfigBlock = plateConfigBlock;
-    }
-
-    public String getSelectedPlateConfigContentColumn() {
-        return selectedPlateConfigContentColumn;
-    }
-
-    public void setSelectedPlateConfigContentColumn(String selectedPlateConfigContentColumn) {
-        this.selectedPlateConfigContentColumn = selectedPlateConfigContentColumn;
-    }
+    
 }
