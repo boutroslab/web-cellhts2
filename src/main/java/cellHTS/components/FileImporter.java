@@ -3,12 +3,11 @@ package cellHTS.components;
 import org.apache.tapestry5.annotations.Persist;
 import org.apache.tapestry5.annotations.OnEvent;
 import org.apache.tapestry5.annotations.Parameter;
+import org.apache.tapestry5.annotations.SetupRender;
 import org.apache.tapestry5.json.JSONObject;
 import org.apache.tapestry5.ioc.annotations.Inject;
-import org.apache.tapestry5.Block;
-import org.apache.tapestry5.ComponentEventCallback;
-import org.apache.tapestry5.ComponentResources;
-import org.apache.tapestry5.RenderSupport;
+import org.apache.tapestry5.*;
+import org.apache.tapestry5.services.FormSupport;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -16,14 +15,16 @@ import java.util.LinkedHashMap;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
+import cellHTS.classes.SelectedColumn;
+
 /**
  * Created by IntelliJ IDEA.
  * User: oliverpelz
  * Date: 20.11.2009
  * Time: 10:42:16
  * To change this template use File | Settings | File Templates.
- */
-public class FileImporter {
+ */                                  //implement the methods so we can use the selectedColumn in a loop
+public class FileImporter{
 
 //parameters ----------------------------------------------------------------------------
     @Parameter(required=true)
@@ -63,7 +64,7 @@ public class FileImporter {
     @Persist
     private String DROPDOWNDELIMTER;
 
-    
+
     @Persist
     private boolean init;
     @Persist
@@ -80,26 +81,29 @@ public class FileImporter {
      @Inject
     private RenderSupport renderSupport;
 
+    
    public void setupRender() {
+
         if(!init) {
             init=true;
-            csvDelimter="\t";
-            selectedColumns=new SelectedColumn[headsToFind.size()];
-            int i=0;
-            for(String headToFind : headsToFind) {
-                selectedColumns[i++]  = new SelectedColumn(headToFind);
-            }
-            File firstDataFileObj = new File(filesToProcess.get(0));
-            firstDataFile=firstDataFileObj.getName();
-            //all file headers must be equal to go on
-            if(compareHeadersCSV()&&showHeadline) {
-                 getHeaderLineItemsCSV(firstDataFileObj);
-            }
+            csvDelimter="\\t";
             DROPDOWNDELIMTER=":";
-            EVENTNAME="onSuccessfullySetupColumns";
+
+            EVENTNAME="successfullySetupColumns";
             uniqueID = renderSupport.allocateClientId(componentResources);
 
         }
+       selectedColumns=new SelectedColumn[headsToFind.size()];
+       int i=0;
+       for(String headToFind : headsToFind) {
+                selectedColumns[i++]  = new SelectedColumn(headToFind);
+       }
+       File firstDataFileObj = new File(filesToProcess.get(0));
+       firstDataFile=firstDataFileObj.getName();
+            //all file headers must be equal to go on
+       if(compareHeadersCSV()&&showHeadline) {
+          getHeaderLineItemsCSV(firstDataFileObj);
+       }
    }
 
 
@@ -136,7 +140,7 @@ public class FileImporter {
 			int i = 0;
 			reader.close();
 			headerFields = headerLine.split(csvDelimter);
-            firstLineFields = headerLine.split(csvDelimter);
+            firstLineFields = firstLine.split(csvDelimter);
             plateDataModel="";
             plateDataModel=generateCSNumberList(headerFields);
 
@@ -179,7 +183,11 @@ public class FileImporter {
     public String generateCSNumberList(String[]values) {
           String returnString="";
           int count=1;
+
           for(String value: values) {
+              if(value.equals("")|| value.equals(" ")) {
+                  continue;
+              }
               if(returnString.equals("")) {
                   returnString=count+DROPDOWNDELIMTER+value;
               }
@@ -192,35 +200,10 @@ public class FileImporter {
 
    }
 
-    //we use this inner class to keep track of the changed values in the drop down
-    //we need this to build it dynamically
-    public class SelectedColumn {
-        private String columnName;
-        private String mappedToColumn;
-        private Integer mappedToColumnNumber;
 
-        public SelectedColumn(String columnName) {
-            this.columnName = columnName;
-        }
 
-        public String getColumnName() {
-            return columnName;
-        }
-
-        public void setColumnName(String columnName) {
-            this.columnName = columnName;
-
-        }
-
-        public String getMappedToColumn() {
-            return mappedToColumn;
-        }
-
-        public void setMappedToColumn(String mappedToColumn) {
-            this.mappedToColumn = mappedToColumn;
-            mappedToColumnNumber = Integer.parseInt(mappedToColumn.split(DROPDOWNDELIMTER)[0]);
-        }
-    }
+    
+    
 
      public void setError(String msg) {
         errorFound=true;
@@ -240,6 +223,9 @@ public class FileImporter {
         return returnObjs;
     }
     public void onSuccessFromBigForm1() {
+        for(SelectedColumn column : selectedColumns) {
+            System.out.println("column name: "+column.getColumnName()+" "+column.getMappedToColumn());
+        }
          triggerSuccessEvent();
 
     }
@@ -377,7 +363,15 @@ public class FileImporter {
     public void setUniqueID(String uniqueID) {
         this.uniqueID = uniqueID;
     }
-//end of setters---------------------------------------------------
+
+    public boolean isInit() {
+        return init;
+    }
+
+    public void setInit(boolean init) {
+        this.init = init;
+    }
+    //end of setters---------------------------------------------------
 
 
     

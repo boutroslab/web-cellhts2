@@ -64,6 +64,7 @@ public class ExportCSV {
 
     public void setupRender() {
         if (!init) {
+            System.out.println("we init!");
             init = true;
             fileType = "excel";
             csvDelimter = "\\t";
@@ -76,7 +77,8 @@ public class ExportCSV {
         }
     }
    //TODO: variables dont get updated
-    public void onSubmitFromBigForm() {
+    public void onSuccessFromBigForm() {
+       
         if (filesToProcess.size() < 1) {
             return;
         }
@@ -320,5 +322,12 @@ public class ExportCSV {
     public void setSheetNumber(String sheetNumber) {
         this.sheetNumber = sheetNumber;
     }
-    
+
+    public boolean isInit() {
+        return init;
+    }
+
+    public void setInit(boolean init) {
+        this.init = init;
+    }
 }

@@ -17,7 +17,7 @@
   ~
   ~
   -->
-<html xmlns:t="http://tapestry.apache.org/schema/tapestry_5_0_0.xsd">
+<t:layout xmlns:t="http://tapestry.apache.org/schema/tapestry_5_0_0.xsd">
  <head>
      <title>cellHTS2 Debug Page</title>
 
@@ -25,10 +25,13 @@
   <body>
       <div t:type="signaling/MultiplefileUploader" t:id="multipleUploadOne" t:uploadPath="uploadPath"/>
       <br/>
-      <t:actionlink id="go on">Go on</t:actionlink>
-      <t:ExportCSV t:filesToProcess="tempDebugFiles"/>
+      <t:actionlink t:id="processFiles">Go on</t:actionlink>      
+
+      <t:if test="startFileImport">
+      <t:ExportCSV t:id="exportCSV" t:filesToProcess="uploadedFiles"/>
       <t:if test="convertedAllFiles">
-        <t:FileImporter filesToProcess="filesToImport" headsToFind="headsToFind" showHeadline="showHeadline"/>
+        <t:FileImporter t:id="datafileImporter" filesToProcess="filesToImport" headsToFind="headsToFind" showHeadline="showHeadline"/>
+      </t:if>
       </t:if>
  </body>
-</html>
+</t:layout>

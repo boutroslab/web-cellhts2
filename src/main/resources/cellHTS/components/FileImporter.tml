@@ -9,19 +9,19 @@
             <!--show grid with example data-->
             Filename: ${firstDataFile}
             <br/>
-             Headerline:<br/>
+
              <table style="min-width:800px;">
 					<tr>
 
 						<t:loop source="headerFields" value="headerField">
-							<th>${headerField}</th>
+							<th><b>${headerField}</b></th>
 						</t:loop>
 
 					</tr>
-            </table>
+
             <br/>
-            First Line:<br/>
-            <table style="min-width:800px;">
+            
+            
                     <tr>
 
                         <t:loop source="firstLineFields" value="firstLineField">
@@ -34,12 +34,12 @@
             <!--now show the config opportunity for plate data files-->
             <t:form t:id="bigForm1">
             <table>
-                        <t:loop source="selectedColumns" value="selectedColumn">
+                        <t:loop t:source="selectedColumns" t:value="selectedColumn">
 						<tr>
 							<th id="tcon">${selectedColumn.columnName}</th>
 							<td align="center" width="160px">
 								<!--<input t:type="TextField" t:id="plateh" size="11" />-->
-                                <t:select t:value="selectedColumn.mappedToColumn" model="plateDataModel"/>
+                                <t:select  t:value="selectedColumn.mappedToColumn" model="plateDataModel"/>
 
 							</td>
 						</tr>

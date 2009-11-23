@@ -26,10 +26,15 @@ import org.apache.tapestry5.*;
 import org.apache.tapestry5.ioc.MappedConfiguration;
 import org.apache.tapestry5.ioc.OrderedConfiguration;
 import org.apache.tapestry5.ioc.ServiceBinder;
+import org.apache.tapestry5.ioc.Configuration;
+import org.apache.tapestry5.ioc.services.Coercion;
+import org.apache.tapestry5.ioc.services.CoercionTuple;
 import org.apache.tapestry5.ioc.annotations.Local;
 import org.apache.tapestry5.services.*;
 import org.slf4j.Logger;
 import cellHTS.dao.*;
+import cellHTS.components.FileImporter;
+import cellHTS.classes.SelectedColumn;
 
 
 /**
@@ -134,5 +139,21 @@ public class AppModule
         
         configuration.add("Timing", filter);
     }
-    
+
+//    public static void contributeTranslatorSource(Configuration<Translator>configuration) {
+//
+//    }
+//
+    public static void contributeTypeCoercer(Configuration<CoercionTuple> configuration)
+   {
+     Coercion<String, SelectedColumn> coercion = new Coercion<String, SelectedColumn>()
+     {
+       public SelectedColumn coerce(String input)
+       {
+         return new SelectedColumn();
+       }
+     };
+
+     configuration.add(new CoercionTuple<String, SelectedColumn>(String.class, SelectedColumn.class, coercion));
+   }
 }
