@@ -33,6 +33,8 @@ public class FileImporter{
     private ArrayList<String> headsToFind;
     @Parameter(required=true)
     private boolean showHeadline;
+    @Parameter(required=true)
+    private Boolean compareHeader;
 
 
 //parameters end ----------------------------------------------------------------------------
@@ -89,21 +91,33 @@ public class FileImporter{
             csvDelimter="\\t";
             DROPDOWNDELIMTER=":";
 
+
             EVENTNAME="successfullySetupColumns";
             uniqueID = renderSupport.allocateClientId(componentResources);
+            selectedColumns=new SelectedColumn[headsToFind.size()];
+            int i=0;
+            for(String headToFind : headsToFind) {
+                selectedColumns[i++]  = new SelectedColumn(headToFind);
+             }
+
 
         }
-       selectedColumns=new SelectedColumn[headsToFind.size()];
-       int i=0;
-       for(String headToFind : headsToFind) {
-                selectedColumns[i++]  = new SelectedColumn(headToFind);
+       if(headerFields==null) {
+           headerFields=new String[] {};
        }
+       if(firstLineFields==null) {
+           firstLineFields=new String[] {};
+       }
+       if(plateDataModel==null) {
+           plateDataModel="";
+       }
+
+
        File firstDataFileObj = new File(filesToProcess.get(0));
        firstDataFile=firstDataFileObj.getName();
-            //all file headers must be equal to go on
-       if(compareHeadersCSV()&&showHeadline) {
-          getHeaderLineItemsCSV(firstDataFileObj);
-       }
+       
+
+       getHeaderLineItemsCSV(firstDataFileObj);
    }
 
 
@@ -113,6 +127,9 @@ public class FileImporter{
 
 
    public boolean compareHeadersCSV() {
+       if(!compareHeader) {
+           return true;
+       }
        String fileToCompare = filesToProcess.get(0);
        File compare = new File(fileToCompare);
        String headerLineToCompare = getHeaderLineStringCSV(compare);
@@ -141,7 +158,6 @@ public class FileImporter{
 			reader.close();
 			headerFields = headerLine.split(csvDelimter);
             firstLineFields = firstLine.split(csvDelimter);
-            plateDataModel="";
             plateDataModel=generateCSNumberList(headerFields);
 
        }catch(IOException e) {
@@ -214,19 +230,48 @@ public class FileImporter{
         errorMsg="";
     }
     public Object[] selectedColumnsToObjects() {
-        Object[] returnObjs = new Object[selectedColumns.length*2];
-        int i=0;
+
+
+
+        ArrayList<String> tempColumns=new ArrayList<String>();
         for(SelectedColumn tempColumn : selectedColumns) {
-             returnObjs[i++]=tempColumn.getColumnName();
-             returnObjs[i++]=tempColumn.getMappedToColumn();
+             if(tempColumn==null ) {
+                 continue;
+             }
+             if(tempColumn.getColumnName()==null || tempColumn.getColumnName().equals("")) {
+                 continue;
+             }
+             if(tempColumn.getMappedToColumn()==null || tempColumn.getMappedToColumn().equals("")) {
+                 continue;
+             }
+             String name = tempColumn.getColumnName();
+             String number="";
+             if(tempColumn.getColumnNumber()!=null) {
+                 number=""+tempColumn.getColumnNumber();
+             }
+            tempColumns.add(name);
+            tempColumns.add(number);
+        }
+        Object[] returnObjs = new Object[]{};
+        if(tempColumns.size()>0) {
+            returnObjs=new Object[tempColumns.size()];
+            int i=0;
+            for(String tmp : tempColumns) {
+                returnObjs[i]=tmp;
+                i++;
+            } 
         }
         return returnObjs;
     }
-    public void onSuccessFromBigForm1() {
-        for(SelectedColumn column : selectedColumns) {
-            System.out.println("column name: "+column.getColumnName()+" "+column.getMappedToColumn());
-        }
-         triggerSuccessEvent();
+    public void onSuccessFromBigForm1(String uniqueIdentifier) {         
+             //all file headers must be equal to go on
+      //make sure this was called from the right component
+       if(uniqueIdentifier.equals(this.uniqueID)) {
+            if(compareHeadersCSV()) {
+                 triggerSuccessEvent();
+            }
+       }
+
 
     }
     public void triggerSuccessEvent() {
@@ -239,10 +284,11 @@ public class FileImporter{
             };
 
                 Object[] objs =selectedColumnsToObjects();
+                if(objs.length>0) {
+                    componentResources.triggerEvent(EVENTNAME, objs, callback);
+    }           }
 
-                componentResources.triggerEvent(EVENTNAME, objs, callback);
-    }
-//getters and setters -----------------------------------------------------------------------------
+    //getters and setters -----------------------------------------------------------------------------
 
     public boolean getErrorFound() {
         return errorFound;
@@ -371,6 +417,7 @@ public class FileImporter{
     public void setInit(boolean init) {
         this.init = init;
     }
+
     //end of setters---------------------------------------------------
 
 

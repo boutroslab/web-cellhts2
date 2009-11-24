@@ -1003,9 +1003,9 @@ public class CellHTS2 {
                     }
                     //check if we have a valid format
                     dataFileList.put(singleFile.getName(), new DataFile(singleFile.getName()));
-                    //we reset this 
+                    //we reset this
                     errorNextLink=false;
-                    
+
 
                 } else {
                     //if error occured erase the uploaded file
@@ -1026,7 +1026,7 @@ public class CellHTS2 {
 
         if (noErrorUploadFile && dataFileList.size()>0) {
 
-            
+
             plate = convertIntToPlateTypes(thisPlateFormat);
             //enable goto next page
             activatedPages.put(currentPagePointer, false);

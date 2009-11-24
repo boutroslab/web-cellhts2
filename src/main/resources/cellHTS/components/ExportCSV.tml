@@ -3,7 +3,7 @@
 
     </head>
 
-    <body onLoad="document.getElementById('csvDelimter').disabled=true;document.getElementById('sheetNumber').disabled=false;">
+    <body onLoad="initPage()">
      <div id="${uniqueID}">
         a. Choose filetype
       <t:form t:id="dummyID">
@@ -24,12 +24,37 @@
            <input t:type="submit" t:id="submitBigFormData" value="format data"/>
        </t:form>
         <t:if test="errorFound">
-           ${errorMsg}
+           <font color="red">${errorMsg}</font>
         </t:if>
         </div>                                                                                                          
          </body>
     <script type="text/javascript">
         <!-- //
+
+        function initPage() {
+           var fileType = document.getElementById('fileType');
+           if(fileType==null) {
+               document.getElementById('csvDelimter').disabled=true;
+               document.getElementById('sheetNumber').disabled=true;
+           }
+           else if(fileType.value==null) {
+                document.getElementById('csvDelimter').disabled=true;
+               document.getElementById('sheetNumber').disabled=true;
+           }
+           else if(fileType.value=="") {
+              document.getElementById('csvDelimter').disabled=true;
+               document.getElementById('sheetNumber').disabled=true;
+           }
+           else if(fileType.value=="csv") {
+                document.getElementById('csvDelimter').disabled=false;
+               document.getElementById('sheetNumber').disabled=true;
+           }
+           else if(fileType.value=="excel") {
+               document.getElementById('csvDelimter').disabled=true;
+               document.getElementById('sheetNumber').disabled=false;
+           }
+
+        }
 
         function onCompleteFileTypeChangeEvent(response) {
            var yesNo = response.fileType;

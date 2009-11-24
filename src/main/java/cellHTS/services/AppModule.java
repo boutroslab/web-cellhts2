@@ -140,20 +140,30 @@ public class AppModule
         configuration.add("Timing", filter);
     }
 
+
+
 //    public static void contributeTranslatorSource(Configuration<Translator>configuration) {
 //
 //    }
 //
-    public static void contributeTypeCoercer(Configuration<CoercionTuple> configuration)
-   {
-     Coercion<String, SelectedColumn> coercion = new Coercion<String, SelectedColumn>()
-     {
-       public SelectedColumn coerce(String input)
-       {
-         return new SelectedColumn();
-       }
-     };
-
-     configuration.add(new CoercionTuple<String, SelectedColumn>(String.class, SelectedColumn.class, coercion));
-   }
+//public static void contributeTypeCoercer(Configuration<CoercionTuple> configuration) {
+//    Coercion<String, SelectedColumn> coercion = new Coercion<String, SelectedColumn>()
+//         {
+//           public SelectedColumn coerce(String input)
+//           {
+//             return new SelectedColumn();
+//           }
+//         };
+//
+//         configuration.add(new CoercionTuple<String,SelectedColumn>(String.class, SelectedColumn.class, coercion));
+//
+////     configuration.add(new CoercionTuple(void.class, SelectedColumn.class,
+////        new Coercion<Void, SelectedColumn>()
+////        {
+////            public SelectedColumn coerce(Void input)
+////            {
+////                return new SelectedColumn();
+////            }
+////        }));
+// }
 }

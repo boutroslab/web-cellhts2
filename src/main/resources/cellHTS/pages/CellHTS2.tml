@@ -216,7 +216,9 @@
             <p>You can upload csv raw plate result reader files, single text files in cellHTS2 format or ZIP files
                 containing multiple data files.
             </p>
-
+              <br/>
+                <t:pagelink page="debugpage">advanced file importer stuff</t:pagelink>
+              <br/>
             <div t:type="ck/Tooltip" clientId="tooltip2"
                  value="If the experiment has a lot of data files, it is best to pack them into a ZIP file and upload it."
                  effect="appear">

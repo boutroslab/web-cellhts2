@@ -1,9 +1,11 @@
-<html xmlns:t="http://tapestry.apache.org/schema/tapestry_5_0_0.xsd">
+<html xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd"
+      xmlns:p="tapestry:parameter">
     <head>
 
     </head>
 
     <body>
+
           <div id="${uniqueID}">
             <t:if test="showHeadline">
             <!--show grid with example data-->
@@ -29,26 +31,49 @@
 						</t:loop>
                     </tr>
             </table>
+                 <br/>
                 </t:if>
-            
+
             <!--now show the config opportunity for plate data files-->
-            <t:form t:id="bigForm1">
-            <table>
-                        <t:loop t:source="selectedColumns" t:value="selectedColumn">
-						<tr>
-							<th id="tcon">${selectedColumn.columnName}</th>
-							<td align="center" width="160px">
-								<!--<input t:type="TextField" t:id="plateh" size="11" />-->
-                                <t:select  t:value="selectedColumn.mappedToColumn" model="plateDataModel"/>
+            <t:form t:id="bigForm1" t:context="prop:uniqueID">
 
-							</td>
-						</tr>
-                        </t:loop>
+                        <!--cannot figure out how to use loops with objects-->
+                        <!--<t:loop t:source="selectedColumns" t:value="selectedColumn">-->
+						<!--<tr>-->
+							<!--<th id="tcon">${selectedColumn.columnName}</th>-->
+							<!--<td align="center" width="160px">-->
+                                <!--<t:select  t:value="selectedColumn.mappedToColumn" model="plateDataModel"-->
+                                 <!--t:blankOption="always"-->
+                                 <!--t:blankLabel="please select"-->
+                                <!--/>-->
+<!---->
+							<!--</td>-->
+						<!--</tr>-->
+                        <!--</t:loop>-->
 
-					</table>
+                    <t:grid t:source="selectedColumns" t:row="selectedColumn" t:include="columnName,mappedToColumn">
+                         <p:columnamecell>
+                            ${selectedColumn.columnName}
+                       </p:columnamecell>
+
+                        <p:mappedToColumncell>
+                            <t:select t:value="selectedColumn.mappedToColumn" model="plateDataModel"
+                                 t:blankOption="always"
+                                 t:blankLabel="please select"
+                                />
+                        </p:mappedToColumncell>
+                    </t:grid>
+
+
                 <input t:type="submit" value="format data"/>
             </t:form>
         </div>
+        <br/>
+        <t:if test="errorFound">
+           <font color="red">${errorMsg}</font>
+        </t:if>
+        <br/>
     </body>
+
 
 </html>

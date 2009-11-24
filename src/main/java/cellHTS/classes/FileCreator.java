@@ -646,4 +646,51 @@ public class FileCreator {
 
 
     }
+
+    public  static boolean createDataFilesFromCVSFiles(ArrayList<File> inputFiles,ArrayList<File> outputFiles,
+                                        LinkedHashMap<String,Integer> returnMap) {
+
+        ArrayList<Integer> tempColNums = new ArrayList<Integer>();
+        for (String colName : returnMap.keySet()) {
+            tempColNums.add(returnMap.get(colName));
+        }
+        try {
+            int i = 0;
+            for(File file : inputFiles) {
+                    File outputFile = outputFiles.get(i);
+         
+                    FileReader reader = new FileReader(file);
+                    BufferedReader buffer = new BufferedReader(reader);
+
+                    FileWriter outFileWriter = new FileWriter(outputFile);
+                    BufferedWriter outBufferedWriter = new BufferedWriter(outFileWriter);
+
+                    String line;
+
+
+                    while ((line = buffer.readLine()) != null) {
+                        String[] cols = line.split("\t");
+                        String outline = "";
+                        for (Integer colID : tempColNums) {
+                            if(outline.equals("")) {
+                                outline = cols[colID-1];   //the columns are index based
+                            }
+                            else {
+                                outline = "\t"+cols[colID-1];     //the columns are index based
+                            }
+                        }
+                        outBufferedWriter.write(outline+"\n");
+                    }
+                    outBufferedWriter.close();
+                    outFileWriter.close();
+                    buffer.close();
+                    reader.close();
+
+            }
+    }catch(IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;   
+    }
 }

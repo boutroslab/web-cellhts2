@@ -30,7 +30,21 @@
       <t:if test="startFileImport">
       <t:ExportCSV t:id="exportCSV" t:filesToProcess="uploadedFiles"/>
       <t:if test="convertedAllFiles">
-        <t:FileImporter t:id="datafileImporter" filesToProcess="filesToImport" headsToFind="headsToFind" showHeadline="showHeadline"/>
+        <t:FileImporter t:id="datafileImporter" filesToProcess="filesToImport" headsToFind="headsToFindDatafile" showHeadline="literal:true"  compareHeader="literal:false"/>
+        <t:if test="plateWellDefined">
+            Please select if your files contain Plate Config data<br/>
+            <t:FileImporter t:id="plateConfigImporter" filesToProcess="filesToImport" headsToFind="headsToFindPlateconfigfile" showHeadline="literal:false" compareHeader="literal:true"/>
+            Please select if your files contain Annotation data<br/>
+            <t:FileImporter t:id="annotationImporter" filesToProcess="filesToImport" headsToFind="headsToFindAnnotationfile" showHeadline="literal:false"  compareHeader="literal:true"/>
+        </t:if>
+
+          <t:pagelink page="cellhts2">Go back to cellHTS2</t:pagelink>
+
+      <!--<t:actionlink t:id="containsAnnotation">Contains annotation information</t:actionlink>-->
+       <!--<t:if test="containsAnnotation">-->
+        <!--<t:FileImporter t:id="containsAnnotation" filesToProcess="filesToImport" headsToFind="literal:" showHeadline="literal:false"/>-->
+      <!--</t:if>-->
+
       </t:if>
       </t:if>
  </body>

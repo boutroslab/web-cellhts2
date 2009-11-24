@@ -20,29 +20,17 @@
 
 package cellHTS.pages;
 
-import cellHTS.classes.Configuration;
-import cellHTS.classes.FileCreator;
-import cellHTS.classes.FileParser;
 import cellHTS.components.ExportCSV;
 import cellHTS.components.FileImporter;
+import cellHTS.classes.FileCreator;
 
-import java.io.File;
-import java.io.FileReader;
-import java.net.URL;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
 import java.util.ArrayList;
-import java.util.SortedMap;
 import java.util.LinkedHashMap;
+import java.io.File;
 
-import org.apache.tapestry5.ioc.annotations.Inject;
-import org.apache.tapestry5.services.Request;
-import org.apache.tapestry5.services.RequestGlobals;
-import org.apache.tapestry5.ComponentResources;
 import org.apache.tapestry5.annotations.Persist;
 import org.apache.tapestry5.annotations.InjectComponent;
-
-import javax.servlet.http.HttpServletRequest;
+import org.apache.tapestry5.annotations.InjectPage;
 
 public class DebugPage {
     @Persist
@@ -52,21 +40,31 @@ public class DebugPage {
     @Persist
     private ArrayList<String> filesToImport;
     @Persist
-    private ArrayList<String> headsToFind;
+    private ArrayList<String> headsToFindDatafile;
     @Persist
-    private boolean showHeadline;
+    private ArrayList<String> headsToFindPlateconfigfile;
+    @Persist
+    private ArrayList<String> headsToFindAnnotationfile;
     @Persist
     private String uploadPath;
     @Persist
     private boolean init;
     @Persist
     private boolean startFileImport;
+    @InjectPage
+    private CellHTS2 cellHTS2;
+    @Persist
+    private boolean plateWellDefined;
+
 
     @InjectComponent
     private ExportCSV exportCSV;
     @InjectComponent
     private FileImporter dataFileImporter;
-    
+    @InjectComponent
+    private FileImporter plateConfigImporter;
+    @InjectComponent
+    private FileImporter annotationImporter;
 
 
     public void setupRender() {
@@ -74,14 +72,21 @@ public class DebugPage {
             init=true;
             uploadedFiles = new ArrayList<String>();
             filesToImport = new ArrayList<String>();
-            headsToFind = new ArrayList<String>();
-            headsToFind.add("Plate");
-            headsToFind.add("Well");
-            headsToFind.add("Value");
-            showHeadline=true;
+            plateWellDefined=false;
+            headsToFindDatafile = new ArrayList<String>();
+            headsToFindDatafile.add("Plate");
+            headsToFindDatafile.add("Well");
+            headsToFindDatafile.add("Value");
+            headsToFindPlateconfigfile = new ArrayList<String>();
+            headsToFindPlateconfigfile.add("Value");
+            headsToFindAnnotationfile=new ArrayList<String>();
+            headsToFindAnnotationfile.add("GeneID");
+
+
             uploadPath="/tmp/bla";
             startFileImport=false;
             convertedAllFiles=false;
+
         }
     }
           //this is for testing only
@@ -118,8 +123,7 @@ public class DebugPage {
     //this event is broadcasted from the multipleupload component
     void onlastFileTransferedFromMultipleUploadOne(Object[]submittedFiles) {
 
-          for(Object file : submittedFiles) {
-              System.out.println("submitted and UPLOADED file: "+(String)file);
+          for(Object file : submittedFiles) {                     
               uploadedFiles.add((String)file);
           }
     }
@@ -131,6 +135,8 @@ public class DebugPage {
         convertedAllFiles=false;
         exportCSV.setInit(false);
         dataFileImporter.setInit(false);
+        plateConfigImporter.setInit(false);
+        annotationImporter.setInit(false);
 
     }
 
@@ -145,6 +151,11 @@ public class DebugPage {
         System.out.println("filesToImport:"+filesToImport);
         convertedAllFiles=true;
     }
+    public void onFailedConvertedToCVSFromExportCSV(Object []dummy) {
+       convertedAllFiles=false;
+        //reinit everything
+       dataFileImporter.setInit(false);
+    }
     public void onActionFromProcessFiles() {
         if(uploadedFiles.size()>0) {
             startFileImport=true;
@@ -154,8 +165,52 @@ public class DebugPage {
             startFileImport=false;
         }
     }
-    //this will be fired if all the columns have been associated to the column names by the user
+    //this will be fired if all the columns have been associated to the column names by the user form the dataFileImporter
+    //component
     public void onSuccessfullySetupColumnsFromDatafileImporter(Object[]objs) {
+
+        LinkedHashMap<String,Integer> returnMap = eventObjToColumnNamesAndNums(objs);
+        if(returnMap.containsKey("Plate")&&returnMap.containsKey("Well")) {
+            plateWellDefined=true;
+        }
+        else {
+            plateWellDefined=false;
+        }
+        //now generate the data files
+        if(returnMap.containsKey("Plate")&&returnMap.containsKey("Well")&&returnMap.containsKey("Value")) {
+           ArrayList<File> inputFiles= new ArrayList<File>();
+            for(String tempFile : filesToImport) {
+                inputFiles.add(new File(tempFile));
+            }
+            ArrayList<File> outputFiles= new ArrayList<File>();
+            for(String tempFile : uploadedFiles) {
+                outputFiles.add(new File(tempFile));
+            }
+
+           if(FileCreator.createDataFilesFromCVSFiles(inputFiles,outputFiles,returnMap)) {
+               System.out.println("creation succeeded");
+                 //send the files to cellHTS2
+
+           }
+            else {
+                //create a error message
+           }
+
+        }
+
+    }
+    //this will be fired from the plateConfigImporter component
+    public void onSuccessfullySetupColumnsFromPlateConfigImporter(Object[]objs) {
+        System.out.println("plateConfigImporter called");
+        LinkedHashMap<String,Integer> returnMap = eventObjToColumnNamesAndNums(objs);
+        for(String key : returnMap.keySet()) {
+            System.out.println(key+":"+returnMap.get(key));
+        }
+
+    }
+    //this will be fired from the annotationImporter component
+    public void onSuccessfullySetupColumnsFromAnnotationImporter(Object[]objs) {
+        System.out.println("plateConfigImporter called");
         LinkedHashMap<String,Integer> returnMap = eventObjToColumnNamesAndNums(objs);
         for(String key : returnMap.keySet()) {
             System.out.println(key+":"+returnMap.get(key));
@@ -165,9 +220,6 @@ public class DebugPage {
         LinkedHashMap<String,Integer> returnMap = new LinkedHashMap<String,Integer>();
         try {
         for(int i=0;i<objs.length;i+=2) {
-            System.out.println("i:"+(String)objs[i+1]);
-            System.out.println("i+1:"+(String)objs[i+1]);
-
             returnMap.put((String)objs[i],Integer.parseInt((String)objs[i+1]));
         }
 
@@ -177,7 +229,6 @@ public class DebugPage {
         }
         return returnMap;
     }
-
 
      //getters and setters--------------------------------------------------------------------------------
 
@@ -197,21 +248,16 @@ public class DebugPage {
         this.filesToImport = filesToImport;
     }
 
-    public ArrayList<String> getHeadsToFind() {
-        return headsToFind;
+    public ArrayList<String> getHeadsToFindDatafile() {
+        return headsToFindDatafile;
     }
 
-    public void setHeadsToFind(ArrayList<String> headsToFind) {
-        this.headsToFind = headsToFind;
+    public void setHeadsToFindDatafile(ArrayList<String> headsToFindDatafile) {
+        this.headsToFindDatafile = headsToFindDatafile;
     }
 
-    public boolean isShowHeadline() {
-        return showHeadline;
-    }
+    
 
-    public void setShowHeadline(boolean showHeadline) {
-        this.showHeadline = showHeadline;
-    }
 
     public String getUploadPath() {
         return uploadPath;
@@ -235,6 +281,30 @@ public class DebugPage {
 
     public void setUploadedFiles(ArrayList<String> uploadedFiles) {
         this.uploadedFiles = uploadedFiles;
+    }
+
+    public ArrayList<String> getHeadsToFindPlateconfigfile() {
+        return headsToFindPlateconfigfile;
+    }
+
+    public void setHeadsToFindPlateconfigfile(ArrayList<String> headsToFindPlateconfigfile) {
+        this.headsToFindPlateconfigfile = headsToFindPlateconfigfile;
+    }
+
+    public ArrayList<String> getHeadsToFindAnnotationfile() {
+        return headsToFindAnnotationfile;
+    }
+
+    public void setHeadsToFindAnnotationfile(ArrayList<String> headsToFindAnnotationfile) {
+        this.headsToFindAnnotationfile = headsToFindAnnotationfile;
+    }
+
+    public boolean isPlateWellDefined() {
+        return plateWellDefined;
+    }
+
+    public void setPlateWellDefined(boolean plateWellDefined) {
+        this.plateWellDefined = plateWellDefined;
     }
     // end of getters and setters-------------------------------------------------------------------------
 }

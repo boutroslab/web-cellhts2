@@ -51,7 +51,9 @@ public class ExportCSV {
     @Inject
     private ComponentResources componentResources;
     @Persist
-    private String EVENTNAME;
+    private String SUCCESSEVENTNAME;
+    @Persist
+    private String FAILEVENTNAME;
     @Persist
     private String fileTypeModel;
     @Inject
@@ -66,11 +68,10 @@ public class ExportCSV {
         if (!init) {
             System.out.println("we init!");
             init = true;
-            fileType = "excel";
+            //fileType = "excel";
             csvDelimter = "\\t";
-            errorFound = false;
-            errorMsg = "";
-            EVENTNAME = "successfullyConvertedToCVS";
+            SUCCESSEVENTNAME = "successfullyConvertedToCVS";
+            FAILEVENTNAME= "failedConvertedToCVS";
             fileTypeModel = "excel,csv";
             uniqueID = renderSupport.allocateClientId(componentResources);
 
@@ -78,6 +79,10 @@ public class ExportCSV {
     }
    //TODO: variables dont get updated
     public void onSuccessFromBigForm() {
+       //if you selected the item "please select"
+        if(fileType==null || fileType.equals("")) {
+            return;
+        }
        
         if (filesToProcess.size() < 1) {
             return;
@@ -87,8 +92,15 @@ public class ExportCSV {
 
         //show an grid
         if (fileType.equals("excel")) {
+            System.out.println("Bam outside");
             if (excelToTabCVS()) {
+                System.out.println("bam inside");                
                 triggerSuccessEvent();
+            }
+            else {
+                //if an error occured
+                init=false;
+                triggerFailEvent();
             }
 
         } else if (fileType.equals("csv")) {
@@ -98,6 +110,10 @@ public class ExportCSV {
             }
             if (cvsToTabCVS()) {
                 triggerSuccessEvent();
+            }
+            else {
+                init=false;
+                triggerFailEvent();
             }
         }
         //call an event which will be fired if we successfully converted everything
@@ -129,8 +145,19 @@ public class ExportCSV {
             for (String cf : convertedFilenames) {
                 objs[i++] = cf;
             }
-            componentResources.triggerEvent(EVENTNAME, objs, callback);
+            componentResources.triggerEvent(SUCCESSEVENTNAME, objs, callback);
         }
+    }
+    public void triggerFailEvent() {
+        //trigger an event that everything has been converted successfully and
+        //parameters are the converted files
+        ComponentEventCallback callback = new ComponentEventCallback() {
+            public boolean handleResult(Object result) {
+                return true;
+            }
+        };
+        componentResources.triggerEvent(FAILEVENTNAME,new Object[]{}, callback);
+        
     }
 
     public boolean cvsToTabCVS() {
@@ -226,7 +253,7 @@ public class ExportCSV {
                         if (row.length > 0) {
                             bw.write(row[0].getContents());
                             for (int j = 1; j < row.length; j++) {
-                                bw.write(',');
+                                bw.write('\t');
                                 bw.write(row[j].getContents());
                             }
                         }

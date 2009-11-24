@@ -12,6 +12,7 @@ package cellHTS.classes;
     public class SelectedColumn {
         private String columnName;
         private String mappedToColumn;
+        private Integer columnNumber;
 
         public SelectedColumn(String columnName) {
             this.columnName = columnName;
@@ -35,7 +36,22 @@ package cellHTS.classes;
         }
 
         public void setMappedToColumn(String mappedToColumn) {
+            if(mappedToColumn==null) {
+                return;
+            }
             this.mappedToColumn = mappedToColumn;
-           
+            if(mappedToColumn.contains(":")) {
+                Integer intValue = Integer.parseInt(mappedToColumn.split(":")[0]);
+                columnNumber=intValue;
+            }
+
         }
-    }
+
+        public Integer getColumnNumber() {
+            return columnNumber;
+        }
+
+        public void setColumnNumber(Integer columnNumber) {
+            this.columnNumber = columnNumber;
+        }
+}
