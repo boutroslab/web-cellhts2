@@ -33,45 +33,47 @@ import java.util.jar.Attributes;
 import cellHTS.classes.RInterface;
 
 /**
- *
- *  This class generates the general layout of the webtool so its like a frame where the different sites
- *  are embedded. It shows info about R version etc. too
- *
+ * This class generates the general layout of the webtool so its like a frame where the different sites
+ * are embedded. It shows info about R version etc. too
+ * <p/>
  * Created by IntelliJ IDEA.
  * User: oliverpelz
  * Date: 15.12.2008
  * Time: 13:53:30
- *
  */
 public class Layout {
-        //to access .pom file entries etc.
-        @Inject
-        private ApplicationGlobals applicationGlobals;
+    //to access .pom file entries etc.
 
-        @Persist
-        private String build;
-        @Persist
-        private String version;
-        @Persist
-        private boolean initOnce;
-        @Persist
-        private String cellHTS2Version;
+    @Inject
+    private ApplicationGlobals applicationGlobals;
+
+    @SessionState
+    private String buildCellHTS2Version;
+    private boolean buildCellHTS2VersionExists;
+    @SessionState
+    private String versionCellHTS2Version;
+    private boolean versionCellHTS2VersionExists;
+    @Persist
+    private boolean initOnce;
+    @Persist
+    private String cellHTS2Version;
 
     /**
-     *
      * initalize stuff, do this only once such as retriving cellHTS version (Singleton call)
-     *
      */
-        @SetupRender
-        public void init() {
-            //do this only once
-            if (!initOnce) {
-                initOnce = true;
-                build="";
-                version="";
-                cellHTS2Version="";                   
+    @SetupRender
+    public void init() {
+        //do this only once
+        if (!initOnce) {
+            initOnce = true;
+            //check the sessionstate variables 
+            if (!buildCellHTS2VersionExists && !versionCellHTS2VersionExists) {
+                buildCellHTS2Version = "";
+                versionCellHTS2Version = "";
+
+
                 String path = applicationGlobals.getServletContext().getRealPath(File.separator);
-               //this will actually start and end a rserver instance 
+                //this will actually start and end a rserver instance
                 RInterface rInterface = new RInterface();
                 cellHTS2Version = rInterface.getCellHTS2Version();
 
@@ -83,12 +85,8 @@ public class Layout {
 
                     Attributes atts = mf.getMainAttributes();
 
-                    build = atts.getValue("Implementation-Build");
-                    version = atts.getValue("Implementation-Version");
-
-
-
-                    
+                    buildCellHTS2Version = atts.getValue("Implementation-Build");
+                    versionCellHTS2Version = atts.getValue("Implementation-Version");
 
 
                 } catch (Exception e) {
@@ -96,24 +94,33 @@ public class Layout {
                 }
             }
         }
+    }
 
-        public String getBuild() {
-            if(build.equals("")) {
-                //when we are running through a jetty we cant get the MANIFEST so we will
-                //output not available
-                build="<not available>";
-            }
-            return build;
+    public String getBuild() {
+        if (!buildCellHTS2VersionExists) {
+            buildCellHTS2Version = "<not available>";
         }
+        if (buildCellHTS2Version.equals("")) {
+            //when we are running through a jetty we cant get the MANIFEST so we will
+            //output not available
+            buildCellHTS2Version = "<not available>";
+        }
+        return buildCellHTS2Version;
+    }
 
-        public String getVersion() {
-            if(version.equals("")) {
-                version="<not available>";
-            }
-            return version;
+    public String getVersion() {
+        if (!versionCellHTS2VersionExists) {
+            versionCellHTS2Version = "<not available>";
         }
+        if (versionCellHTS2Version.equals("")) {
+            versionCellHTS2Version = "<not available>";
+        }
+        return versionCellHTS2Version;
+    }
 
-        public String getCellHTS2Version() {
-          return cellHTS2Version;
-        }
+    public String getCellHTS2Version() {
+        return cellHTS2Version;
+    }
+
+
 }

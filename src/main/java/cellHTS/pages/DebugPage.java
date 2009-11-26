@@ -31,6 +31,8 @@ import java.io.File;
 import org.apache.tapestry5.annotations.Persist;
 import org.apache.tapestry5.annotations.InjectComponent;
 import org.apache.tapestry5.annotations.InjectPage;
+import org.apache.tapestry5.annotations.OnEvent;
+import org.apache.tapestry5.json.JSONObject;
 
 public class DebugPage {
     @Persist
@@ -65,6 +67,12 @@ public class DebugPage {
     private FileImporter plateConfigImporter;
     @InjectComponent
     private FileImporter annotationImporter;
+    @Persist
+    private boolean containsMultiChannelData;
+     @Persist
+    private boolean containsHeadline;
+    @Persist
+    private int replicateNumbers;
 
 
     public void setupRender() {
@@ -86,6 +94,10 @@ public class DebugPage {
             uploadPath="/tmp/bla";
             startFileImport=false;
             convertedAllFiles=false;
+
+            containsHeadline=true;
+            containsMultiChannelData=false;
+            replicateNumbers=1;
 
         }
     }
@@ -119,6 +131,8 @@ public class DebugPage {
         return al;
     }
 
+    
+
     //if all files have been transfered to the server with the multifileupload component
     //this event is broadcasted from the multipleupload component
     void onlastFileTransferedFromMultipleUploadOne(Object[]submittedFiles) {
@@ -141,14 +155,11 @@ public class DebugPage {
     }
 
 
-    public void onSuccessfullyConvertedToCVSFromExportCSV(Object []objs) {
-        System.out.println("I am here");
+    public void onSuccessfullyConvertedToCVSFromExportCSV(Object []objs) {                      
         filesToImport.clear();
         for(Object obj: objs) {
-            filesToImport.add((String)obj);
-            System.out.println("file:"+(String)obj);
-        }
-        System.out.println("filesToImport:"+filesToImport);
+            filesToImport.add((String)obj);                
+        }                          
         convertedAllFiles=true;
     }
     public void onFailedConvertedToCVSFromExportCSV(Object []dummy) {
@@ -158,8 +169,7 @@ public class DebugPage {
     }
     public void onActionFromProcessFiles() {
         if(uploadedFiles.size()>0) {
-            startFileImport=true;
-            System.out.println("bam");
+            startFileImport=true;                     
         }
         else {
             startFileImport=false;
@@ -176,7 +186,7 @@ public class DebugPage {
         else {
             plateWellDefined=false;
         }
-        //now generate the data files
+        //now generate the data files if everything was defined
         if(returnMap.containsKey("Plate")&&returnMap.containsKey("Well")&&returnMap.containsKey("Value")) {
            ArrayList<File> inputFiles= new ArrayList<File>();
             for(String tempFile : filesToImport) {
@@ -229,6 +239,27 @@ public class DebugPage {
         }
         return returnMap;
     }
+
+
+    public Object[] getEmptyObject() {
+        return new Object[]{"test"};
+    }
+    public void onActionFromProceedWebCellHTS2() {
+        //cellHTS2.
+    }
+    @OnEvent(component = "containsMultiChannelData", value = "change")
+     public JSONObject onContainsMultiChannelData(boolean type) {
+            containsMultiChannelData=type;                            
+            return new JSONObject().put("multi",type);
+        }
+    @OnEvent(component = "containsHeadline", value = "change")
+    public JSONObject onContainsHeadline(boolean type) {
+        containsHeadline=type;
+        System.out.println("changed on server");
+        return new JSONObject().put("dummy", "");
+    }
+
+
 
      //getters and setters--------------------------------------------------------------------------------
 
@@ -305,6 +336,30 @@ public class DebugPage {
 
     public void setPlateWellDefined(boolean plateWellDefined) {
         this.plateWellDefined = plateWellDefined;
+    }
+
+    public boolean isContainsMultiChannelData() {
+        return containsMultiChannelData;
+    }
+
+    public void setContainsMultiChannelData(boolean containsMultiChannelData) {
+        this.containsMultiChannelData = containsMultiChannelData;
+    }
+
+    public boolean isContainsHeadline() {
+        return containsHeadline;
+    }
+
+    public void setContainsHeadline(boolean containsHeadline) {
+        this.containsHeadline = containsHeadline;
+    }
+
+    public int getReplicateNumbers() {
+        return replicateNumbers;
+    }
+
+    public void setReplicateNumbers(int replicateNumbers) {
+        this.replicateNumbers = replicateNumbers;
     }
     // end of getters and setters-------------------------------------------------------------------------
 }

@@ -220,6 +220,9 @@ public class CellHTS2 {
     @InjectPage
     private Results resultPage;
 
+    @InjectPage
+    private DebugPage debugPage;
+
     //this variable states if all required input has been made in a certain step of the cellHTS2
     //wizard to enable next step: can be enabled, disabled and none
     @Persist
@@ -316,6 +319,7 @@ public class CellHTS2 {
 
         //do a lot of init stuff...and do it only once as long as the whole java app lives!!!!
         if (!notFirstRun) {
+            checkAndCreateUploadDirectory();
             //never come in here again!!!
 
             //this is for providing a temp path for the tool...either via command line or via app.properties file
@@ -415,7 +419,6 @@ public class CellHTS2 {
         }
         
     }
-
     /**
      *
      * before actually rendering the template we will set the
@@ -919,7 +922,6 @@ public class CellHTS2 {
     }
 
 
-
     /**
      *
      *  this method will be started when trying to upload a
@@ -1365,8 +1367,8 @@ public class CellHTS2 {
     }
 
 
-    public void onFailureFromDataFileUpload
-            () {
+    public void onFailureFromDataFileUpload() {
+
         noErrorUploadFile = false;
         errorDatafileMsg = "Error: could not upload the file, maybe its too big to upload";
 
@@ -1677,6 +1679,9 @@ public class CellHTS2 {
         filePathes.toArray(filePathesArr);
         ShellEnvironment.zipFiles(fileNamesArr, filePathesArr, zipFile);
         return new File(zipFile);
+    }
+    public Object onActionFromShowDebugPage(){
+       return debugPage; 
     }
 
 
@@ -3363,6 +3368,22 @@ public class CellHTS2 {
         }
         file.write(copied);
     }
+    public void checkAndCreateUploadDirectory() {
+        String uploadPath = msg.get("upload-path");
+        File uploadPathObj = new File(uploadPath);
+        if(!uploadPathObj.exists()) {
+            if(!uploadPathObj.mkdirs()) {
+                throw new TapestryException("Cannot create directory on the server to upload files: "+uploadPath+".\nCheck read/write permissions or change file upload property in apps.properties file",null);
+            }
+        }
+        if(uploadPathObj.canRead()&&uploadPathObj.canWrite()) {
+            return;
+        }
+        else {
+                throw new TapestryException("Cannot read or write directory: "+uploadPath+".\nCheck read/write permissions",null);
+        }
+    }
+
 
     public void onClickWellEvent() {
                System.exit(1);

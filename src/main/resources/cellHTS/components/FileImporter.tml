@@ -31,11 +31,12 @@
 						</t:loop>
                     </tr>
             </table>
-                 <br/>
+                                
                 </t:if>
 
             <!--now show the config opportunity for plate data files-->
             <t:form t:id="bigForm1" t:context="prop:uniqueID">
+
 
                         <!--cannot figure out how to use loops with objects-->
                         <!--<t:loop t:source="selectedColumns" t:value="selectedColumn">-->
@@ -73,7 +74,5 @@
            <font color="red">${errorMsg}</font>
         </t:if>
         <br/>
-    </body>
-
-
+    </body>         
 </html>

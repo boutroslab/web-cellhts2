@@ -83,6 +83,8 @@ public class FileImporter{
      @Inject
     private RenderSupport renderSupport;
 
+
+
     
    public void setupRender() {
 
@@ -99,7 +101,7 @@ public class FileImporter{
             for(String headToFind : headsToFind) {
                 selectedColumns[i++]  = new SelectedColumn(headToFind);
              }
-
+             
 
         }
        if(headerFields==null) {
@@ -215,7 +217,7 @@ public class FileImporter{
         return returnString;
 
    }
-
+    
 
 
     
@@ -417,8 +419,7 @@ public class FileImporter{
     public void setInit(boolean init) {
         this.init = init;
     }
-
-    //end of setters---------------------------------------------------
+//end of setters---------------------------------------------------
 
 
     

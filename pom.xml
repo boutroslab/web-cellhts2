@@ -18,7 +18,8 @@
   ~
   -->
 
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0">
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0">
     <modelVersion>4.0.0</modelVersion>
     <groupId>cellHTS</groupId>
     <artifactId>cellHTS-java</artifactId>
@@ -27,7 +28,7 @@
     <name>web cellHTS2 application</name>
     <url>http://web-cellhts2.dkfz.de/</url>
     <description>a web-application for the (user-friendly) analysis of cellHTS2 datasets.</description>
-     <scm>
+    <scm>
         <connection>scm:svn:https://webcellhts.googlecode.com/svn/trunk/</connection>
         <developerConnection>scm:svn:https://webcellhts.googlecode.com/svn/trunk/
         </developerConnection>
@@ -35,37 +36,36 @@
     </scm>
 
     <issueManagement>
-         <system>Google Issues</system>
-         <url>http://code.google.com/p/webcellhts/issues/list</url>
-    </issueManagement>       
+        <system>Google Issues</system>
+        <url>http://code.google.com/p/webcellhts/issues/list</url>
+    </issueManagement>
 
     <developers>
-          <developer>
-             <id>olip</id>
-             <name>Oliver Pelz</name>
-             <email>o.pelz@dkfz.de</email>
-             <roles>
+        <developer>
+            <id>olip</id>
+            <name>Oliver Pelz</name>
+            <email>o.pelz@dkfz.de</email>
+            <roles>
                 <role>Project Manager</role>
                 <role>Architect</role>
-             </roles>
-             <organization>www.dkfz.de/signaling</organization>
-             <timezone>-5</timezone>
-           </developer>
-           <developer>
-             <id>moritzg</id>
-             <name>Moritz Gilsdorf</name>
-             <email>m.gilsdorf@dkfz.de</email>
-             <roles>                          
+            </roles>
+            <organization>www.dkfz.de/signaling</organization>
+            <timezone>-5</timezone>
+        </developer>
+        <developer>
+            <id>moritzg</id>
+            <name>Moritz Gilsdorf</name>
+            <email>m.gilsdorf@dkfz.de</email>
+            <roles>
                 <role>Architect</role>
-             </roles>
-             <organization>www.dkfz.de/signaling</organization>
-             <timezone>-5</timezone>
-           </developer>
+            </roles>
+            <organization>www.dkfz.de/signaling</organization>
+            <timezone>-5</timezone>
+        </developer>
     </developers>
 
 
-
-    <dependencies>            
+    <dependencies>
         <dependency>
             <groupId>org.apache.tapestry</groupId>
             <artifactId>tapestry-core</artifactId>
@@ -76,7 +76,7 @@
             <artifactId>ognl</artifactId>
             <version>2.7.3</version>
         </dependency>
-        
+
         <!-- A dependency on either JUnit or TestNG is required, or the surefire plugin (which runs the tests)
 will fail, preventing Maven from packaging the WAR. Tapestry includes a large number
 of testing facilities designed for use with TestNG (http://testng.org/), so it's recommended. -->
@@ -113,18 +113,17 @@ of testing facilities designed for use with TestNG (http://testng.org/), so it's
             <groupId>org.rosuda</groupId>
             <artifactId>REngine</artifactId>
             <version>0.6-0</version>
-        </dependency>         
+        </dependency>
         <dependency>
             <groupId>org.rosuda</groupId>
             <artifactId>JRclient</artifactId>
             <version>0.6-0</version>
         </dependency>
-         <dependency>
-             <groupId>javax.mail</groupId>
-                 <artifactId>mail</artifactId>
-             <version>1.4.2</version>
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.4.2</version>
         </dependency>
-        
 	<dependency>
 	  <groupId>javax.activation</groupId>
 	  <artifactId>activation</artifactId>
@@ -138,6 +137,7 @@ of testing facilities designed for use with TestNG (http://testng.org/), so it's
 <!--        </dependency> -->
       
        <!--we need these for unpackign the war file-->
+
         <dependency>
             <groupId>tomcat</groupId>
             <artifactId>catalina</artifactId>
@@ -145,11 +145,11 @@ of testing facilities designed for use with TestNG (http://testng.org/), so it's
         </dependency>
         <dependency>
             <!--this is needed for the all-in-one-jar as well-->
-        <groupId>commons-logging</groupId>
+            <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
             <version>1.1.1</version>
-       </dependency>
-      
+        </dependency>
+
         <dependency>
             <groupId>org.chenillekit</groupId>
             <artifactId>chenillekit-tapestry</artifactId>
@@ -159,13 +159,13 @@ of testing facilities designed for use with TestNG (http://testng.org/), so it's
             <groupId>de.dkfz.signaling</groupId>
             <artifactId>signalingComponents</artifactId>
             <version>0.1.8.3</version>
-        </dependency>                 
+        </dependency>
         <dependency>
             <groupId>net.sourceforge.jexcelapi</groupId>
             <artifactId>jxl</artifactId>
             <version>2.6.10</version>
-        </dependency> 
-        
+        </dependency>
+
 
     </dependencies>
     <build>
@@ -181,20 +181,21 @@ of testing facilities designed for use with TestNG (http://testng.org/), so it's
                 </configuration>
             </plugin>
 
-            
+
             <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <systemProperties>
-            <property>
-              <name>java.library.path</name>
-              <value>/Users/clr/launchpad/ndb-bindings/working/
-java/.libs</value>
-            </property>
-          </systemProperties>
-        </configuration>
-      </plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <systemProperties>
+                        <property>
+                            <name>java.library.path</name>
+                            <value>/Users/clr/launchpad/ndb-bindings/working/
+                                java/.libs
+                            </value>
+                        </property>
+                    </systemProperties>
+                </configuration>
+            </plugin>
 
             <!-- Run the application using "mvn jetty:run" -->
             <plugin>
@@ -227,14 +228,14 @@ java/.libs</value>
                     <!--for deploying on tomcat this has to be set to false-->
                     <archiveClasses>false</archiveClasses>
                     <archive>
-                      <manifestEntries>
-                        <Implementation-Build>${buildNumber}</Implementation-Build>
-                        <Implementation-Version>${version}</Implementation-Version>
-                      </manifestEntries>
+                        <manifestEntries>
+                            <Implementation-Build>${buildNumber}</Implementation-Build>
+                            <Implementation-Version>${version}</Implementation-Version>
+                        </manifestEntries>
                     </archive>
                 </configuration>
 
-                
+
             </plugin>
 
             <plugin>
@@ -256,30 +257,70 @@ java/.libs</value>
             </plugin>
 
 
-              <plugin>
+            <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
                     <source>1.5</source>
                     <target>1.5</target>
                 </configuration>
             </plugin>
-             <!--this is for doing an all-in-one jetty integrated executable jar file-->
+            <!--this is for doing an all-in-one jetty integrated executable jar file-->
             <!--build with mvn assembly:assembly-->
 
+            <!--<plugin>-->
+            <!--<groupId>net.sf.alchim</groupId>-->
+            <!--<artifactId>winstone-maven-plugin</artifactId>-->
+            <!--<version>1.2</version>-->
+            <!--<configuration>-->
+            <!--<cmdLineOptions>-->
+            <!--<property>-->
+            <!--<name>httpPort</name>-->
+            <!--<value>8181</value>-->
+            <!--</property>-->
+            <!---->
+            <!---->
+            <!--<property>-->
+            <!--<name>debug</name>-->
+            <!--<value>9</value>-->
+            <!--</property>-->
+            <!---->
+
+            <!---->
+            <!---->
+            <!--</cmdLineOptions>-->
+            <!--</configuration>-->
+            <!--<executions>-->
+            <!--<execution>-->
+            <!--<goals>-->
+            <!--<goal>embed</goal>-->
+            <!--</goals>-->
+            <!--<phase>package</phase>-->
+            <!--</execution>-->
+            <!--</executions>-->
+            <!--</plugin>-->
+
             <plugin>
-                <groupId>net.sf.alchim</groupId>
-                <artifactId>winstone-maven-plugin</artifactId>
+                <groupId>org.simplericity.jettyconsole</groupId>
+                <artifactId>jetty-console-maven-plugin</artifactId>
+                <version>1.18</version>
                 <executions>
                     <execution>
                         <goals>
-                            <goal>embed</goal>
+                            <goal>createconsole</goal>
                         </goals>
-                        <phase>package</phase>
+                        <configuration>
+                            <!--<backgroundImage>${basedir}/src/main/jettyconsole/puffin.jpg</backgroundImage>-->
+                            <option>
+                                <headless>true</headless>
+                            </option>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
-<!--copy the generated all-in-one jetty integrated executable jar into the site structure that it gets integraated into the site-->
-<!--we build a html site for download there-->
+
+
+            <!--copy the generated all-in-one jetty integrated executable jar into the site structure that it gets integraated into the site-->
+            <!--we build a html site for download there-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
@@ -308,7 +349,7 @@ java/.libs</value>
 
                     <!--copy the sample JOB session for the project site into a site folder too-->
                     <execution>
-                        <id>copy-job-session-resources</id>                           
+                        <id>copy-job-session-resources</id>
                         <phase>install</phase>
                         <goals>
                             <goal>copy-resources</goal>
@@ -358,22 +399,20 @@ java/.libs</value>
                 <artifactId>jxr-maven-plugin</artifactId>
             </plugin>
             <plugin>
-                    <artifactId>maven-clover-plugin</artifactId>
+                <artifactId>maven-clover-plugin</artifactId>
             </plugin>
             <plugin>
-                  <groupId>org.codehaus.mojo</groupId>
-                  <artifactId>changelog-maven-plugin</artifactId>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>changelog-maven-plugin</artifactId>
             </plugin>
             <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>taglist-maven-plugin</artifactId>
-                  </plugin>
-            
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>taglist-maven-plugin</artifactId>
+            </plugin>
+
 
         </plugins>
 
-
-        
 
     </reporting>
 
@@ -402,7 +441,12 @@ java/.libs</value>
             <name>OpenQA Release Repository</name>
             <url>http://archiva.openqa.org/repository/releases/</url>
         </repository>
-         
+
+        <repository>
+            <id>kos</id>
+            <url>http://opensource.kantega.no/nexus/content/groups/public/</url>
+        </repository>
+
     </repositories>
 
     <pluginRepositories>
@@ -412,6 +456,12 @@ of a Tapestry Maven plugin is not required.   -->
             <id>tapestry-snapshots</id>
             <url>http://tapestry.formos.com/maven-snapshot-repository/</url>
         </pluginRepository>
+
+        <pluginRepository>
+            <id>kos</id>
+            <url>http://opensource.kantega.no/nexus/content/groups/public/</url>
+        </pluginRepository>
+
     </pluginRepositories>
 
     <properties>
@@ -419,19 +469,18 @@ of a Tapestry Maven plugin is not required.   -->
         <!--<tapestry-release-version>5.0.18</tapestry-release-version>-->
         <chenillekit-release-version>1.1.0</chenillekit-release-version>
     </properties>
-     <!---->
+    <!---->
     <!--where to deploy/upload the project onto which server-->
     <distributionManagement>
         <!--the place where to deploy the project page-->
         <site>
-        <id>b110-websrv</id>
-        <name>Sandbox Server</name>    
-        <url> scp://opelz@b110-websrv:/home/opelz/site</url>
+            <id>b110-websrv</id>
+            <name>Sandbox Server</name>
+            <url>scp://opelz@b110-websrv:/home/opelz/site</url>
             <!--/var/www/boutroslab/cellHTS/web-project/</url>-->
         </site>
-        
+
     </distributionManagement>
 
 
-    
 </project>

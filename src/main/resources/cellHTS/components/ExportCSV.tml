@@ -21,6 +21,7 @@
            <br/>
             <t:label for="csvDelimter"/>
             <t:textfield t:id="csvDelimter" size="4" />
+           <br/>
            <input t:type="submit" t:id="submitBigFormData" value="format data"/>
        </t:form>
         <t:if test="errorFound">

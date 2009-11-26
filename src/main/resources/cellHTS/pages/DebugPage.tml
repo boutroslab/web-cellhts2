@@ -18,34 +18,104 @@
   ~
   -->
 <t:layout xmlns:t="http://tapestry.apache.org/schema/tapestry_5_0_0.xsd">
- <head>
-     <title>cellHTS2 Debug Page</title>
+    <head>
+        <title>cellHTS2 Debug Page</title>
 
- </head>
-  <body>
-      <div t:type="signaling/MultiplefileUploader" t:id="multipleUploadOne" t:uploadPath="uploadPath"/>
-      <br/>
-      <t:actionlink t:id="processFiles">Go on</t:actionlink>      
+    </head>
+    <body onLoad="initPage()">
+        <div t:type="signaling/MultiplefileUploader" t:id="multipleUploadOne" t:uploadPath="uploadPath"/>
+        <br/>
+        <t:form>
 
-      <t:if test="startFileImport">
-      <t:ExportCSV t:id="exportCSV" t:filesToProcess="uploadedFiles"/>
-      <t:if test="convertedAllFiles">
-        <t:FileImporter t:id="datafileImporter" filesToProcess="filesToImport" headsToFind="headsToFindDatafile" showHeadline="literal:true"  compareHeader="literal:false"/>
-        <t:if test="plateWellDefined">
-            Please select if your files contain Plate Config data<br/>
-            <t:FileImporter t:id="plateConfigImporter" filesToProcess="filesToImport" headsToFind="headsToFindPlateconfigfile" showHeadline="literal:false" compareHeader="literal:true"/>
-            Please select if your files contain Annotation data<br/>
-            <t:FileImporter t:id="annotationImporter" filesToProcess="filesToImport" headsToFind="headsToFindAnnotationfile" showHeadline="literal:false"  compareHeader="literal:true"/>
+                <t:checkbox t:id="containsHeadline"
+                            t:mixins="ck/OnEvent"
+                            onCompleteCallback="onCompleteChangeEventDummy"
+                            event="change"/>
+                Data Files contain Headlines such as Plate, Well, Replicate...<br/>
+
+                <t:checkbox t:id="containsMultiChannelData"
+                                t:mixins="ck/OnEvent"
+                                onCompleteCallback="onCompleteChangeEventMulti"
+                                event="change"/>
+                    Data Files contain Multi Channel Data<br/>
+
+                    <t:label for="replicateNumbers">Number of Replicates</t:label>
+                    <t:textfield t:id="replicateNumbers" size="2" />
+
+            </t:form>
+        <t:actionlink t:id="processFiles">Go on</t:actionlink>
+
+        <t:if test="startFileImport">
+
+            <t:ExportCSV t:id="exportCSV" t:filesToProcess="uploadedFiles"/>
+
+            <t:if test="convertedAllFiles">
+                <t:FileImporter t:id="datafileImporter" filesToProcess="filesToImport" headsToFind="headsToFindDatafile"
+                                showHeadline="literal:true" compareHeader="literal:false"/>
+
+                <t:if test="plateWellDefined">
+
+                    Please select if your files contain Plate Config data
+                    <br/>
+                    <t:FileImporter t:id="plateConfigImporter" filesToProcess="filesToImport"
+                                    headsToFind="headsToFindPlateconfigfile" showHeadline="literal:false"
+                                    compareHeader="literal:true"/>
+                    Please select if your files contain Annotation data
+                    <br/>
+                    <t:FileImporter t:id="annotationImporter" filesToProcess="filesToImport"
+                                    headsToFind="headsToFindAnnotationfile" showHeadline="literal:false"
+                                    compareHeader="literal:true"/>
+                </t:if>
+
+                <t:actionlink t:id="proceedWebCellHTS2">Proceed to webCellHTS2</t:actionlink>
+                <!--<t:actionlink t:id="containsAnnotation">Contains annotation information</t:actionlink>-->
+                <!--<t:if test="containsAnnotation">-->
+                <!--<t:FileImporter t:id="containsAnnotation" filesToProcess="filesToImport" headsToFind="literal:" showHeadline="literal:false"/>-->
+                <!--</t:if>-->
+
+            </t:if>
         </t:if>
+    </body>
+    <script type="text/javascript">
+        <!-- //
 
-          <t:pagelink page="cellhts2">Go back to cellHTS2</t:pagelink>
+        function initPage() {
+           var multi = document.getElementById('containsMultiChannelData');
 
-      <!--<t:actionlink t:id="containsAnnotation">Contains annotation information</t:actionlink>-->
-       <!--<t:if test="containsAnnotation">-->
-        <!--<t:FileImporter t:id="containsAnnotation" filesToProcess="filesToImport" headsToFind="literal:" showHeadline="literal:false"/>-->
-      <!--</t:if>-->
+           if(multi==null) {
+               document.getElementById('replicateNumbers').disabled=true;
+           }
+           else if(multi.value==null) {
+               document.getElementById('replicateNumbers').disabled=true;     
+           }
+           else if(multi.value=="") {
+              document.getElementById('replicateNumbers').disabled=true;
+           }
+           else if(multi.checked==false) {
+                document.getElementById('replicateNumbers').disabled=true;
+           }
+           else if(multi.checked==true) {
+               document.getElementById('replicateNumbers').disabled=false;     
+           }
 
-      </t:if>
-      </t:if>
- </body>
+        }
+
+
+        function onCompleteChangeEventMulti(response) {
+           if(response.multi==true)  {
+                document.getElementById('replicateNumbers').disabled=false;
+           }else {
+               document.getElementById('replicateNumbers').disabled=true;     
+           }
+        }
+        //no response needed
+        function onCompleteChangeEventDummy(response) {
+           if(response.multi==true)  {
+                document.getElementById('replicateNumbers').disabled=false;
+           }else {
+               document.getElementById('replicateNumbers').disabled=true;
+           }
+        }
+        //-->
+    </script>
 </t:layout>
