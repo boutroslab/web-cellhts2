@@ -646,7 +646,7 @@ public class FileCreator {
 
 
     }
-
+    //deprecated, works only for files with headline and no multichannel or multireplicates are supported
     public  static boolean createDataFilesFromCVSFiles(ArrayList<File> inputFiles,ArrayList<File> outputFiles,
                                         LinkedHashMap<String,Integer> returnMap) {
 
@@ -692,5 +692,211 @@ public class FileCreator {
             return false;
         }
         return true;   
+    }
+    public  static boolean createDataFilesFromCVSMultiFiles(ArrayList<File> inputFiles,
+                                                            ArrayList<File> outputFiles,
+                                                            boolean containsHeadline,
+                                                             LinkedHashMap<String,DataFile> repChannelMap,
+                                                            int amounReplicates,
+                                                            LinkedHashMap<String,Integer> colNameToID) {
+
+        //if we are single channel with only one replicate...outputfiles=inputfiles
+        boolean generateAdditionOutputFiles;
+
+        if(repChannelMap.size()<2) {
+            generateAdditionOutputFiles=false;
+        }
+        else {
+            //if we are more than one replicate and channel we have to create more outputfiles
+            generateAdditionOutputFiles=true;
+        }
+
+        //plate names to generated plate nums
+        LinkedHashMap<String,Integer> plateNameToNum = new LinkedHashMap<String,Integer>();
+        int plateNumCounter=1;
+        try {
+            int i = 0;
+            //log all the new generated outputfiles if we generated via multichannel
+            HashSet<String> allNewMultiOutputFiles = new HashSet<String>();
+            for(File file : inputFiles) {
+//this will the base nam of out outputfiles which are called like /home/pelz/ABC.OUT_1_1_1
+                File outputFile = outputFiles.get(i++);
+
+                    LinkedHashMap<String,BufferedWriter>  outfilesForInfile
+                            = new LinkedHashMap<String,BufferedWriter>();//outputfiles for ONE! inputfile
+
+                   //get all plateNums out of the file in a unique way  
+                    HashSet<String> plateNames
+                            = getAllRowsForColumnIDFromFile(file,(colNameToID.get("Plate")-1),containsHeadline);
+                    //associate new plate numbers for exisiting names
+
+                    for(String plateName : plateNames) {
+                        Integer plateNumCount=null;
+                        try {
+                            //if it only contains numbers
+                            plateNumCount=Integer.parseInt(plateName);
+                        } catch(NumberFormatException e) {
+                            //TODO: this approach can lead to errors, fill the gaps
+                            plateNumCount=plateNumCounter++;
+                        }
+                        
+                        if(!plateNameToNum.containsKey(plateName)) {
+                            plateNameToNum.put(plateName,plateNumCount);
+                        }
+                    }
+                    //get all the columns which contain multichannel data
+                    LinkedHashMap<Integer,String> colsContainMultiChannelData = new LinkedHashMap<Integer,String>();
+
+
+                    //Map the filename,plate Number and replicate/channel combination which maps to the indes to the
+                   // corresponding output bufferedwriter array index
+                    // plateNumString->Datafil->outputfile buffer writer index
+
+                    //single file will be mapped to single outputfile
+                    BufferedWriter singleBufferedWriter=null;
+                    if(!generateAdditionOutputFiles) {
+                        singleBufferedWriter = new BufferedWriter(new FileWriter(outputFile));
+                    }  //multi channel files
+                    else {
+                        //get all the columns which contain multichannel data
+                        for(String colName: colNameToID.keySet()) {
+                             if(repChannelMap.containsKey(colName)) {
+                                colsContainMultiChannelData.put(colNameToID.get(colName),colName);
+                             }
+                         }
+
+                        //generate outputwriter buffer streams for every plate,repl,channel combi
+                        for(String plateName : plateNames) {
+                            //get the unique plateNumber
+                            int plateN = plateNameToNum.get(plateName);
+
+                            for(String head : repChannelMap.keySet()) {
+                                //get the replicate,channel combination for a column name such as "rep_X_channel_X"
+                                DataFile oldDF = repChannelMap.get(head);
+                                
+                                int rep = oldDF.getReplicate();
+                                int channel = oldDF.getChannel();
+                                //build a plate,rep,channel combination for a bufferedwriter
+                                String id = plateN+"_"+rep+"_"+channel;
+                                //set a new  filename which identifies plate,repl,channel
+                                String newFilename = outputFile.getAbsolutePath();
+                                //TODO: cut extention and put it before the extension so that /tmp/oli/ABC_1_1_1.TXT and not /tmp/oli/ABC.TXT_1_1_1
+                                newFilename = newFilename+"_"+id;
+                                //store this for later-->submission
+                                allNewMultiOutputFiles.add(newFilename);
+                                outfilesForInfile.put(id,new BufferedWriter(new FileWriter(newFilename)));
+                            }
+                        }
+                    }
+
+                   // FileWriter outFileWriter = new FileWriter(outputFile);
+                   // BufferedWriter outBufferedWriter = new BufferedWriter(outFileWriter);
+
+                    String line;
+
+
+                    FileReader reader = new FileReader(file);
+                    BufferedReader buffer = new BufferedReader(reader);
+
+
+                    if(containsHeadline) {
+                           //forward one line if we got headlines in first line
+                        buffer.readLine();
+                    }
+
+                    while ((line = buffer.readLine()) != null) {
+                        String[] cols = line.split("\t");
+                        String outline = "";
+
+                        String plateName = cols[colNameToID.get("Plate")-1];
+                        String well = cols[colNameToID.get("Well")-1];
+                        
+                        //this is a correct data line 
+                        outline = plateName+"\t"+well;
+                        //if single data files just write
+                        if(!generateAdditionOutputFiles) {
+                            singleBufferedWriter.write(outline+"\t"+cols[colNameToID.get("Value")-1]+"\n");
+                        }
+                        //Multichannel data
+                        else {
+                            int plateNum = plateNameToNum.get(plateName);
+                            //for all the columns in the file
+                            for(int multiChannelCol : colsContainMultiChannelData.keySet()) {
+                                String colName = colsContainMultiChannelData.get(multiChannelCol);
+                                //if the column is one of the rep_X_channel_Y channels
+                              
+                                 if(repChannelMap.containsKey(colName)) {
+                                     DataFile df = repChannelMap.get(colName);
+                                     int rep = df.getReplicate();
+                                     int cha = df.getChannel();
+
+                                     String id = plateNum+"_"+rep+"_"+cha;
+
+                                     BufferedWriter writer = outfilesForInfile.get(id);
+                                     writer.write(outline+"\t"+cols[multiChannelCol]+"\n");
+                                 }
+                            }
+
+                        }
+
+
+                    }
+                    //close the buffers after the whole file was read and wrote
+                    if(!generateAdditionOutputFiles) {
+
+                            singleBufferedWriter.close();
+                    }
+                    else {
+                         for(String id : outfilesForInfile.keySet()) {
+                             outfilesForInfile.get(id).close();
+                         }
+                    }
+                    
+
+            }
+            //if we generated new outputfiles for inputfile we have to change the outputfilenames
+            if(generateAdditionOutputFiles) {
+                outputFiles.clear();
+                for(String filename : allNewMultiOutputFiles) {
+
+                    outputFiles.add(new File(filename));
+                }
+        }
+    }catch(IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+
+        return true;
+    }
+    private static HashSet<String> getAllRowsForColumnIDFromFile(File file,int rowNumber,boolean containsHeadline) {
+        HashSet<String> returnArr = new HashSet<String>();
+        try {
+        FileReader reader = new FileReader(file);
+        BufferedReader buffer = new BufferedReader(reader);
+
+        if(containsHeadline) {
+            //forward one line
+            buffer.readLine();
+        }
+
+
+        String line;
+
+        while ((line = buffer.readLine()) != null) {
+                        String[] cols = line.split("\t");
+                        
+                        String field = cols[rowNumber];   //the columns are index based
+
+                        returnArr.add(field);
+        }
+        buffer.close();
+        reader.close();
+        }catch(IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+       return returnArr;
     }
 }

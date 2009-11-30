@@ -31,7 +31,7 @@
                             t:mixins="ck/OnEvent"
                             onCompleteCallback="onCompleteChangeEventDummy"
                             event="change"/>
-                Data Files contain Headlines such as Plate, Well, Replicate...<br/>
+                    Data Files contain Headlines such as Plate, Well, Replicate...<br/>
 
                 <t:checkbox t:id="containsMultiChannelData"
                                 t:mixins="ck/OnEvent"
@@ -40,12 +40,16 @@
                     Data Files contain Multi Channel Data<br/>
 
                     <t:label for="replicateNumbers">Number of Replicates</t:label>
-                    <t:textfield t:id="replicateNumbers" size="2" />
+                    <t:textfield t:id="replicateNumbers" size="2"
+                     t:mixins="ck/OnEvent"
+                     onCompleteCallback="onCompleteFromReplicateNumber"
+                     event="blur"
+                            />
 
             </t:form>
-        <t:actionlink t:id="processFiles">Go on</t:actionlink>
+       <!-- <t:actionlink t:id="processFiles">Go on</t:actionlink> -->
 
-        <t:if test="startFileImport">
+        <!--<t:if test="startFileImport">    -->
 
             <t:ExportCSV t:id="exportCSV" t:filesToProcess="uploadedFiles"/>
 
@@ -67,19 +71,22 @@
                                     compareHeader="literal:true"/>
                 </t:if>
 
-                <t:actionlink t:id="proceedWebCellHTS2">Proceed to webCellHTS2</t:actionlink>
+                <!--<t:actionlink t:id="proceedWebCellHTS2">Proceed to webCellHTS2</t:actionlink>  -->
+
+
                 <!--<t:actionlink t:id="containsAnnotation">Contains annotation information</t:actionlink>-->
                 <!--<t:if test="containsAnnotation">-->
                 <!--<t:FileImporter t:id="containsAnnotation" filesToProcess="filesToImport" headsToFind="literal:" showHeadline="literal:false"/>-->
                 <!--</t:if>-->
 
             </t:if>
-        </t:if>
+        <!--</t:if>  -->
     </body>
     <script type="text/javascript">
         <!-- //
 
         function initPage() {
+           /*
            var multi = document.getElementById('containsMultiChannelData');
 
            if(multi==null) {
@@ -97,24 +104,24 @@
            else if(multi.checked==true) {
                document.getElementById('replicateNumbers').disabled=false;     
            }
+           */
 
         }
 
 
         function onCompleteChangeEventMulti(response) {
-           if(response.multi==true)  {
+           /*if(response.multi==true)  {
                 document.getElementById('replicateNumbers').disabled=false;
            }else {
                document.getElementById('replicateNumbers').disabled=true;     
-           }
+           }*/
         }
         //no response needed
         function onCompleteChangeEventDummy(response) {
-           if(response.multi==true)  {
-                document.getElementById('replicateNumbers').disabled=false;
-           }else {
-               document.getElementById('replicateNumbers').disabled=true;
-           }
+
+        }
+        function onCompleteFromReplicateNumber(response) {
+           
         }
         //-->
     </script>

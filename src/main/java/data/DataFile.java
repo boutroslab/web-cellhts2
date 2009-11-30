@@ -85,5 +85,38 @@ public class DataFile implements Serializable {
         this.channel = channel;
     }
 
-    
+    @Override
+    public String toString() {
+        return "DataFile{" +
+                "channel=" + channel +
+                ", fileName='" + fileName + '\'' +
+                ", plateNumber=" + plateNumber +
+                ", replicate=" + replicate +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        DataFile dataFile = (DataFile) o;
+
+        if (channel != null ? !channel.equals(dataFile.channel) : dataFile.channel != null) return false;
+        if (fileName != null ? !fileName.equals(dataFile.fileName) : dataFile.fileName != null) return false;
+        if (plateNumber != null ? !plateNumber.equals(dataFile.plateNumber) : dataFile.plateNumber != null)
+            return false;
+        if (replicate != null ? !replicate.equals(dataFile.replicate) : dataFile.replicate != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = channel != null ? channel.hashCode() : 0;
+        result = 31 * result + (fileName != null ? fileName.hashCode() : 0);
+        result = 31 * result + (plateNumber != null ? plateNumber.hashCode() : 0);
+        result = 31 * result + (replicate != null ? replicate.hashCode() : 0);
+        return result;
+    }
 }

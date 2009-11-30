@@ -33,12 +33,17 @@ import org.apache.tapestry5.annotations.InjectComponent;
 import org.apache.tapestry5.annotations.InjectPage;
 import org.apache.tapestry5.annotations.OnEvent;
 import org.apache.tapestry5.json.JSONObject;
+import org.apache.tapestry5.ioc.annotations.Inject;
+import org.apache.tapestry5.ioc.Messages;
+import org.apache.tapestry5.ioc.internal.util.TapestryException;
+import data.DataFile;
 
 public class DebugPage {
     @Persist
     private boolean convertedAllFiles;
     @Persist
     private ArrayList<String> uploadedFiles;
+    //these are the outputfiles from the cvs export function
     @Persist
     private ArrayList<String> filesToImport;
     @Persist
@@ -57,6 +62,8 @@ public class DebugPage {
     private CellHTS2 cellHTS2;
     @Persist
     private boolean plateWellDefined;
+    @Persist
+    private LinkedHashMap<String,DataFile> repChannelMap;
 
 
     @InjectComponent
@@ -73,7 +80,8 @@ public class DebugPage {
     private boolean containsHeadline;
     @Persist
     private int replicateNumbers;
-
+    @Inject
+    private Messages msg;
 
     public void setupRender() {
         if(!init) {
@@ -81,17 +89,15 @@ public class DebugPage {
             uploadedFiles = new ArrayList<String>();
             filesToImport = new ArrayList<String>();
             plateWellDefined=false;
-            headsToFindDatafile = new ArrayList<String>();
-            headsToFindDatafile.add("Plate");
-            headsToFindDatafile.add("Well");
-            headsToFindDatafile.add("Value");
+            headsToFindDatafile= new  ArrayList<String>();
+            initHeadsToFind();
             headsToFindPlateconfigfile = new ArrayList<String>();
             headsToFindPlateconfigfile.add("Value");
             headsToFindAnnotationfile=new ArrayList<String>();
             headsToFindAnnotationfile.add("GeneID");
+            repChannelMap= new LinkedHashMap<String,DataFile>(); 
 
-
-            uploadPath="/tmp/bla";
+            uploadPath=msg.get("upload-path");
             startFileImport=false;
             convertedAllFiles=false;
 
@@ -105,29 +111,7 @@ public class DebugPage {
     public ArrayList<String> getTempDebugFiles() {
 
          ArrayList<String> al = new ArrayList<String>();
-       // al.add("/home/pelz/cellHTS2-auswertugn/cellHTS2/JOB5702_RUN5703/in/A02-W17-C.TXT");
-       // al.add("/home/pelz/cellHTS2-auswertugn/cellHTS2/JOB5702_RUN5703/in/A02-W17-C.TXT");
-       // al.add("/home/pelz/cellHTS2-auswertugn/cellHTS2/JOB5702_RUN5703/in/A01-W21-C.TXT");
-       // al.add("/home/pelz/cellHTS2-auswertugn/cellHTS2/JOB5702_RUN5703/in/A02-W49-C.TXT");
-
-
-
-
-      //  al.add("/home/pelz/Desktop/LabCollector/Filemaker_Last_Import_linuxFilemaker/orders.xls");
-      //  al.add("/home/pelz/Desktop/LabCollector/Filemaker_Last_Import_linuxFilemaker/oligos.xls");
-      //  al.add("/home/pelz/Desktop/LabCollector/Filemaker_Last_Import_linuxFilemaker/plasmids.xls");
-
-         //al.add("/home/pelz/csvTAB");
-
-      //al.add("/home/pelz/csvKaufmann");
-
-     //    al.add("/temp/cellHTS2/JOB63651/A15_W01.TXT");
-     //   al.add("/temp/cellHTS2/JOB63651/A15_W02.TXT");
-     //   al.add("/temp/cellHTS2/JOB63651/A15_W03.TXT");
-     //   al.add("/temp/cellHTS2/JOB63651/A15_W04.TXT");
-     //   al.add("/temp/cellHTS2/JOB63651/A15_W05.TXT");
-     //   al.add("/temp/cellHTS2/JOB63651/A15_W06.TXT");
-     //   al.add("/temp/cellHTS2/JOB63651/A15_W07.TXT");
+     
         return al;
     }
 
@@ -159,14 +143,21 @@ public class DebugPage {
         filesToImport.clear();
         for(Object obj: objs) {
             filesToImport.add((String)obj);                
-        }                          
+        }
+
+         initDatafileHeaders();
+
+
         convertedAllFiles=true;
     }
     public void onFailedConvertedToCVSFromExportCSV(Object []dummy) {
        convertedAllFiles=false;
         //reinit everything
        dataFileImporter.setInit(false);
+       initDatafileHeaders();
     }
+
+    //this is deprecated ...we dont have an actionlink anymore
     public void onActionFromProcessFiles() {
         if(uploadedFiles.size()>0) {
             startFileImport=true;                     
@@ -174,6 +165,74 @@ public class DebugPage {
         else {
             startFileImport=false;
         }
+        //now create the headsToFindDatafile out of the number of replicates, and multichannel flags
+
+        //build a new datastructure which maps
+        // "repXchannelY"  to  a datafile structure
+        repChannelMap = generateHeadersReplicateChannel();
+        //this is caused if we have multichannel experiments
+        if(repChannelMap.size()<2) {
+            headsToFindDatafile.add("Value");
+        }
+        else {
+              initHeadsToFind();
+              headsToFindDatafile.addAll(repChannelMap.keySet());
+            //reinit the dataFileImporter so that new heads will shown
+              dataFileImporter.setInit(false);
+        }
+    }
+
+    public void initDatafileHeaders() {
+        //build a new datastructure which maps
+        // "repXchannelY"  to  a datafile structure
+        LinkedHashMap<String,DataFile> repChannelMap = generateHeadersReplicateChannel();
+        initHeadsToFind();
+        System.out.println("size:"+repChannelMap.size());
+        //this is caused if we have multichannel experiments
+        if(repChannelMap.size()==1) {
+            headsToFindDatafile.add("Value");
+        }
+        if(repChannelMap.size()>1)  {
+
+              headsToFindDatafile.addAll(repChannelMap.keySet());
+            //reinit the dataFileImporter so that new heads will shown
+              dataFileImporter.setInit(false);
+        }
+    }
+
+    public LinkedHashMap<String,DataFile> generateHeadersReplicateChannel() {
+         LinkedHashMap<String,DataFile>repChannelMap = new LinkedHashMap<String,DataFile>();
+
+        //max replicate numbers to 9
+        if(replicateNumbers>9) {
+            replicateNumbers=9;
+        }
+
+        //build replicates
+        ArrayList<Integer> replicateArr= new ArrayList<Integer>();
+        for(int i=0;i<replicateNumbers;i++) {
+            replicateArr.add(i+1);
+        }
+        //build channels
+        ArrayList<Integer> channelArr = new ArrayList<Integer>();
+        //every file has at least one channel
+        channelArr.add(1);
+        if(containsMultiChannelData) {
+            channelArr.add(2);
+        }
+        //generate combinations
+
+        for(Integer replicate : replicateArr) {
+            for(Integer channel : channelArr) {
+                DataFile df = new DataFile();
+                df.setReplicate(replicate);
+                df.setChannel(channel);
+                String headName = "rep"+replicate+"channel"+channel;
+                repChannelMap.put(headName,df);
+            }
+        }
+
+        return repChannelMap;
     }
     //this will be fired if all the columns have been associated to the column names by the user form the dataFileImporter
     //component
@@ -186,19 +245,33 @@ public class DebugPage {
         else {
             plateWellDefined=false;
         }
-        //now generate the data files if everything was defined
-        if(returnMap.containsKey("Plate")&&returnMap.containsKey("Well")&&returnMap.containsKey("Value")) {
+        //now generate the data files if everything was defined           //for singlechannel              //for multichannel
+        if(returnMap.containsKey("Plate")&&returnMap.containsKey("Well")&&(returnMap.containsKey("Value")||returnMap.size()>2)) {
            ArrayList<File> inputFiles= new ArrayList<File>();
+        //these are the outputfiles from the cvs export function
             for(String tempFile : filesToImport) {
                 inputFiles.add(new File(tempFile));
             }
             ArrayList<File> outputFiles= new ArrayList<File>();
+       //these are all the uploaded files...we will use these as original names for the
+       //outputfiles again!!
             for(String tempFile : uploadedFiles) {
                 outputFiles.add(new File(tempFile));
             }
+           repChannelMap = generateHeadersReplicateChannel();
+            System.out.println(repChannelMap.size());
+          
+           if(FileCreator.createDataFilesFromCVSMultiFiles(inputFiles,outputFiles,
+                                                      containsHeadline,
+                                                      repChannelMap, 
+                                                      replicateNumbers,
+                                                      returnMap)) {
+               System.out.println("creation of datafiles succeeded");
+               for(File outfile: outputFiles) {
+                   System.out.println("outputdatafile:"+outfile.getAbsolutePath());
 
-           if(FileCreator.createDataFilesFromCVSFiles(inputFiles,outputFiles,returnMap)) {
-               System.out.println("creation succeeded");
+               }
+               System.exit(1);
                  //send the files to cellHTS2
 
            }
@@ -258,8 +331,17 @@ public class DebugPage {
         System.out.println("changed on server");
         return new JSONObject().put("dummy", "");
     }
-
-
+   @OnEvent(component = "replicateNumbers", value = "blur")
+    public JSONObject onBluredreplicateNumbers(int value) {
+        this.replicateNumbers=value;
+       return new JSONObject().put("dummy", "");
+    }
+    public void initHeadsToFind() {
+        headsToFindDatafile.clear();
+        headsToFindDatafile.add("Plate");
+        headsToFindDatafile.add("Well");
+        //headsToFindDatafile.add("Value");
+    }
 
      //getters and setters--------------------------------------------------------------------------------
 
@@ -361,5 +443,6 @@ public class DebugPage {
     public void setReplicateNumbers(int replicateNumbers) {
         this.replicateNumbers = replicateNumbers;
     }
+    
     // end of getters and setters-------------------------------------------------------------------------
 }
