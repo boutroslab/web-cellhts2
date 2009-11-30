@@ -5,7 +5,7 @@
 
     <body onLoad="initPage()">
      <div id="${uniqueID}">
-        a. Choose filetype
+        a. Choose filetype  (please note: if you choose excel, only Excel 95, 97, 2000, XP, and 2003 are supported)
       <t:form t:id="dummyID">
         <t:select t:id="fileType" model="fileTypeModel"
                           t:blankOption="always"

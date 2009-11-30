@@ -3,7 +3,9 @@
            <title>cellHTS2 WebTool Download Page</title>
       </head>
 <body>
-    Thank you for using web cellHTS2. Click <a href="http://web-cellHTS2.dkfz.de">here</a> to go back to web cellHTS2.<br/>
+    Thank you for using web cellHTS2. Click <t:actionlink t:id="goBackWebCellHTS2">here</t:actionlink> to go back to web cellHTS2.<br/>
     Click <t:actionlink t:id="downloadResults">here</t:actionlink> to download your results.
 </body>
 </html>
+
+        

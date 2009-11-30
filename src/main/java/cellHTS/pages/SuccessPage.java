@@ -12,7 +12,8 @@ import org.apache.tapestry5.annotations.InjectPage;
 public class SuccessPage {
     @InjectPage
     private SuccessCellHTS2 successPage;
-
+    @InjectPage
+    private CellHTS2 cellHTS2;
     
     public void setZipFile(String file)  {
         successPage.setZipFile(file);
@@ -24,5 +25,9 @@ public class SuccessPage {
         else {
             return this;
         }
+    }
+    public Object onActionFromGoBackwebCellHTS2() {
+        cellHTS2.activatedFromOtherPage(this.getClass().getName());
+        return cellHTS2;
     }
 }

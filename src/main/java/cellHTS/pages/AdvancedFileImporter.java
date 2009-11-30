@@ -38,7 +38,7 @@ import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.internal.util.TapestryException;
 import data.DataFile;
 
-public class DebugPage {
+public class AdvancedFileImporter {
     @Persist
     private boolean convertedAllFiles;
     @Persist
@@ -270,9 +270,9 @@ public class DebugPage {
                for(File outfile: outputFiles) {
                    System.out.println("outputdatafile:"+outfile.getAbsolutePath());
 
-               }
-               System.exit(1);
-                 //send the files to cellHTS2
+               }                
+               cellHTS2.setDatafilesFromAdvancedFileImporter(outputFiles);     //send the files to cellHTS2 so if
+                                                                              //we switch later to it, this will be used
 
            }
             else {
@@ -282,6 +282,12 @@ public class DebugPage {
         }
 
     }
+
+    public Object onActionFromGoBackwebCellHTS2() {
+        cellHTS2.activatedFromOtherPage(this.getClass().getName());
+        return cellHTS2;
+    }
+
     //this will be fired from the plateConfigImporter component
     public void onSuccessfullySetupColumnsFromPlateConfigImporter(Object[]objs) {
         System.out.println("plateConfigImporter called");

@@ -646,7 +646,7 @@ public class FileCreator {
 
 
     }
-    //deprecated, works only for files with headline and no multichannel or multireplicates are supported
+    //deprecated, DO NOT USE! works only for files with headline and no multichannel or multireplicates are supported
     public  static boolean createDataFilesFromCVSFiles(ArrayList<File> inputFiles,ArrayList<File> outputFiles,
                                         LinkedHashMap<String,Integer> returnMap) {
 
@@ -725,9 +725,13 @@ public class FileCreator {
                     LinkedHashMap<String,BufferedWriter>  outfilesForInfile
                             = new LinkedHashMap<String,BufferedWriter>();//outputfiles for ONE! inputfile
 
-                   //get all plateNums out of the file in a unique way  
+                   //get all plateNums out of the file in a unique way
                     HashSet<String> plateNames
                             = getAllRowsForColumnIDFromFile(file,(colNameToID.get("Plate")-1),containsHeadline);
+                    System.out.println("number of platenames:"+plateNames.size());
+                    for(String bla : plateNames) {
+                        System.out.println(bla);
+                    }
                     //associate new plate numbers for exisiting names
 
                     for(String plateName : plateNames) {
@@ -779,9 +783,10 @@ public class FileCreator {
                                 //build a plate,rep,channel combination for a bufferedwriter
                                 String id = plateN+"_"+rep+"_"+channel;
                                 //set a new  filename which identifies plate,repl,channel
-                                String newFilename = outputFile.getAbsolutePath();
-                                //TODO: cut extention and put it before the extension so that /tmp/oli/ABC_1_1_1.TXT and not /tmp/oli/ABC.TXT_1_1_1
-                                newFilename = newFilename+"_"+id;
+                                String newFilename=id+"_"+outputFile.getName();
+                                String path = outputFile.getParent();
+
+                                newFilename = path+"/"+newFilename;
                                 //store this for later-->submission
                                 allNewMultiOutputFiles.add(newFilename);
                                 outfilesForInfile.put(id,new BufferedWriter(new FileWriter(newFilename)));
