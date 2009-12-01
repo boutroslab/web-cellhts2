@@ -26,11 +26,10 @@
         <div t:type="signaling/MultiplefileUploader" t:id="multipleUploadOne" t:uploadPath="uploadPath"/>
         <br/>
         <t:form>
-
                 <t:checkbox t:id="containsHeadline"
                             t:mixins="ck/OnEvent"
                             onCompleteCallback="onCompleteChangeEventDummy"
-                            event="change"/>
+                            event="change"/>    <br/>
                     Data Files contain Headlines such as Plate, Well, Replicate...<br/>
 
                 <t:checkbox t:id="containsMultiChannelData"
@@ -45,6 +44,8 @@
                      onCompleteCallback="onCompleteFromReplicateNumber"
                      event="blur"
                             />
+
+
 
             </t:form>
        <!-- <t:actionlink t:id="processFiles">Go on</t:actionlink> -->

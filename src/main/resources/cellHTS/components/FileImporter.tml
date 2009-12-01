@@ -66,7 +66,7 @@
                     </t:grid>
 
 
-                <input t:type="submit" value="format data"/>
+                <input t:type="submit" value="create files"/>
             </t:form>
         </div>
         <br/>

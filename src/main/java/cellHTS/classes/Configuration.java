@@ -60,7 +60,8 @@ public class Configuration {
 
          DATAFILE_PATTERNS.put(Pattern.compile("(\\d+)_(\\d+)_\\d+_rep(\\d+)"),
                                               new DataFileParameter[]{DataFileParameter.PLATE,DataFileParameter.CHANNEL,DataFileParameter.REPLIC});
- 		 DATAFILE_PATTERNS.put(Pattern.compile("(\\d+)_(\\d+)_(\\d+)\\."),
+ 		 //DATAFILE_PATTERNS.put(Pattern.compile("(\\d+)_(\\d+)_(\\d+)\\."),
+         DATAFILE_PATTERNS.put(Pattern.compile("(\\d+)_(\\d+)_(\\d+)"),
                                               new DataFileParameter[]{DataFileParameter.PLATE,DataFileParameter.REPLIC,DataFileParameter.CHANNEL});
  	     //the next pattern is for filenames such as RA01D01.TXT,RB01D01.TXT
          DATAFILE_PATTERNS.put(Pattern.compile("R(\\w)(\\d+)D(\\d+)"),

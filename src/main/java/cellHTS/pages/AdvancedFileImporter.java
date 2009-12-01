@@ -26,6 +26,7 @@ import cellHTS.classes.FileCreator;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.regex.Pattern;
 import java.io.File;
 
 import org.apache.tapestry5.annotations.Persist;
@@ -64,6 +65,7 @@ public class AdvancedFileImporter {
     private boolean plateWellDefined;
     @Persist
     private LinkedHashMap<String,DataFile> repChannelMap;
+
 
 
     @InjectComponent
@@ -135,6 +137,7 @@ public class AdvancedFileImporter {
         dataFileImporter.setInit(false);
         plateConfigImporter.setInit(false);
         annotationImporter.setInit(false);
+        plateWellDefined=false;
 
     }
 
@@ -149,6 +152,7 @@ public class AdvancedFileImporter {
 
 
         convertedAllFiles=true;
+        plateWellDefined=false;
     }
     public void onFailedConvertedToCVSFromExportCSV(Object []dummy) {
        convertedAllFiles=false;
@@ -253,18 +257,20 @@ public class AdvancedFileImporter {
                 inputFiles.add(new File(tempFile));
             }
             ArrayList<File> outputFiles= new ArrayList<File>();
-       //these are all the uploaded files...we will use these as original names for the
-       //outputfiles again!!
+
             for(String tempFile : uploadedFiles) {
+                //add a file extension
+                tempFile+=".tab";
                 outputFiles.add(new File(tempFile));
             }
            repChannelMap = generateHeadersReplicateChannel();
             System.out.println(repChannelMap.size());
-          
+
+
            if(FileCreator.createDataFilesFromCVSMultiFiles(inputFiles,outputFiles,
                                                       containsHeadline,
                                                       repChannelMap, 
-                                                      replicateNumbers,
+                                                      replicateNumbers,                                                    
                                                       returnMap)) {
                System.out.println("creation of datafiles succeeded");
                for(File outfile: outputFiles) {
@@ -284,6 +290,7 @@ public class AdvancedFileImporter {
     }
 
     public Object onActionFromGoBackwebCellHTS2() {
+        System.out.println("BAM: "+this.getClass().getName());
         cellHTS2.activatedFromOtherPage(this.getClass().getName());
         return cellHTS2;
     }
@@ -342,6 +349,7 @@ public class AdvancedFileImporter {
         this.replicateNumbers=value;
        return new JSONObject().put("dummy", "");
     }
+
     public void initHeadsToFind() {
         headsToFindDatafile.clear();
         headsToFindDatafile.add("Plate");
@@ -349,6 +357,14 @@ public class AdvancedFileImporter {
         //headsToFindDatafile.add("Value");
     }
 
+    public static String changeFileExtension(String originalName, String newExtension) {
+        int lastDot = originalName.lastIndexOf(".");
+        if (lastDot != -1) {
+            return originalName.substring(0, lastDot) + newExtension;
+        } else {
+          return originalName + newExtension;
+        }
+    }
      //getters and setters--------------------------------------------------------------------------------
 
     public boolean isConvertedAllFiles() {
@@ -449,6 +465,6 @@ public class AdvancedFileImporter {
     public void setReplicateNumbers(int replicateNumbers) {
         this.replicateNumbers = replicateNumbers;
     }
-    
+
     // end of getters and setters-------------------------------------------------------------------------
 }

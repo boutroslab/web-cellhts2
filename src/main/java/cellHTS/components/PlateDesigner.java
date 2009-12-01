@@ -166,12 +166,13 @@ public class PlateDesigner {
         for(int i =0;i<=rows;i++) {
 
             writer.element("tr");
-
+            //get ascii code
+            int ascii = (int) i + 64;
+            char letter = (char)ascii;
+            
             for(int j=0;j<=cols;j++) {
                 String well;
-                //get ascii code
-                int ascii = (int) i + 64;
-                char letter = (char)ascii;
+
 
                 //first row, first column (left upper corner of table should contain an X)
                 if(i==0&&j==0) {

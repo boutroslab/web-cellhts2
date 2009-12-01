@@ -701,16 +701,18 @@ public class FileCreator {
                                                             LinkedHashMap<String,Integer> colNameToID) {
 
         //if we are single channel with only one replicate...outputfiles=inputfiles
-        boolean generateAdditionOutputFiles;
+        boolean multiRepOrChannel;
 
         if(repChannelMap.size()<2) {
-            generateAdditionOutputFiles=false;
+            multiRepOrChannel=false;
         }
         else {
             //if we are more than one replicate and channel we have to create more outputfiles
-            generateAdditionOutputFiles=true;
+            multiRepOrChannel=true;
         }
 
+        
+        
         //plate names to generated plate nums
         LinkedHashMap<String,Integer> plateNameToNum = new LinkedHashMap<String,Integer>();
         int plateNumCounter=1;
@@ -719,19 +721,17 @@ public class FileCreator {
             //log all the new generated outputfiles if we generated via multichannel
             HashSet<String> allNewMultiOutputFiles = new HashSet<String>();
             for(File file : inputFiles) {
+                
 //this will the base nam of out outputfiles which are called like /home/pelz/ABC.OUT_1_1_1
                 File outputFile = outputFiles.get(i++);
-
+                
                     LinkedHashMap<String,BufferedWriter>  outfilesForInfile
                             = new LinkedHashMap<String,BufferedWriter>();//outputfiles for ONE! inputfile
 
                    //get all plateNums out of the file in a unique way
                     HashSet<String> plateNames
                             = getAllRowsForColumnIDFromFile(file,(colNameToID.get("Plate")-1),containsHeadline);
-                    System.out.println("number of platenames:"+plateNames.size());
-                    for(String bla : plateNames) {
-                        System.out.println(bla);
-                    }
+                    
                     //associate new plate numbers for exisiting names
 
                     for(String plateName : plateNames) {
@@ -746,6 +746,7 @@ public class FileCreator {
                         
                         if(!plateNameToNum.containsKey(plateName)) {
                             plateNameToNum.put(plateName,plateNumCount);
+
                         }
                     }
                     //get all the columns which contain multichannel data
@@ -758,8 +759,22 @@ public class FileCreator {
 
                     //single file will be mapped to single outputfile
                     BufferedWriter singleBufferedWriter=null;
-                    if(!generateAdditionOutputFiles) {
-                        singleBufferedWriter = new BufferedWriter(new FileWriter(outputFile));
+                    if(!multiRepOrChannel) {
+
+                        //if we do only have one unique plate per outputfile 
+                        if(plateNames.size()<2) {
+                            singleBufferedWriter = new BufferedWriter(new FileWriter(outputFile));
+                        }
+                        else {
+                            //if we have more than one plate per outputfile  ...generate multiple buffered outputstreams
+                            for(String plateName : plateNames) {
+                                //get the unique plateNumber
+                                
+                                String newFilename=outputFile.getParent()+"/"+plateName+"_1_1_"+outputFile.getName();
+                                allNewMultiOutputFiles.add(newFilename);
+                                outfilesForInfile.put(plateName,new BufferedWriter(new FileWriter(newFilename)));
+                            }
+                        }
                     }  //multi channel files
                     else {
                         //get all the columns which contain multichannel data
@@ -819,8 +834,15 @@ public class FileCreator {
                         //this is a correct data line 
                         outline = plateName+"\t"+well;
                         //if single data files just write
-                        if(!generateAdditionOutputFiles) {
-                            singleBufferedWriter.write(outline+"\t"+cols[colNameToID.get("Value")-1]+"\n");
+                        if(!multiRepOrChannel) {
+                            if(plateNames.size()<2) {
+                                singleBufferedWriter.write(outline+"\t"+cols[colNameToID.get("Value")-1]+"\n");
+                            }
+                            else {
+                               int plateNum = plateNameToNum.get(plateName);
+                               BufferedWriter writer = outfilesForInfile.get(plateName);
+                               writer.write(outline+"\t"+cols[colNameToID.get("Value")-1]+"\n");
+                            }
                         }
                         //Multichannel data
                         else {
@@ -847,9 +869,10 @@ public class FileCreator {
 
                     }
                     //close the buffers after the whole file was read and wrote
-                    if(!generateAdditionOutputFiles) {
+                    if(!multiRepOrChannel&&outfilesForInfile.size()<1) {
 
                             singleBufferedWriter.close();
+
                     }
                     else {
                          for(String id : outfilesForInfile.keySet()) {
@@ -860,13 +883,14 @@ public class FileCreator {
 
             }
             //if we generated new outputfiles for inputfile we have to change the outputfilenames
-            if(generateAdditionOutputFiles) {
-                outputFiles.clear();
+                if(allNewMultiOutputFiles.size()>0) {
+                    outputFiles.clear();
+                }
                 for(String filename : allNewMultiOutputFiles) {
 
                     outputFiles.add(new File(filename));
                 }
-        }
+        
     }catch(IOException e) {
             e.printStackTrace();
             return false;
@@ -875,6 +899,50 @@ public class FileCreator {
 
         return true;
     }
+
+    //96er plate : 4 rows,12 cols
+    //384er plate: 24 cols,
+    //1536er plate: 48 cols
+    private static HashSet<String> createWellPlate(int plateFormat) {
+         HashSet<String> newPlate = new HashSet<String>();
+         int rows=0;
+         int cols = 0;
+         if(plateFormat==96) {
+            cols=12;
+         }
+         else if (plateFormat==384) {
+            cols=24;
+         }
+         else if (plateFormat ==1536) {
+            cols=48;
+         }
+         else {
+             return null;
+         }
+         rows= plateFormat/cols;
+
+         for(int i =0;i<=rows;i++) {
+
+            //get ascii code
+            int ascii = (int) i + 64;
+            char letter = (char)ascii;
+             
+            for(int j=1;j<=cols;j++) {
+
+                String well = letter+String.format("%02d",j);
+                //this is the alternate letter
+                String well2 =  letter+String.format("%d",j);
+
+                newPlate.add(well);
+                newPlate.add(well2);
+            }
+
+
+        }
+        return newPlate; 
+    }
+
+
     private static HashSet<String> getAllRowsForColumnIDFromFile(File file,int rowNumber,boolean containsHeadline) {
         HashSet<String> returnArr = new HashSet<String>();
         try {
