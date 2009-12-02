@@ -158,7 +158,7 @@ of testing facilities designed for use with TestNG (http://testng.org/), so it's
         <dependency>
             <groupId>de.dkfz.signaling</groupId>
             <artifactId>signalingComponents</artifactId>
-            <version>0.1.8.3</version>
+            <version>0.1.8.5-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>net.sourceforge.jexcelapi</groupId>

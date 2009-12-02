@@ -463,8 +463,7 @@ public class CellHTS2 {
 
 
             if(datafilesFromAdvancedFileImporter!=null) {
-               System.out.println("i am in");
-                 
+               
                 //check and parse all the uploaded filesnames for plate,replicate,channel combinations in the file NAME
                checkAndPutSingleFileToDataFileList(datafilesFromAdvancedFileImporter);
                 //go to the data file upload step
@@ -1028,11 +1027,9 @@ public class CellHTS2 {
             errorDatafileMsg = zipErrorMsg[1];
         }
 
+        
 
-        //show/enable both back and forward link in the next step..this is for the plateconfig
-        activatedPages.put(currentPagePointer + 1, false);
-        //show enable forward link in the second next page too ..this for the statistics parameterization
-        activatedPages.put(currentPagePointer + 2, false);
+
 
     }
     public void checkAndPutSingleFileToDataFileList(ArrayList<File> filesToCheck) {
@@ -1063,7 +1060,7 @@ public class CellHTS2 {
                     if (!foundvalidFormat) {
                         noErrorUploadFile = false;
                         errorDatafileMsg = "Error: you uploaded datafile(s) which do not fit into valid plate formats: " + validPlateFormat + " wells. Filename: "+singleFile.getName();
-                        return;
+                        break;
                     }
                     //check if plateFormat differs between uploaded files
                     if (plateFormat != null) {
@@ -1072,7 +1069,7 @@ public class CellHTS2 {
                             errorDatafileMsg = "Error: you uploaded datafiles which have no equal plateformat: " + thisPlateFormat + " vs " + plateFormat;
                             //erase the list before because its useless ...which is the correct format?
                             dataFileList.clear();
-                            return;
+                            break;
                         }
 
                     }
@@ -1094,21 +1091,25 @@ public class CellHTS2 {
                     noErrorUploadFile = false;
                     errorDatafileMsg = "Error in : " + singleFile.getName() + " msg : " + result[1];
                     //do not process any further file
-                    return;
+                    break;
                 }
 
             }
             if (noErrorUploadFile && dataFileList.size()>0) {
 
 
-            plate = convertIntToPlateTypes(thisPlateFormat);
-            //enable goto next page
-            activatedPages.put(currentPagePointer, false);
-            //we have to do this id we update our list..otherwise the plate configurator drop down menue
-            //will stay the same if you go back
-            clickedWellsAndPlates.clear();
+                plate = convertIntToPlateTypes(thisPlateFormat);
+                //enable goto next page
+                activatedPages.put(currentPagePointer, false);
+                //we have to do this id we update our list..otherwise the plate configurator drop down menue
+                //will stay the same if you go back
+                clickedWellsAndPlates.clear();
 
-        }
+            }
+        //show/enable both back and forward link in the next step..this is for the plateconfig
+        activatedPages.put(currentPagePointer + 1, false);
+        //show enable forward link in the second next page too ..this for the statistics parameterization
+        activatedPages.put(currentPagePointer + 2, false);
     }
 
     /**
@@ -1746,7 +1747,9 @@ public class CellHTS2 {
         ShellEnvironment.zipFiles(fileNamesArr, filePathesArr, zipFile);
         return new File(zipFile);
     }
-    public Object onActionFromShowDebugPage(){
+    public Object onActionFromShowAdvancedFileImporter(){
+       
+       advancedFileImporter.setUploadPath(jobNameDir.getAbsolutePath());
        return advancedFileImporter;
     }
 
@@ -2798,7 +2801,8 @@ public class CellHTS2 {
             
 
             jobNameDir=null;
-        
+        //restart the advanced file importer
+            advancedFileImporter.setInit(false);
     }
 
     public void setDatafilesFromAdvancedFileImporter(ArrayList<File> outputFiles) {
@@ -3199,14 +3203,12 @@ public class CellHTS2 {
         String jobNamePath="";
 	String jobName="";
         try {
-        System.out.println("Upload path:"+uploadPath);
+
         jobName  = File.createTempFile("JOB", File.separator,new File(uploadPath)).getName();
-	    System.out.println("JOBNAME:"+jobName);
+
        
             
         jobNamePath = uploadPath+jobName;
-
-        System.out.println("JOBNAMEPATH:"+jobNamePath); 
 
         //delete the file,we dont need it we will create a dir with this name
         (new File(jobNamePath)).delete();
@@ -3439,6 +3441,7 @@ public class CellHTS2 {
         }
         file.write(copied);
     }
+    
     public void checkAndCreateUploadDirectory() {
         String uploadPath = msg.get("upload-path");
         File uploadPathObj = new File(uploadPath);
@@ -3448,12 +3451,30 @@ public class CellHTS2 {
             }
         }
         if(uploadPathObj.canRead()&&uploadPathObj.canWrite()) {
-            return;
-        }
-        else {
+            //check if we can create a temp file in the new dir
+            File tmpFile =new File(uploadPath+"tmp.txt");
+            try{
+
+                tmpFile.createNewFile();
+                if(tmpFile.canWrite()) {
+                    tmpFile.delete();
+                    return;
+                }
+
+            }catch(IOException e) {
+                e.printStackTrace();
+                if(tmpFile.exists()){
+                    tmpFile.delete();
+                }
+                throw new TapestryException("Cannot write a test file in the upload path: "+uploadPath+"tmp.txt"+".\nCheck read/write permissions or change file upload property in apps.properties file",null);
+            }
+
+         }else {
                 throw new TapestryException("Cannot read or write directory: "+uploadPath+".\nCheck read/write permissions",null);
         }
     }
+
+
 
 
     public void onClickWellEvent() {

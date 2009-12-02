@@ -703,6 +703,15 @@ public class FileCreator {
         //if we are single channel with only one replicate...outputfiles=inputfiles
         boolean multiRepOrChannel;
 
+        //check if we have dualchannel
+        boolean hasDualChannel=false;
+        for(DataFile df : repChannelMap.values()) {
+            if(df.getChannel()>1) {
+                hasDualChannel=true;
+            }
+        }
+
+
         if(repChannelMap.size()<2) {
             multiRepOrChannel=false;
         }
@@ -769,8 +778,11 @@ public class FileCreator {
                             //if we have more than one plate per outputfile  ...generate multiple buffered outputstreams
                             for(String plateName : plateNames) {
                                 //get the unique plateNumber
-                                
-                                String newFilename=outputFile.getParent()+"/"+plateName+"_1_1_"+outputFile.getName();
+                                String plateRepAddition="_1_";
+                                if(hasDualChannel) {
+                                    plateRepAddition+="1_";
+                                }
+                                String newFilename=outputFile.getParent()+"/"+plateName+plateRepAddition+outputFile.getName();
                                 allNewMultiOutputFiles.add(newFilename);
                                 outfilesForInfile.put(plateName,new BufferedWriter(new FileWriter(newFilename)));
                             }

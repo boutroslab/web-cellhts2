@@ -217,7 +217,7 @@
                 containing multiple data files.
             </p>
               <br/>
-                <t:actionlink t:id="showDebugPage">show the debugpage</t:actionlink>
+                <t:actionlink t:id="showAdvancedFileImporter">Advanced File Importer</t:actionlink>
               <br/>
             <div t:type="ck/Tooltip" clientId="tooltip2"
                  value="If the experiment has a lot of data files, it is best to pack them into a ZIP file and upload it."

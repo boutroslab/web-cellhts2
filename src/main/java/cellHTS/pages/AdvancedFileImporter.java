@@ -65,7 +65,7 @@ public class AdvancedFileImporter {
     private boolean plateWellDefined;
     @Persist
     private LinkedHashMap<String,DataFile> repChannelMap;
-
+  
 
 
     @InjectComponent
@@ -87,6 +87,16 @@ public class AdvancedFileImporter {
 
     public void setupRender() {
         if(!init) {
+            if(uploadPath==null) {
+                throw new TapestryException("upload path has not been submitted to this page",null);
+            }
+            else {
+                File pathFileObj=new File(uploadPath);
+                if(!pathFileObj.exists()) {
+                    pathFileObj.mkdirs();
+                }
+            }    
+
             init=true;
             uploadedFiles = new ArrayList<String>();
             filesToImport = new ArrayList<String>();
@@ -99,7 +109,7 @@ public class AdvancedFileImporter {
             headsToFindAnnotationfile.add("GeneID");
             repChannelMap= new LinkedHashMap<String,DataFile>(); 
 
-            uploadPath=msg.get("upload-path");
+
             startFileImport=false;
             convertedAllFiles=false;
 
@@ -126,6 +136,8 @@ public class AdvancedFileImporter {
           for(Object file : submittedFiles) {                     
               uploadedFiles.add((String)file);
           }
+        //this is a dynamical process
+
     }
     void onAllFilesClearedFromMultipleUploadOne(Object[]dummy) {
         //reinit everything
@@ -147,6 +159,9 @@ public class AdvancedFileImporter {
         for(Object obj: objs) {
             filesToImport.add((String)obj);                
         }
+
+        //TO DO here we will check if the files contain headers or not
+        //if so we will set the boolean value containHeaders
 
          initDatafileHeaders();
 
@@ -466,5 +481,13 @@ public class AdvancedFileImporter {
         this.replicateNumbers = replicateNumbers;
     }
 
-    // end of getters and setters-------------------------------------------------------------------------
+    public boolean isInit() {
+        return init;
+    }
+
+    public void setInit(boolean init) {
+        this.init = init;
+    }
+
+// end of getters and setters-------------------------------------------------------------------------
 }
