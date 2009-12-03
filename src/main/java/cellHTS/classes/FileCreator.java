@@ -33,40 +33,40 @@ import data.Plate;
 /**
  * This class is a typical file creation class
  * It has all the methods to build configuration files etc. or to build files in general
- *
+ * <p/>
  * Created by IntelliJ IDEA.
  * User: oliverpelz
  * Date: 01.12.2008
  * Time: 17:34:33
- *
  */
 
 //this class
 
 public class FileCreator {
 
-    
+
     /**
-     *  this will be the operating system dependendant linefeed symol
+     * this will be the operating system dependendant linefeed symol
      */
-    public static String lineFeed="\n";
+    public static String lineFeed = "\n";
 
 
     //write two output files...one PlateConfig file and one Screenlog file
     /**
      * This method creates/writes the plate config file and the screenlogfile out of a
      * datastructure defined in clickedWellsAndlates.
-     * @param PlateConfFilename the filename for the plate configuration output file
-     * @param ScreenlogFilename the filename for the screen log output file
+     *
+     * @param PlateConfFilename     the filename for the plate configuration output file
+     * @param ScreenlogFilename     the filename for the screen log output file
      * @param clickedWellsAndPlates the datastructure to built the plateconfig and screenlog outputfiles from
-     * @param plateFormat  the plateformat is the number of wells per plate, e.g. 384
-     * @param isDualChannel if true we are building dual-channel outputfiles which is essentially needed for the screenlog which differs from single to dual channel
+     * @param plateFormat           the plateformat is the number of wells per plate, e.g. 384
+     * @param isDualChannel         if true we are building dual-channel outputfiles which is essentially needed for the screenlog which differs from single to dual channel
      * @return returns true if creation was fine, false otherwise
      */
-    public static Boolean createPlateConfigFile(String PlateConfFilename, String ScreenlogFilename,ArrayList<Plate> clickedWellsAndPlates, int plateFormat,boolean isDualChannel) {
+    public static Boolean createPlateConfigFile(String PlateConfFilename, String ScreenlogFilename, ArrayList<Plate> clickedWellsAndPlates, int plateFormat, boolean isDualChannel) {
 
         int plateAmount = getPlateAmount(clickedWellsAndPlates);
-        String plateConfHeaderline = createPlateConfHeaderLine(plateFormat,plateAmount);
+        String plateConfHeaderline = createPlateConfHeaderLine(plateFormat, plateAmount);
 
         String screenlogHeaderline = createScreenlogHeaderLine(isDualChannel);
 
@@ -92,75 +92,73 @@ public class FileCreator {
 
             //we disregard plate replicates and channels in the plateconfig file therefore we need
             // a special data structure to drop non uniques
-            HashMap<Integer,HashSet<String>> uniquePlateConfIDs= new HashMap<Integer,HashSet<String>>();
+            HashMap<Integer, HashSet<String>> uniquePlateConfIDs = new HashMap<Integer, HashSet<String>>();
 
 
             //plate zero is the all plate so we dont want to write any information to other plates which is already
             //print out on the all plate
-            HashMap<String,String> allPlate = clickedWellsAndPlates.get(0).getWellsArray();
-            
-            for(Integer i=0; i < clickedWellsAndPlates.size(); i++) {
-                HashMap<String,String> wellsArray =clickedWellsAndPlates.get(i).getWellsArray();
+            HashMap<String, String> allPlate = clickedWellsAndPlates.get(0).getWellsArray();
+
+            for (Integer i = 0; i < clickedWellsAndPlates.size(); i++) {
+                HashMap<String, String> wellsArray = clickedWellsAndPlates.get(i).getWellsArray();
                 int plateNum = clickedWellsAndPlates.get(i).getPlateNum();
 
 
-                Integer repNum=clickedWellsAndPlates.get(i).getReplicateNum();
+                Integer repNum = clickedWellsAndPlates.get(i).getReplicateNum();
                 //create an contaminated plates and wells datastructure (copy info from clickedWellsandPlates)
-                contaminatedPlatesNWells.add(new Plate(i,plateNum,repNum));
+                contaminatedPlatesNWells.add(new Plate(i, plateNum, repNum));
 
-            // sort everything by wellID
+                // sort everything by wellID
                 ArrayList<String> sortedWellmapKeys = new ArrayList();
                 sortedWellmapKeys.addAll(wellsArray.keySet());
                 Collections.sort(sortedWellmapKeys);
                 Iterator wellIterator = sortedWellmapKeys.iterator();
 
-                while(wellIterator.hasNext()) {
-                     String wellID = (String)wellIterator.next();
-                     String wellType = wellsArray.get(wellID);
-                   
+                while (wellIterator.hasNext()) {
+                    String wellID = (String) wellIterator.next();
+                    String wellType = wellsArray.get(wellID);
+
 
                     //we dont want to store sample wells as this is true for all wells of one plate which are not explicitelty defined (this is due the line * * sample)
-                     if(wellType.equals("sample")) {
+                    if (wellType.equals("sample")) {
                         continue;
-                     }
+                    }
 
-                     //on the first plate print stars
-                     if(i==0) {
-                        plateNumber="*";
-                     }
-                     else {
-                         plateNumber = ""+plateNum;
-                     }
+                    //on the first plate print stars
+                    if (i == 0) {
+                        plateNumber = "*";
+                    } else {
+                        plateNumber = "" + plateNum;
+                    }
                     String orgWellID = wellID;
                     wellID = wellID.split("_")[1];
 
 
                     // here we get all the contaminated wells for the screenlog file
                     //quick hack
-                    if(!(wellType.equals("pos")||wellType.equals("neg")||wellType.equals("other")||wellType.equals("empty"))) {
-                         contaminatedPlatesNWells.get(i).getWellsArray().put(wellID,wellType);
+                    if (!(wellType.equals("pos") || wellType.equals("neg") || wellType.equals("other") || wellType.equals("empty"))) {
+                        contaminatedPlatesNWells.get(i).getWellsArray().put(wellID, wellType);
 
 
-                         continue;
+                        continue;
                     }
 
                     //drop non-uniques for plateconf file
-                    if(!uniquePlateConfIDs.containsKey(plateNum)) {
-                       uniquePlateConfIDs.put(plateNum,new HashSet<String>());
+                    if (!uniquePlateConfIDs.containsKey(plateNum)) {
+                        uniquePlateConfIDs.put(plateNum, new HashSet<String>());
                     }
 
-                    if(!uniquePlateConfIDs.get(plateNum).contains(wellID)) {
+                    if (!uniquePlateConfIDs.get(plateNum).contains(wellID)) {
                         //do never write that combination again...this is settled for all replicates of one plate
                         uniquePlateConfIDs.get(plateNum).add(wellID);
 
                         //do only write information which is not already written on the allplate
-                        if(plateNum==0) {
+                        if (plateNum == 0) {
                             plateConfigOut.write(plateNumber + "\t" + wellID + "\t" + wellType + lineFeed);
-                        }
-                        else {
+                        } else {
                             //do only write information which is not already written on the allplate
-                            if(allPlate.containsKey(orgWellID)) {
-                                if(allPlate.get(orgWellID).equals(wellType))  {
+                            if (allPlate.containsKey(orgWellID)) {
+                                if (allPlate.get(orgWellID).equals(wellType)) {
                                     continue;
                                 }
                             }
@@ -178,36 +176,35 @@ public class FileCreator {
 
             //now print the screenlog file
 
-            for(Integer i=0; i < contaminatedPlatesNWells.size(); i++) {
+            for (Integer i = 0; i < contaminatedPlatesNWells.size(); i++) {
                 //plate zero will not be put in the screenlog file because it
                 //is the sample plate which cannot contain any contaminated wells
-                if(contaminatedPlatesNWells.get(i).getPlateNum()==0) {
+                if (contaminatedPlatesNWells.get(i).getPlateNum() == 0) {
                     continue;
                 }
-                HashMap<String,String> wellsArray =contaminatedPlatesNWells.get(i).getWellsArray();
-                Integer repNum=contaminatedPlatesNWells.get(i).getReplicateNum();
+                HashMap<String, String> wellsArray = contaminatedPlatesNWells.get(i).getWellsArray();
+                Integer repNum = contaminatedPlatesNWells.get(i).getReplicateNum();
                 int plateNum = contaminatedPlatesNWells.get(i).getPlateNum();
 
 
-            // sort everything by wellID
+                // sort everything by wellID
                 ArrayList<String> sortedWellmapKeys = new ArrayList();
                 sortedWellmapKeys.addAll(wellsArray.keySet());
                 Collections.sort(sortedWellmapKeys);
                 Iterator wellIterator = sortedWellmapKeys.iterator();
 
-                while(wellIterator.hasNext()) {
-                     String wellID = (String)wellIterator.next();
+                while (wellIterator.hasNext()) {
+                    String wellID = (String) wellIterator.next();
 
-                     //String pureWellName =wellName.split("_")[1];
-                    if(!isDualChannel) {
-                        screenlogOut.write(plateNum+"\t"+repNum+"\t"+wellID+"\tNA\tContaminated"+lineFeed);
-                    }
-                    else {
+                    //String pureWellName =wellName.split("_")[1];
+                    if (!isDualChannel) {
+                        screenlogOut.write(plateNum + "\t" + repNum + "\t" + wellID + "\tNA\tContaminated" + lineFeed);
+                    } else {
                         //we dont care about the channels in the plate configurator but actually cellHTS2 takes
                         //care of contaminated channels which in my opinion doesnt make sense but i have to output
                         //it just like this
-                        screenlogOut.write(plateNum+"\t"+repNum+"\t"+1+"\t"+wellID+"\tNA\tContaminated"+lineFeed);
-                        screenlogOut.write(plateNum+"\t"+repNum+"\t"+2+"\t"+wellID+"\tNA\tContaminated"+lineFeed);
+                        screenlogOut.write(plateNum + "\t" + repNum + "\t" + 1 + "\t" + wellID + "\tNA\tContaminated" + lineFeed);
+                        screenlogOut.write(plateNum + "\t" + repNum + "\t" + 2 + "\t" + wellID + "\tNA\tContaminated" + lineFeed);
                     }
 
                 }
@@ -224,82 +221,49 @@ public class FileCreator {
     }
 
     /**
-     *
      * this method creates the header for the plate configuration file
-     * @param well number of wells per plate
+     *
+     * @param well   number of wells per plate
      * @param plates number of plates in your set
      * @return the header as a string
      */
     private static String createPlateConfHeaderLine(int well, int plates) {
         String returnString;
         //TODO: put this string in the configuration file
-        returnString = "Wells: " + well + lineFeed+"Plates: " + plates + lineFeed+"Plate\tWell\tContent"+lineFeed+"*\t*\tsample"+lineFeed;
+        returnString = "Wells: " + well + lineFeed + "Plates: " + plates + lineFeed + "Plate\tWell\tContent" + lineFeed + "*\t*\tsample" + lineFeed;
         return returnString;
     }
 
     /**
-     *
      * this method creates the header for the screen log file
      *
-     * @param isDualChannel  if set we are building a dual screen header otherwise single channel
+     * @param isDualChannel if set we are building a dual screen header otherwise single channel
      * @return the built header as string
      */
     public static String createScreenlogHeaderLine(boolean isDualChannel) {
         String returnString;
-        if(!isDualChannel) {
-            returnString="Plate\tSample\tWell\tFlag\tComment"+lineFeed;
-        }
-        else {
+        if (!isDualChannel) {
+            returnString = "Plate\tSample\tWell\tFlag\tComment" + lineFeed;
+        } else {
             //we dont care about the channels in the plate configurator but actually cellHTS2 takes
             //care of contaminated channels which in my opinion doesnt make sense but i have to output
             //it just like this
-            returnString="Plate\tSample\tChannel\tWell\tFlag\tComment"+lineFeed;
+            returnString = "Plate\tSample\tChannel\tWell\tFlag\tComment" + lineFeed;
         }
         return returnString;
     }
 
     /**
-     *
      * this simple method creates a file out of a string
      *
-     * @param aFile the filename for the outputfile
+     * @param aFile     the filename for the outputfile
      * @param aContents the string to save in the file
      * @return returns true if everything went fine, false otherwise
      */
     public static boolean stringToFile(File aFile, String aContents) {
         try {
             //use buffering
-            DataOutputStream output = new DataOutputStream(new FileOutputStream(aFile,false));
-            try {
-                //FileWriter always assumes default encoding is OK!
-                output.write(aContents.getBytes());                   
-            }
-            finally {
-                output.close();
-            }
-
-        } catch (IOException e) {
-            return false;
-        }
-        ;
-
-        return true;
-
-    }
-
-    /**
-     *
-     * this method appends a string to a existing or new file
-     *
-     * @param aFile the filename for the outputfile
-     * @param aContents the string to save in the file
-     * @return returns true if everything went fine, false otherwise
-     */
-
-    private static boolean appendStringToFile(File aFile, String aContents) {
-        try {
-            //use buffering
-            DataOutputStream output = new DataOutputStream(new FileOutputStream(aFile,true));
+            DataOutputStream output = new DataOutputStream(new FileOutputStream(aFile, false));
             try {
                 //FileWriter always assumes default encoding is OK!
                 output.write(aContents.getBytes());
@@ -318,139 +282,164 @@ public class FileCreator {
     }
 
     /**
+     * this method appends a string to a existing or new file
      *
-     * this method creates a plate list file out of a dataFiles data structure
-     *
-     * @param dataFiles the datastructure as for the plate list input. The Hashmpap keys are the filenames, the value a datafile object
-     * @param file the file object of the outputfile
-     * @return  returns true if everything went fine, else false
+     * @param aFile     the filename for the outputfile
+     * @param aContents the string to save in the file
+     * @return returns true if everything went fine, false otherwise
      */
-    public static boolean createPlatelistFile(HashMap<String, DataFile> dataFiles,File file) {
-		boolean goodFile=true;
-        boolean hasChannel = false;
-		String output="";
-        Iterator iterator = dataFiles.keySet().iterator();
-		//if weve got not uploaded any data file at all
-		if(dataFiles.size()==0) {
-		    return false;	
-        }
-		while(iterator.hasNext()) {
-		    String key = (String)iterator.next();
-			DataFile tmpFile = dataFiles.get(key);
 
-            Integer plateNum = tmpFile.getPlateNumber();
-			Integer replicate = tmpFile.getReplicate();
-			Integer channel = tmpFile.getChannel();
-			if(plateNum ==null || replicate==null){
-
-                return false;
+    private static boolean appendStringToFile(File aFile, String aContents) {
+        try {
+            //use buffering
+            DataOutputStream output = new DataOutputStream(new FileOutputStream(aFile, true));
+            try {
+                //FileWriter always assumes default encoding is OK!
+                output.write(aContents.getBytes());
+            }
+            finally {
+                output.close();
             }
 
-            output+=key+"\t"+plateNum+"\t"+replicate;
-            if(channel!=null) {
-                hasChannel = true;
-                output+="\t"+channel;
-            }
-            output+=lineFeed;
+        } catch (IOException e) {
+            return false;
         }
-		//write the header at last
-        String headerLine="Filename\tPlate\tReplicate";
-        if(hasChannel) {
-            headerLine+="\tChannel";
-        }
-        headerLine+=lineFeed;
-        output=headerLine+output;        
+        ;
 
-        goodFile = stringToFile(file,output);
-		return goodFile;
-	}
-
-    /**
-     *
-     * This method creates a description file for cellHTS2
-     *
-     *
-     * @param exp   an Experiment object which keeps all the descriptive information
-     * @param descFile the filename as an outputfile
-     */
-    public static void createDescriptionFile(Experiment exp, String descFile) {
-        HashMap<String,String> resultsMap=exp2hashMap(exp);
-        String fileTxt = "[Screen description]"+lineFeed;
-
-        String validNames[] = {"screen","title","date","experimenter","version","celltype","assay",
-                               "assaytype","assaydesc","dualChannel","internal","channel1",
-                               "channel2"};
-        for(String name : validNames) {
-            if(resultsMap.get(name)!=null)   {
-                   fileTxt += name+":"+resultsMap.get(name)+lineFeed;
-                 }
-        }
-
-        stringToFile(new File(descFile),fileTxt);
-        
+        return true;
 
     }
 
     /**
+     * this method creates a plate list file out of a dataFiles data structure
      *
+     * @param dataFiles the datastructure as for the plate list input. The Hashmpap keys are the filenames, the value a datafile object
+     * @param file      the file object of the outputfile
+     * @return returns true if everything went fine, else false
+     */
+    public static boolean createPlatelistFile(HashMap<String, DataFile> dataFiles, File file) {
+        boolean goodFile = true;
+        boolean hasChannel = false;
+        String output = "";
+        Iterator iterator = dataFiles.keySet().iterator();
+        //if weve got not uploaded any data file at all
+        if (dataFiles.size() == 0) {
+            return false;
+        }
+        while (iterator.hasNext()) {
+            String key = (String) iterator.next();
+            DataFile tmpFile = dataFiles.get(key);
+
+            Integer plateNum = tmpFile.getPlateNumber();
+            Integer replicate = tmpFile.getReplicate();
+            Integer channel = tmpFile.getChannel();
+            if (plateNum == null || replicate == null) {
+
+                return false;
+            }
+
+            output += key + "\t" + plateNum + "\t" + replicate;
+            if (channel != null) {
+                hasChannel = true;
+                output += "\t" + channel;
+            }
+            output += lineFeed;
+        }
+        //write the header at last
+        String headerLine = "Filename\tPlate\tReplicate";
+        if (hasChannel) {
+            headerLine += "\tChannel";
+        }
+        headerLine += lineFeed;
+        output = headerLine + output;
+
+        goodFile = stringToFile(file, output);
+        return goodFile;
+    }
+
+    /**
+     * This method creates a description file for cellHTS2
+     *
+     * @param exp      an Experiment object which keeps all the descriptive information
+     * @param descFile the filename as an outputfile
+     */
+    public static void createDescriptionFile(Experiment exp, String descFile) {
+        HashMap<String, String> resultsMap = exp2hashMap(exp);
+        String fileTxt = "[Screen description]" + lineFeed;
+
+        String validNames[] = {"screen", "title", "date", "experimenter", "version", "celltype", "assay",
+                "assaytype", "assaydesc", "dualChannel", "internal", "channel1",
+                "channel2"};
+        for (String name : validNames) {
+            if (resultsMap.get(name) != null) {
+                fileTxt += name + ":" + resultsMap.get(name) + lineFeed;
+            }
+        }
+
+        stringToFile(new File(descFile), fileTxt);
+
+
+    }
+
+    /**
      * Transforms an Experiment object into a plain old HashMap format
      *
-     * @param exp  The input experiment
+     * @param exp The input experiment
      * @return an Hashmap with the transformed results
      */
-    private static HashMap<String,String> exp2hashMap(Experiment exp) {
-        HashMap<String,String> resultsMap= new HashMap<String,String>();
+    private static HashMap<String, String> exp2hashMap(Experiment exp) {
+        HashMap<String, String> resultsMap = new HashMap<String, String>();
 
-        if(exp.getDate()!=null) {
+        if (exp.getDate() != null) {
             String dateString = DateFormat.getDateInstance(DateFormat.SHORT).format(exp.getDate());
             Pattern p = Pattern.compile("(\\d+)\\.(\\d+)\\.(\\d+)");
             Matcher m = p.matcher(dateString);
-            if(m.find()) {
+            if (m.find()) {
                 String day = m.group(1);
                 String month = m.group(2);
                 String year = m.group(3);
-                dateString=month+"/"+day+"/"+year;
+                dateString = month + "/" + day + "/" + year;
             }
             //convert to us string
-            resultsMap.put("date",dateString);
+            resultsMap.put("date", dateString);
         }
-        resultsMap.put("screen",exp.getScreen());
-        resultsMap.put("title",exp.getTitle());
-        resultsMap.put("experimenter",exp.getExperimenter());
-        resultsMap.put("version",exp.getVersion());
-        resultsMap.put("celltype",exp.getCelltype());
-        resultsMap.put("assay",exp.getAssay());
-        resultsMap.put("assaytype",exp.getAssaytype());
-        resultsMap.put("assaydesc",exp.getAssaydesc());
-        resultsMap.put("dualChannel",""+exp.isDualChannel());
-        resultsMap.put("internal",""+exp.isInternal());
-        resultsMap.put("channel1",exp.getChannel1());
-        resultsMap.put("channel2",exp.getChannel2());
+        resultsMap.put("screen", exp.getScreen());
+        resultsMap.put("title", exp.getTitle());
+        resultsMap.put("experimenter", exp.getExperimenter());
+        resultsMap.put("version", exp.getVersion());
+        resultsMap.put("celltype", exp.getCelltype());
+        resultsMap.put("assay", exp.getAssay());
+        resultsMap.put("assaytype", exp.getAssaytype());
+        resultsMap.put("assaydesc", exp.getAssaydesc());
+        resultsMap.put("dualChannel", "" + exp.isDualChannel());
+        resultsMap.put("internal", "" + exp.isInternal());
+        resultsMap.put("channel1", exp.getChannel1());
+        resultsMap.put("channel2", exp.getChannel2());
 
         return resultsMap;
     }
 
     /**
-     *
      * this method edits an already exisiting (or empty) descriptionfile
-     *  with an changed experiment object (e.g. through beaneditform)
-     * @param exp The output experiment object
+     * with an changed experiment object (e.g. through beaneditform)
+     *
+     * @param exp      The output experiment object
      * @param descFile the input description file
      */
 
     public static void editDescriptionFile(Experiment exp, String descFile) {
-        String resultText="";
-        String beforeText="";
-        String descText="";
-        String afterText="";
+        String resultText = "";
+        String beforeText = "";
+        String descText = "";
+        String afterText = "";
 
         //transform the Experiment into a hashmap
-        HashMap<String,String> resultsMap=exp2hashMap(exp);
+        HashMap<String, String> resultsMap = exp2hashMap(exp);
 
 
-        String validNames[] = {"screen","title","date","experimenter","version","celltype","assay",
-                               "assaytype","assaydesc","dualChannel","internal","channel1",
-                               "channel2"};
+        String validNames[] = {"screen", "title", "date", "experimenter", "version", "celltype", "assay",
+                "assaytype", "assaydesc", "dualChannel", "internal", "channel1",
+                "channel2"};
         try {
             FileReader reader = new FileReader(descFile);
             BufferedReader buffer = new BufferedReader(reader);
@@ -458,69 +447,66 @@ public class FileCreator {
             String line;
             Matcher m;
 
-            boolean beforeDesc=true;
-            boolean afterDesc=false;
-            boolean descFound=false;
+            boolean beforeDesc = true;
+            boolean afterDesc = false;
+            boolean descFound = false;
             Pattern tag = Pattern.compile("\\[.*\\]");
             //collect before,description and after description texts
             while ((line = buffer.readLine()) != null) {
-               if(!line.equals("[Screen description]")&&beforeDesc) {
-                   beforeText+=line+lineFeed;
-               }
-               else {
-                   if(beforeDesc){
-                    descText+=line+lineFeed;
-                    descFound=true;
-                    beforeDesc=false;
-                    continue;
-                   }
-               }
-               if(descFound) {
+                if (!line.equals("[Screen description]") && beforeDesc) {
+                    beforeText += line + lineFeed;
+                } else {
+                    if (beforeDesc) {
+                        descText += line + lineFeed;
+                        descFound = true;
+                        beforeDesc = false;
+                        continue;
+                    }
+                }
+                if (descFound) {
 
-                   if(tag.matcher(line).find()) {
-                       descFound=false;
-                       afterDesc=true;
-                       afterText+=line+lineFeed;
-                   }                                                                                        
-                   else {
-                       descText+=line+lineFeed;
-                   }
-               }
-               else if(afterDesc) {
-                   afterText+=line+lineFeed;
-               }
-               
+                    if (tag.matcher(line).find()) {
+                        descFound = false;
+                        afterDesc = true;
+                        afterText += line + lineFeed;
+                    } else {
+                        descText += line + lineFeed;
+                    }
+                } else if (afterDesc) {
+                    afterText += line + lineFeed;
+                }
+
             }
             //now search the description text and add/alter if not found
-            String appendText="";             
-            for(String name : validNames) {
-                 String text="";
-                 if(resultsMap.get(name)!=null)   {
-                   text = resultsMap.get(name);
-                 }
+            String appendText = "";
+            for (String name : validNames) {
+                String text = "";
+                if (resultsMap.get(name) != null) {
+                    text = resultsMap.get(name);
+                }
 
                 //search for lines matching...not in the tag lines [.
                 //TODO : does this work here???
-                 Pattern p = Pattern.compile("[^\\[]"+name+"[^"+lineFeed+"]+",Pattern.CASE_INSENSITIVE);
-                 m = p.matcher(descText);
+                Pattern p = Pattern.compile("[^\\[]" + name + "[^" + lineFeed + "]+", Pattern.CASE_INSENSITIVE);
+                m = p.matcher(descText);
 
-                 if(m.find()) {
-                   descText= m.replaceFirst(lineFeed+name+": "+text);
-                 }
+                if (m.find()) {
+                    descText = m.replaceFirst(lineFeed + name + ": " + text);
+                }
                 //append fields which dont be in the file yet
-                 else {
+                else {
 
-                    appendText+= name+": "+text+lineFeed;
-                 }
+                    appendText += name + ": " + text + lineFeed;
+                }
             }
 
             //add the text not been found
-            descText+=appendText;
+            descText += appendText;
 
             //mix everyhing together
-            resultText=beforeText+descText+afterText;
+            resultText = beforeText + descText + afterText;
         } catch (IOException e) {
-             //TODO: what to do when file is corrupted??
+            //TODO: what to do when file is corrupted??
         }
         //TODO:add a Screen Description tag if non is available
         //convert the string to a filename
@@ -529,18 +515,18 @@ public class FileCreator {
 
     /**
      * this method gets the number of all plates from a ArrayList of Plates (clickedWellsAndPlates)
-     * 
-     * @param clickedWellsAndPlates  the input datastructure(a complete set of all the plates of your set)
+     *
+     * @param clickedWellsAndPlates the input datastructure(a complete set of all the plates of your set)
      * @return number/amount of all the plates of your arrayList
      */
     private static int getPlateAmount(ArrayList<Plate> clickedWellsAndPlates) {
-        int plateAmount=0;
+        int plateAmount = 0;
 
-        for(int i=0; i < clickedWellsAndPlates.size(); i++) {
+        for (int i = 0; i < clickedWellsAndPlates.size(); i++) {
             Plate plate = clickedWellsAndPlates.get(i);
             int currPlateNum = plate.getPlateNum();
-            if(currPlateNum>plateAmount) {
-                plateAmount=currPlateNum;
+            if (currPlateNum > plateAmount) {
+                plateAmount = currPlateNum;
             }
 
         }
@@ -548,14 +534,13 @@ public class FileCreator {
     }
 
     /**
-     *
      * converts dos files which have ^m instead of ^n as a newline character
      *
      * @param input input file to convert from
      * @return true if succeeded, false otherwise
      */
     public static boolean convertDos2UnixFile(File input) {
-        File tempFile= new File(input.getAbsolutePath()+".temp");
+        File tempFile = new File(input.getAbsolutePath() + ".temp");
         try {
             FileInputStream fis = new FileInputStream(input);
             BufferedReader ir = new BufferedReader(new InputStreamReader(fis));
@@ -563,12 +548,12 @@ public class FileCreator {
 
             FileOutputStream fos = new FileOutputStream(tempFile);
             PrintWriter pw = new PrintWriter(fos);
-            
-            String line=null;
-            while((line =ir.readLine())!=null) {
+
+            String line = null;
+            while ((line = ir.readLine()) != null) {
                 //find carriage return at end of line
-                line=line.replaceAll("\r$","");
-                pw.write(line+lineFeed);
+                line = line.replaceAll("\r$", "");
+                pw.write(line + lineFeed);
             }
             pw.flush();
             ir.close();
@@ -583,72 +568,70 @@ public class FileCreator {
         tempFile.renameTo(new File(fullInputFilename));
 
 
-
-
         return true;
     }
 
     /**
-     *  set the linefeeder , this is important for changing between windows and mac file format regarding the newlines
-     * @param lineFeeder  e.g. '\n'
+     * set the linefeeder , this is important for changing between windows and mac file format regarding the newlines
+     *
+     * @param lineFeeder e.g. '\n'
      */
     public static void setLineFeed(String lineFeeder) {
         lineFeed = lineFeeder;
     }
 
 
-
     /**
+     * this method is deprecated, we will use Java standard api's properties class instead
+     * this method creates a new "download properties file" with the amount of current downloads "amount"
+     * this file will keep track of the number of downloaded results file
+     * one of those properties files keeps track of a complete folder for all results files
      *
-     *  this method is deprecated, we will use Java standard api's properties class instead
-     *  this method creates a new "download properties file" with the amount of current downloads "amount"
-     *  this file will keep track of the number of downloaded results file
-     *  one of those properties files keeps track of a complete folder for all results files
-     *
-     * @param file outpufile to write to
-     * @param jobID write the jobid propery to the outpufile
+     * @param file   outpufile to write to
+     * @param jobID  write the jobid propery to the outpufile
      * @param amount write the amount property to the file
      */
     public static void writeDownloadPropertiesFile(File file, String jobID, int amount) {
         //get all existing key value pairs
-        HashMap<String,String> map = new HashMap<String,String>();
+        HashMap<String, String> map = new HashMap<String, String>();
 
-        if(!file.exists()) {
-            stringToFile(file,"");
+        if (!file.exists()) {
+            stringToFile(file, "");
         }
 
         try {
-                    FileReader reader = new FileReader(file);
-                    BufferedReader buffer = new BufferedReader(reader);
+            FileReader reader = new FileReader(file);
+            BufferedReader buffer = new BufferedReader(reader);
 
-                    String line;
+            String line;
 
 
-                    while ((line = buffer.readLine()) != null) {
-                        line = line.replaceAll(" ","");
-                        String[]keyValPair = line.split("=");
-                        map.put(keyValPair[0],keyValPair[1]);
-                    }
-        }catch(IOException e) {
+            while ((line = buffer.readLine()) != null) {
+                line = line.replaceAll(" ", "");
+                String[] keyValPair = line.split("=");
+                map.put(keyValPair[0], keyValPair[1]);
+            }
+        } catch (IOException e) {
             e.printStackTrace();
-            
-             return;
+
+            return;
         }
-        map.put(jobID,""+amount);
+        map.put(jobID, "" + amount);
         file.delete();
         //the properties key for amount of downloads is "#"
-        String tempString="";
-        for(String key : map.keySet()) {
+        String tempString = "";
+        for (String key : map.keySet()) {
             String value = map.get(key);
-            tempString+=key+" = "+value+"\n";
+            tempString += key + " = " + value + "\n";
         }
-        stringToFile(file,tempString);
+        stringToFile(file, tempString);
 
 
     }
+
     //deprecated, DO NOT USE! works only for files with headline and no multichannel or multireplicates are supported
-    public  static boolean createDataFilesFromCVSFiles(ArrayList<File> inputFiles,ArrayList<File> outputFiles,
-                                        LinkedHashMap<String,Integer> returnMap) {
+    public static boolean createDataFilesFromCVSFiles(ArrayList<File> inputFiles, ArrayList<File> outputFiles,
+                                                      LinkedHashMap<String, Integer> returnMap) {
 
         ArrayList<Integer> tempColNums = new ArrayList<Integer>();
         for (String colName : returnMap.keySet()) {
@@ -656,254 +639,252 @@ public class FileCreator {
         }
         try {
             int i = 0;
-            for(File file : inputFiles) {
-                    File outputFile = outputFiles.get(i);
-         
-                    FileReader reader = new FileReader(file);
-                    BufferedReader buffer = new BufferedReader(reader);
+            for (File file : inputFiles) {
+                File outputFile = outputFiles.get(i);
 
-                    FileWriter outFileWriter = new FileWriter(outputFile);
-                    BufferedWriter outBufferedWriter = new BufferedWriter(outFileWriter);
+                FileReader reader = new FileReader(file);
+                BufferedReader buffer = new BufferedReader(reader);
 
-                    String line;
+                FileWriter outFileWriter = new FileWriter(outputFile);
+                BufferedWriter outBufferedWriter = new BufferedWriter(outFileWriter);
+
+                String line;
 
 
-                    while ((line = buffer.readLine()) != null) {
-                        String[] cols = line.split("\t");
-                        String outline = "";
-                        for (Integer colID : tempColNums) {
-                            if(outline.equals("")) {
-                                outline = cols[colID-1];   //the columns are index based
-                            }
-                            else {
-                                outline = "\t"+cols[colID-1];     //the columns are index based
-                            }
+                while ((line = buffer.readLine()) != null) {
+                    String[] cols = line.split("\t");
+                    String outline = "";
+                    for (Integer colID : tempColNums) {
+                        if (outline.equals("")) {
+                            outline = cols[colID - 1];   //the columns are index based
+                        } else {
+                            outline = "\t" + cols[colID - 1];     //the columns are index based
                         }
-                        outBufferedWriter.write(outline+"\n");
                     }
-                    outBufferedWriter.close();
-                    outFileWriter.close();
-                    buffer.close();
-                    reader.close();
+                    outBufferedWriter.write(outline + "\n");
+                }
+                outBufferedWriter.close();
+                outFileWriter.close();
+                buffer.close();
+                reader.close();
 
             }
-    }catch(IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             return false;
         }
-        return true;   
+        return true;
     }
-    public  static boolean createDataFilesFromCVSMultiFiles(ArrayList<File> inputFiles,
-                                                            ArrayList<File> outputFiles,
-                                                            boolean containsHeadline,
-                                                             LinkedHashMap<String,DataFile> repChannelMap,
-                                                            int amounReplicates,
-                                                            LinkedHashMap<String,Integer> colNameToID) {
+
+    public static boolean createDataFilesFromCVSMultiFiles(ArrayList<File> inputFiles,
+                                                           ArrayList<File> outputFiles,
+                                                           boolean containsHeadline,
+                                                           LinkedHashMap<String, DataFile> repChannelMap,
+                                                           int amounReplicates,
+                                                           LinkedHashMap<String, Integer> colNameToID,
+                                                           LinkedHashMap<String, Integer> plateNameToNum
+    ) {
 
         //if we are single channel with only one replicate...outputfiles=inputfiles
         boolean multiRepOrChannel;
 
         //check if we have dualchannel
-        boolean hasDualChannel=false;
-        for(DataFile df : repChannelMap.values()) {
-            if(df.getChannel()>1) {
-                hasDualChannel=true;
+        boolean hasDualChannel = false;
+        for (DataFile df : repChannelMap.values()) {
+            if (df.getChannel() > 1) {
+                hasDualChannel = true;
             }
         }
 
 
-        if(repChannelMap.size()<2) {
-            multiRepOrChannel=false;
-        }
-        else {
+        if (repChannelMap.size() < 2) {
+            multiRepOrChannel = false;
+        } else {
             //if we are more than one replicate and channel we have to create more outputfiles
-            multiRepOrChannel=true;
+            multiRepOrChannel = true;
         }
 
-        
-        
+
         //plate names to generated plate nums
-        LinkedHashMap<String,Integer> plateNameToNum = new LinkedHashMap<String,Integer>();
-        int plateNumCounter=1;
+
+        int plateNumCounter = 1;
         try {
             int i = 0;
             //log all the new generated outputfiles if we generated via multichannel
             HashSet<String> allNewMultiOutputFiles = new HashSet<String>();
-            for(File file : inputFiles) {
-                
+            for (File file : inputFiles) {
+
 //this will the base nam of out outputfiles which are called like /home/pelz/ABC.OUT_1_1_1
                 File outputFile = outputFiles.get(i++);
-                
-                    LinkedHashMap<String,BufferedWriter>  outfilesForInfile
-                            = new LinkedHashMap<String,BufferedWriter>();//outputfiles for ONE! inputfile
 
-                   //get all plateNums out of the file in a unique way
-                    HashSet<String> plateNames
-                            = getAllRowsForColumnIDFromFile(file,(colNameToID.get("Plate")-1),containsHeadline);
-                    
-                    //associate new plate numbers for exisiting names
+                LinkedHashMap<String, BufferedWriter> outfilesForInfile
+                        = new LinkedHashMap<String, BufferedWriter>();//outputfiles for ONE! inputfile
 
-                    for(String plateName : plateNames) {
-                        Integer plateNumCount=null;
-                        try {
-                            //if it only contains numbers
-                            plateNumCount=Integer.parseInt(plateName);
-                        } catch(NumberFormatException e) {
-                            //TODO: this approach can lead to errors, fill the gaps
-                            plateNumCount=plateNumCounter++;
-                        }
-                        
-                        if(!plateNameToNum.containsKey(plateName)) {
-                            plateNameToNum.put(plateName,plateNumCount);
+                //get all plateNums out of the file in a unique way
+                HashSet<String> plateNames
+                        = getAllRowsForColumnIDFromFile(file, (colNameToID.get("Plate") - 1), containsHeadline);
 
-                        }
+                //associate new plate numbers for exisiting names
+
+                for (String plateName : plateNames) {
+                    Integer plateNumCount = null;
+                    try {
+                        //if it only contains numbers
+                        plateNumCount = Integer.parseInt(plateName);
+                    } catch (NumberFormatException e) {
+                        //TODO: this approach can lead to errors, fill the gaps
+                        plateNumCount = plateNumCounter++;
                     }
-                    //get all the columns which contain multichannel data
-                    LinkedHashMap<Integer,String> colsContainMultiChannelData = new LinkedHashMap<Integer,String>();
+
+                    if (!plateNameToNum.containsKey(plateName)) {
+                        plateNameToNum.put(plateName, plateNumCount);
+
+                    }
+                }
+                //get all the columns which contain multichannel data
+                LinkedHashMap<Integer, String> colsContainMultiChannelData = new LinkedHashMap<Integer, String>();
 
 
-                    //Map the filename,plate Number and replicate/channel combination which maps to the indes to the
-                   // corresponding output bufferedwriter array index
-                    // plateNumString->Datafil->outputfile buffer writer index
+                //Map the filename,plate Number and replicate/channel combination which maps to the indes to the
+                // corresponding output bufferedwriter array index
+                // plateNumString->Datafil->outputfile buffer writer index
 
-                    //single file will be mapped to single outputfile
-                    BufferedWriter singleBufferedWriter=null;
-                    if(!multiRepOrChannel) {
+                //single file will be mapped to single outputfile
+                BufferedWriter singleBufferedWriter = null;
+                if (!multiRepOrChannel) {
 
-                        //if we do only have one unique plate per outputfile 
-                        if(plateNames.size()<2) {
-                            singleBufferedWriter = new BufferedWriter(new FileWriter(outputFile));
-                        }
-                        else {
-                            //if we have more than one plate per outputfile  ...generate multiple buffered outputstreams
-                            for(String plateName : plateNames) {
-                                //get the unique plateNumber
-                                String plateRepAddition="_1_";
-                                if(hasDualChannel) {
-                                    plateRepAddition+="1_";
-                                }
-                                String newFilename=outputFile.getParent()+"/"+plateName+plateRepAddition+outputFile.getName();
-                                allNewMultiOutputFiles.add(newFilename);
-                                outfilesForInfile.put(plateName,new BufferedWriter(new FileWriter(newFilename)));
-                            }
-                        }
-                    }  //multi channel files
-                    else {
-                        //get all the columns which contain multichannel data
-                        for(String colName: colNameToID.keySet()) {
-                             if(repChannelMap.containsKey(colName)) {
-                                colsContainMultiChannelData.put(colNameToID.get(colName),colName);
-                             }
-                         }
-
-                        //generate outputwriter buffer streams for every plate,repl,channel combi
-                        for(String plateName : plateNames) {
+                    //if we do only have one unique plate per outputfile
+                    if (plateNames.size() < 2) {
+                        singleBufferedWriter = new BufferedWriter(new FileWriter(outputFile));
+                    } else {
+                        //if we have more than one plate per outputfile  ...generate multiple buffered outputstreams
+                        for (String plateName : plateNames) {
                             //get the unique plateNumber
-                            int plateN = plateNameToNum.get(plateName);
-
-                            for(String head : repChannelMap.keySet()) {
-                                //get the replicate,channel combination for a column name such as "rep_X_channel_X"
-                                DataFile oldDF = repChannelMap.get(head);
-                                
-                                int rep = oldDF.getReplicate();
-                                int channel = oldDF.getChannel();
-                                //build a plate,rep,channel combination for a bufferedwriter
-                                String id = plateN+"_"+rep+"_"+channel;
-                                //set a new  filename which identifies plate,repl,channel
-                                String newFilename=id+"_"+outputFile.getName();
-                                String path = outputFile.getParent();
-
-                                newFilename = path+"/"+newFilename;
-                                //store this for later-->submission
-                                allNewMultiOutputFiles.add(newFilename);
-                                outfilesForInfile.put(id,new BufferedWriter(new FileWriter(newFilename)));
+                            String plateRepAddition = "_1";
+                            if (hasDualChannel) {
+                                plateRepAddition += "_1";
                             }
+                            String newFilename = outputFile.getParent() + "/" + plateName + plateRepAddition + "-" + outputFile.getName();
+                            allNewMultiOutputFiles.add(newFilename);
+                            outfilesForInfile.put(plateName, new BufferedWriter(new FileWriter(newFilename)));
+                        }
+                    }
+                }  //multi channel files
+                else {
+                    //get all the columns which contain multichannel data
+                    for (String colName : colNameToID.keySet()) {
+                        if (repChannelMap.containsKey(colName)) {
+                            colsContainMultiChannelData.put(colNameToID.get(colName), colName);
                         }
                     }
 
-                   // FileWriter outFileWriter = new FileWriter(outputFile);
-                   // BufferedWriter outBufferedWriter = new BufferedWriter(outFileWriter);
+                    //generate outputwriter buffer streams for every plate,repl,channel combi
+                    for (String plateName : plateNames) {
+                        //get the unique plateNumber
+                        int plateN = plateNameToNum.get(plateName);
 
-                    String line;
+                        for (String head : repChannelMap.keySet()) {
+                            //get the replicate,channel combination for a column name such as "rep_X_channel_X"
+                            DataFile oldDF = repChannelMap.get(head);
 
+                            int rep = oldDF.getReplicate();
+                            int channel = oldDF.getChannel();
+                            //build a plate,rep,channel combination for a bufferedwriter
+                            String id = plateN + "_" + rep + "_" + channel;
+                            //set a new  filename which identifies plate,repl,channel
+                            String newFilename = id + "_" + outputFile.getName();
+                            String path = outputFile.getParent();
 
-                    FileReader reader = new FileReader(file);
-                    BufferedReader buffer = new BufferedReader(reader);
-
-
-                    if(containsHeadline) {
-                           //forward one line if we got headlines in first line
-                        buffer.readLine();
-                    }
-
-                    while ((line = buffer.readLine()) != null) {
-                        String[] cols = line.split("\t");
-                        String outline = "";
-
-                        String plateName = cols[colNameToID.get("Plate")-1];
-                        String well = cols[colNameToID.get("Well")-1];
-                        
-                        //this is a correct data line 
-                        outline = plateName+"\t"+well;
-                        //if single data files just write
-                        if(!multiRepOrChannel) {
-                            if(plateNames.size()<2) {
-                                singleBufferedWriter.write(outline+"\t"+cols[colNameToID.get("Value")-1]+"\n");
-                            }
-                            else {
-                               int plateNum = plateNameToNum.get(plateName);
-                               BufferedWriter writer = outfilesForInfile.get(plateName);
-                               writer.write(outline+"\t"+cols[colNameToID.get("Value")-1]+"\n");
-                            }
+                            newFilename = path + "/" + newFilename;
+                            //store this for later-->submission
+                            allNewMultiOutputFiles.add(newFilename);
+                            outfilesForInfile.put(id, new BufferedWriter(new FileWriter(newFilename)));
                         }
-                        //Multichannel data
-                        else {
+                    }
+                }
+
+                // FileWriter outFileWriter = new FileWriter(outputFile);
+                // BufferedWriter outBufferedWriter = new BufferedWriter(outFileWriter);
+
+                String line;
+
+
+                FileReader reader = new FileReader(file);
+                BufferedReader buffer = new BufferedReader(reader);
+
+
+                if (containsHeadline) {
+                    //forward one line if we got headlines in first line
+                    buffer.readLine();
+                }
+
+                while ((line = buffer.readLine()) != null) {
+                    String[] cols = line.split("\t");
+                    String outline = "";
+
+                    String plateName = cols[colNameToID.get("Plate") - 1];
+                    String well = cols[colNameToID.get("Well") - 1];
+
+                    //this is a correct data line
+                    outline = plateName + "\t" + well;
+                    //if single data files just write
+                    if (!multiRepOrChannel) {
+                        if (plateNames.size() < 2) {
+                            singleBufferedWriter.write(outline + "\t" + cols[colNameToID.get("Value") - 1] + "\n");
+                        } else {
                             int plateNum = plateNameToNum.get(plateName);
-                            //for all the columns in the file
-                            for(int multiChannelCol : colsContainMultiChannelData.keySet()) {
-                                String colName = colsContainMultiChannelData.get(multiChannelCol);
-                                //if the column is one of the rep_X_channel_Y channels
-                              
-                                 if(repChannelMap.containsKey(colName)) {
-                                     DataFile df = repChannelMap.get(colName);
-                                     int rep = df.getReplicate();
-                                     int cha = df.getChannel();
+                            BufferedWriter writer = outfilesForInfile.get(plateName);
+                            writer.write(outline + "\t" + cols[colNameToID.get("Value") - 1] + "\n");
+                        }
+                    }
+                    //Multichannel data
+                    else {
+                        int plateNum = plateNameToNum.get(plateName);
+                        //for all the columns in the file
+                        for (int multiChannelCol : colsContainMultiChannelData.keySet()) {
+                            String colName = colsContainMultiChannelData.get(multiChannelCol);
+                            //if the column is one of the rep_X_channel_Y channels
 
-                                     String id = plateNum+"_"+rep+"_"+cha;
+                            if (repChannelMap.containsKey(colName)) {
+                                DataFile df = repChannelMap.get(colName);
+                                int rep = df.getReplicate();
+                                int cha = df.getChannel();
 
-                                     BufferedWriter writer = outfilesForInfile.get(id);
-                                     writer.write(outline+"\t"+cols[multiChannelCol]+"\n");
-                                 }
+                                String id = plateNum + "_" + rep + "_" + cha;
+
+                                BufferedWriter writer = outfilesForInfile.get(id);
+                                writer.write(outline + "\t" + cols[multiChannelCol] + "\n");
                             }
-
                         }
 
-
                     }
-                    //close the buffers after the whole file was read and wrote
-                    if(!multiRepOrChannel&&outfilesForInfile.size()<1) {
 
-                            singleBufferedWriter.close();
 
+                }
+                //close the buffers after the whole file was read and wrote
+                buffer.close();
+                if (!multiRepOrChannel && outfilesForInfile.size() < 1) {
+
+                    singleBufferedWriter.close();
+
+                } else {
+                    for (String id : outfilesForInfile.keySet()) {
+                        outfilesForInfile.get(id).close();
                     }
-                    else {
-                         for(String id : outfilesForInfile.keySet()) {
-                             outfilesForInfile.get(id).close();
-                         }
-                    }
-                    
+                }
+
 
             }
             //if we generated new outputfiles for inputfile we have to change the outputfilenames
-                if(allNewMultiOutputFiles.size()>0) {
-                    outputFiles.clear();
-                }
-                for(String filename : allNewMultiOutputFiles) {
+            if (allNewMultiOutputFiles.size() > 0) {
+                outputFiles.clear();
+            }
+            for (String filename : allNewMultiOutputFiles) {
 
-                    outputFiles.add(new File(filename));
-                }
-        
-    }catch(IOException e) {
+                outputFiles.add(new File(filename));
+            }
+
+        } catch (IOException e) {
             e.printStackTrace();
             return false;
         }
@@ -912,38 +893,225 @@ public class FileCreator {
         return true;
     }
 
+    /* public static boolean createPlateConfigFromCVSMultiFiles(ArrayList<File> inputFiles,
+                                                      HashMap<File,Integer> fileToPlateNum,
+                                                      HashMap<File,Integer> fileToReplicateNum,
+                                                      int wellColNum,
+                                                      int wellAnnoColNum, //this is the number (not array index) of the wellAnno column
+                                                      ArrayList<Plate> clickedWellsAndPlates,
+                                                      boolean containsHeadline,
+                                                      int plateFormat
+                                                                ) {*/
+
+
+    public static boolean blablaXXX(ArrayList<File> inputFiles,
+                                    boolean containsHeadline,
+                                    ArrayList<Plate> clickedWellsAndPlates,
+                                    LinkedHashMap<String, DataFile> repChannelMap,
+                                    LinkedHashMap<String, Integer> colNameToID,
+                                    LinkedHashMap<String, Integer> plateNameToNum
+    ) {
+
+
+        //get all the columns which contain different replicated
+        HashMap<Integer, Integer> repNumToColID = new HashMap<Integer, Integer>();
+        boolean containsMultiRep = false;
+
+        if (repChannelMap.size() > 1) {
+            containsMultiRep = true;
+
+
+            for (String colName : colNameToID.keySet()) {
+
+                if (repChannelMap.containsKey(colName)) {
+                    int rep = repChannelMap.get(colName).getReplicate();
+                    if (!repNumToColID.containsKey(rep)) {
+                        repNumToColID.put(rep, colNameToID.get(colName));
+                    }
+                }
+            }
+        }
+
+        TreeMap<String, Plate> plates = new TreeMap<String, Plate>();
+        //put in existing plates
+        for (Plate p : clickedWellsAndPlates) {
+            Integer plate = p.getPlateNum();
+            Integer rep = p.getReplicateNum();
+            String plateWellID = plate + "_" + rep;
+            if (!plates.containsKey(plateWellID)) {
+                plates.put(plateWellID, p);
+            }
+        }
+
+
+        for (File file : inputFiles) {
+
+            try {
+                FileReader reader = new FileReader(file);
+                BufferedReader buffer = new BufferedReader(reader);
+
+                String line;
+                if (containsHeadline) {
+                    //forward one line if we got headlines in first line
+                    buffer.readLine();
+                }
+
+
+                while ((line = buffer.readLine()) != null) {
+                    String[] cols = line.split("\t");
+                    Integer id = colNameToID.get("Plate") - 1;
+
+                    String plateName = cols[id];
+
+                    Integer plate = plateNameToNum.get(plateName);
+                    String well = cols[colNameToID.get("Well") - 1];
+                    String wellAnno = cols[colNameToID.get("WellAnno") - 1];
+                    //if we only have one replicate
+                    if (!containsMultiRep) {
+                         String plateWellID = plate + "_1";
+
+                            if (!plates.containsKey(plateWellID)) {
+                                plates.put(plateWellID, new Plate(plate, 1));
+                            }
+                            if (plates.get(plateWellID).getWellsArray() == null) {
+                                plates.get(plateWellID).setWellsArray(new HashMap<String, String>());
+                            }
+                            plates.get(plateWellID).getWellsArray().put(well, wellAnno);
+
+                    } else {
+                        for (Integer repNum : repNumToColID.keySet()) {
+
+                            String repValue = cols[repNum - 1];
+
+
+                            Integer replicateNum = 0;
+                            try {
+                                replicateNum = Integer.parseInt(repValue);
+                            }
+                            catch (NumberFormatException e) {
+                                e.printStackTrace();
+                                return false;
+                            }
+                            String plateWellID = plate + "_" + repValue;
+
+                            if (!plates.containsKey(plateWellID)) {
+                                plates.put(plateWellID, new Plate(plate, replicateNum));
+                            }
+                            if (plates.get(plateWellID).getWellsArray() == null) {
+                                plates.get(plateWellID).setWellsArray(new HashMap<String, String>());
+                            }
+                            plates.get(plateWellID).getWellsArray().put(well, wellAnno);
+
+
+                        }
+                    }
+                }
+                buffer.close();
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+
+        System.out.println("plate amount:" + plates.size());
+        clickedWellsAndPlates.clear();
+        for (String plateID : plates.keySet()) {
+            clickedWellsAndPlates.add(plates.get(plateID));
+        }
+        return true;
+
+
+    }
+
+
+    public static boolean createPlateConfigFromCVSMultiFiles(ArrayList<File> inputFiles,
+                                                             HashMap<File, Integer> fileToPlateNum,
+                                                             HashMap<File, Integer> fileToReplicateNum,
+                                                             int wellColNum,
+                                                             int wellAnnoColNum, //this is the number (not array index) of the wellAnno column
+                                                             ArrayList<Plate> clickedWellsAndPlates,
+                                                             boolean containsHeadline,
+                                                             int plateFormat
+    ) {
+        try {
+            int i = 0;
+            //log all the new generated outputfiles if we generated via multichannel
+            HashSet<String> allNewMultiOutputFiles = new HashSet<String>();
+            for (File file : inputFiles) {
+                Integer plateNum = fileToPlateNum.get(file);
+                Integer repliNum = fileToReplicateNum.get(file);
+                String line;
+
+
+                FileReader reader = new FileReader(file);
+                BufferedReader buffer = new BufferedReader(reader);
+
+
+                if (containsHeadline) {
+                    //forward one line if we got headlines in first line
+                    buffer.readLine();
+                }
+
+
+                Plate plate = new Plate(plateNum, repliNum);
+                HashMap<String, String> wellMap = new HashMap<String, String>();
+
+                if (containsHeadline) {
+                    //forward one line if we got headlines in first line
+                    buffer.readLine();
+                }
+
+                while ((line = buffer.readLine()) != null) {
+                    String[] cols = line.split("\t");
+                    String wellCol = cols[wellColNum - 1];
+                    String wellAnno = cols[wellAnnoColNum - 1];
+                    wellMap.put(wellCol, wellAnno);
+
+                }
+                buffer.close();
+                plate.setWellsArray(wellMap);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+
+    }
+
+
     //96er plate : 4 rows,12 cols
     //384er plate: 24 cols,
     //1536er plate: 48 cols
     private static HashSet<String> createWellPlate(int plateFormat) {
-         HashSet<String> newPlate = new HashSet<String>();
-         int rows=0;
-         int cols = 0;
-         if(plateFormat==96) {
-            cols=12;
-         }
-         else if (plateFormat==384) {
-            cols=24;
-         }
-         else if (plateFormat ==1536) {
-            cols=48;
-         }
-         else {
-             return null;
-         }
-         rows= plateFormat/cols;
+        HashSet<String> newPlate = new HashSet<String>();
+        int rows = 0;
+        int cols = 0;
+        if (plateFormat == 96) {
+            cols = 12;
+        } else if (plateFormat == 384) {
+            cols = 24;
+        } else if (plateFormat == 1536) {
+            cols = 48;
+        } else {
+            return null;
+        }
+        rows = plateFormat / cols;
 
-         for(int i =0;i<=rows;i++) {
+        for (int i = 0; i <= rows; i++) {
 
             //get ascii code
             int ascii = (int) i + 64;
-            char letter = (char)ascii;
-             
-            for(int j=1;j<=cols;j++) {
+            char letter = (char) ascii;
 
-                String well = letter+String.format("%02d",j);
+            for (int j = 1; j <= cols; j++) {
+
+                String well = letter + String.format("%02d", j);
                 //this is the alternate letter
-                String well2 =  letter+String.format("%d",j);
+                String well2 = letter + String.format("%d", j);
 
                 newPlate.add(well);
                 newPlate.add(well2);
@@ -951,37 +1119,37 @@ public class FileCreator {
 
 
         }
-        return newPlate; 
+        return newPlate;
     }
 
 
-    private static HashSet<String> getAllRowsForColumnIDFromFile(File file,int rowNumber,boolean containsHeadline) {
+    private static HashSet<String> getAllRowsForColumnIDFromFile(File file, int rowNumber, boolean containsHeadline) {
         HashSet<String> returnArr = new HashSet<String>();
         try {
-        FileReader reader = new FileReader(file);
-        BufferedReader buffer = new BufferedReader(reader);
+            FileReader reader = new FileReader(file);
+            BufferedReader buffer = new BufferedReader(reader);
 
-        if(containsHeadline) {
-            //forward one line
-            buffer.readLine();
-        }
+            if (containsHeadline) {
+                //forward one line
+                buffer.readLine();
+            }
 
 
-        String line;
+            String line;
 
-        while ((line = buffer.readLine()) != null) {
-                        String[] cols = line.split("\t");
-                        
-                        String field = cols[rowNumber];   //the columns are index based
+            while ((line = buffer.readLine()) != null) {
+                String[] cols = line.split("\t");
 
-                        returnArr.add(field);
-        }
-        buffer.close();
-        reader.close();
-        }catch(IOException e) {
+                String field = cols[rowNumber];   //the columns are index based
+
+                returnArr.add(field);
+            }
+            buffer.close();
+            reader.close();
+        } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
-       return returnArr;
+        return returnArr;
     }
 }

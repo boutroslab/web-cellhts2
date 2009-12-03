@@ -64,6 +64,9 @@
 
                 <t:FileImporter t:id="datafileImporter" filesToProcess="filesToImport" headsToFind="headsToFindDatafile"
                                 showHeadline="literal:true" compareHeader="literal:false"/>
+               
+                <font color="red">${datafileImporterMsg}</font>
+                <br/>
 
                 <t:if test="plateWellDefined">
 
@@ -71,12 +74,15 @@
                     <br/>
                     <t:FileImporter t:id="plateConfigImporter" filesToProcess="filesToImport"
                                     headsToFind="headsToFindPlateconfigfile" showHeadline="literal:false"
-                                    compareHeader="literal:true"/>
+                                    compareHeader="containsHeadline"/>
+                    <font color="red">${plateConfigFileImporterMsg}</font>
+                    <br/>
+
                     Please select if your files contain Annotation data
                     <br/>
                     <t:FileImporter t:id="annotationImporter" filesToProcess="filesToImport"
                                     headsToFind="headsToFindAnnotationfile" showHeadline="literal:false"
-                                    compareHeader="literal:true"/>
+                                    compareHeader="containsHeadline"/>
                 </t:if>
 
                 <!--<t:actionlink t:id="proceedWebCellHTS2">Proceed to webCellHTS2</t:actionlink>  -->

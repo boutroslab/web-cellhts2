@@ -992,5 +992,36 @@ public class FileParser {
 
         return returnVal;                    
     }
+    public static int countNumberOfLinesForFile(File inputfile) {
+       try {
+       if(!inputfile.exists())   {
+           return 0;
+       }
+//       BufferedReader bf = new BufferedReader(new FileReader(inputfile));
+       FileReader fr = new FileReader(inputfile);
+
+       LineNumberReader ln = new LineNumberReader(fr);
+
+      int count = 0;
+
+        while (ln.readLine() != null){
+
+          count++;
+
+
+        }
+
+
+
+        ln.close();
+
+        return count;
+       } catch(IOException e) {
+                     e.printStackTrace();
+           return 0;
+
+       }
+
+    }
 
     }

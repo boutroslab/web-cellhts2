@@ -23,11 +23,17 @@ package cellHTS.pages;
 import cellHTS.components.ExportCSV;
 import cellHTS.components.FileImporter;
 import cellHTS.classes.FileCreator;
+import cellHTS.classes.FileParser;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 import java.io.File;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 import org.apache.tapestry5.annotations.Persist;
 import org.apache.tapestry5.annotations.InjectComponent;
@@ -38,6 +44,7 @@ import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.internal.util.TapestryException;
 import data.DataFile;
+import data.Plate;
 
 public class AdvancedFileImporter {
     @Persist
@@ -65,6 +72,15 @@ public class AdvancedFileImporter {
     private boolean plateWellDefined;
     @Persist
     private LinkedHashMap<String,DataFile> repChannelMap;
+    @Persist
+    private ArrayList<Plate> clickedWellsAndPlates;
+    @Persist
+    private ArrayList<File> processedDatafiles;
+    @Persist
+    private Integer wellCol;
+    @Persist
+    private Integer plateCol;
+    
   
 
 
@@ -84,6 +100,14 @@ public class AdvancedFileImporter {
     private int replicateNumbers;
     @Inject
     private Messages msg;
+    @Persist
+    private String datafileImporterMsg;
+    @Persist
+    private String plateConfigFileImporterMsg;
+    @Persist
+    private LinkedHashMap<String,Integer> plateNameToNum;
+    @Persist
+    private int plateFormat;
 
     public void setupRender() {
         if(!init) {
@@ -104,7 +128,7 @@ public class AdvancedFileImporter {
             headsToFindDatafile= new  ArrayList<String>();
             initHeadsToFind();
             headsToFindPlateconfigfile = new ArrayList<String>();
-            headsToFindPlateconfigfile.add("Value");
+            headsToFindPlateconfigfile.add("WellAnno");
             headsToFindAnnotationfile=new ArrayList<String>();
             headsToFindAnnotationfile.add("GeneID");
             repChannelMap= new LinkedHashMap<String,DataFile>(); 
@@ -116,7 +140,12 @@ public class AdvancedFileImporter {
             containsHeadline=true;
             containsMultiChannelData=false;
             replicateNumbers=1;
-
+            datafileImporterMsg="";
+            plateConfigFileImporterMsg="";
+            processedDatafiles=new ArrayList<File>();
+            plateNameToNum = new LinkedHashMap<String,Integer>();
+            wellCol=null;
+            plateCol=null;
         }
     }
           //this is for testing only
@@ -150,6 +179,12 @@ public class AdvancedFileImporter {
         plateConfigImporter.setInit(false);
         annotationImporter.setInit(false);
         plateWellDefined=false;
+        datafileImporterMsg="";
+        plateConfigFileImporterMsg="";
+        processedDatafiles=null;
+        plateNameToNum.clear();
+        wellCol=null;
+        plateCol=null;
 
     }
 
@@ -160,8 +195,15 @@ public class AdvancedFileImporter {
             filesToImport.add((String)obj);                
         }
 
-        //TO DO here we will check if the files contain headers or not
-        //if so we will set the boolean value containHeaders
+        //check if our files got a header and if so set boolean got header
+        //else do not set it
+        if(checkIfFileGotHeader(new File(filesToImport.get(0)))) {
+            containsHeadline=true;
+        }
+        else {
+            containsHeadline=false;
+        }
+                    
 
          initDatafileHeaders();
 
@@ -256,10 +298,12 @@ public class AdvancedFileImporter {
     //this will be fired if all the columns have been associated to the column names by the user form the dataFileImporter
     //component
     public void onSuccessfullySetupColumnsFromDatafileImporter(Object[]objs) {
-
+        //get the column num for headline header
         LinkedHashMap<String,Integer> returnMap = eventObjToColumnNamesAndNums(objs);
         if(returnMap.containsKey("Plate")&&returnMap.containsKey("Well")) {
             plateWellDefined=true;
+            plateCol=returnMap.get("Plate");
+            wellCol=returnMap.get("Well");
         }
         else {
             plateWellDefined=false;
@@ -279,29 +323,137 @@ public class AdvancedFileImporter {
                 outputFiles.add(new File(tempFile));
             }
            repChannelMap = generateHeadersReplicateChannel();
-            System.out.println(repChannelMap.size());
 
 
            if(FileCreator.createDataFilesFromCVSMultiFiles(inputFiles,outputFiles,
                                                       containsHeadline,
                                                       repChannelMap, 
                                                       replicateNumbers,                                                    
-                                                      returnMap)) {
-               System.out.println("creation of datafiles succeeded");
+                                                      returnMap,
+                                                      plateNameToNum
+                   )) {
+               datafileImporterMsg= "creation of "+outputFiles.size()+" datafiles succeeded";
+               
                for(File outfile: outputFiles) {
                    System.out.println("outputdatafile:"+outfile.getAbsolutePath());
 
-               }                
+               }
+
+
+                plateFormat = FileParser.countNumberOfLinesForFile(outputFiles.get(0));
+
+                if(! (plateFormat==96|| plateFormat==384|| plateFormat==1536)) {
+                   datafileImporterMsg="plate format of uploaded file isnt valid: "+plateFormat;
+                   return;
+
+                }
+
                cellHTS2.setDatafilesFromAdvancedFileImporter(outputFiles);     //send the files to cellHTS2 so if
+                                                                              //we switch later to it, this will be used
+               
+
+           }
+            else {
+                datafileImporterMsg="general IO error occured. Please check your files";
+                processedDatafiles=null;
+           }
+
+        }
+        else {
+            datafileImporterMsg="";
+            processedDatafiles=null;
+        }
+
+    }
+    //this will be fired from the plateConfigImporter component
+    public void onSuccessfullySetupColumnsFromPlateConfigImporter(Object[]objs) {
+        if(processedDatafiles==null||plateCol==null||wellCol==null) {
+            return;
+        }
+
+        LinkedHashMap<String,Integer> returnMap = eventObjToColumnNamesAndNums(objs);
+        returnMap.put("Plate",plateCol);
+        returnMap.put("Well",wellCol);
+        if(returnMap.containsKey("WellAnno")) {
+
+
+            ArrayList<File> inputFiles= new ArrayList<File>();
+        //these are the outputfiles from the cvs export function
+            for(String tempFile : filesToImport) {
+                inputFiles.add(new File(tempFile));
+            }
+            
+            if(inputFiles.size()<1) {
+               plateConfigFileImporterMsg="error: cant access uploaded files";
+                return; 
+            }
+
+            ArrayList<Plate> clickedWellsAndPlates = new ArrayList<Plate>();
+            if(FileCreator.blablaXXX(inputFiles,
+                                    containsHeadline,                                     
+                                     clickedWellsAndPlates,
+                                     repChannelMap,
+                                     returnMap,
+                                     plateNameToNum
+                                      )) {
+
+
+//               for(Plate p : clickedWellsAndPlates) {
+//                   System.out.println(p.getPlateNum());
+//                   HashMap<String,String> x = p.getWellsArray();
+//                   for(String well : x.keySet()) {
+//                       String content = x.get(well);
+//                       System.out.println(well+"-"+content);
+//                   }
+//               }
+
+               plateConfigFileImporterMsg= "Plate config layout successfully generated";
+               cellHTS2.setPlateConfigWellsFromAdvancedFileImporter(clickedWellsAndPlates); 
+             //  cellHTS2.setDatafilesFromAdvancedFileImporter(outputFiles);     //send the files to cellHTS2 so if
                                                                               //we switch later to it, this will be used
 
            }
             else {
-                //create a error message
+                plateConfigFileImporterMsg="general IO error occured. Please check your files";
+            }
+        }
+        else {
+            plateConfigFileImporterMsg="";
+           
+        }
+    }
+
+
+    public boolean checkIfFileGotHeader(File file) {
+        Pattern ps[] = new Pattern[6];
+        ps[0]= Pattern.compile("plate",Pattern.CASE_INSENSITIVE);
+        ps[1]= Pattern.compile("well",Pattern.CASE_INSENSITIVE);
+        ps[2]= Pattern.compile("value",Pattern.CASE_INSENSITIVE);
+        ps[3]= Pattern.compile("position",Pattern.CASE_INSENSITIVE);
+        ps[4]= Pattern.compile("raw",Pattern.CASE_INSENSITIVE);
+        ps[5]= Pattern.compile("normaliz",Pattern.CASE_INSENSITIVE);
+
+
+       try {
+			BufferedReader reader = new BufferedReader(new FileReader(file));
+			String headerLine = reader.readLine();
+			reader.close();
+			String [] headerFields = headerLine.split("\t");
+           for(String head : headerFields) {
+                for(Pattern p : ps) {
+                    if(p.matcher(head).find()) {
+                        return true;
+                    }
+                }
            }
 
-        }
 
+       }catch(IOException e) {
+          throw new TapestryException("cant read inputfile: "+file.getName(),null);
+
+       }
+
+       return false;
     }
 
     public Object onActionFromGoBackwebCellHTS2() {
@@ -310,15 +462,7 @@ public class AdvancedFileImporter {
         return cellHTS2;
     }
 
-    //this will be fired from the plateConfigImporter component
-    public void onSuccessfullySetupColumnsFromPlateConfigImporter(Object[]objs) {
-        System.out.println("plateConfigImporter called");
-        LinkedHashMap<String,Integer> returnMap = eventObjToColumnNamesAndNums(objs);
-        for(String key : returnMap.keySet()) {
-            System.out.println(key+":"+returnMap.get(key));
-        }
 
-    }
     //this will be fired from the annotationImporter component
     public void onSuccessfullySetupColumnsFromAnnotationImporter(Object[]objs) {
         System.out.println("plateConfigImporter called");
@@ -345,9 +489,7 @@ public class AdvancedFileImporter {
     public Object[] getEmptyObject() {
         return new Object[]{"test"};
     }
-    public void onActionFromProceedWebCellHTS2() {
-        //cellHTS2.
-    }
+    
     @OnEvent(component = "containsMultiChannelData", value = "change")
      public JSONObject onContainsMultiChannelData(boolean type) {
             containsMultiChannelData=type;                            
@@ -489,5 +631,20 @@ public class AdvancedFileImporter {
         this.init = init;
     }
 
-// end of getters and setters-------------------------------------------------------------------------
+    public String getDatafileImporterMsg() {
+        return datafileImporterMsg;
+    }
+
+    public void setDatafileImporterMsg(String datafileImporterMsg) {
+        this.datafileImporterMsg = datafileImporterMsg;
+    }
+    public String getPlateConfigFileImporterMsg() {
+        return plateConfigFileImporterMsg;
+    }
+
+    public void setPlateConfigFileImporterMsg(String plateConfigFileImporterMsg) {
+        this.plateConfigFileImporterMsg = plateConfigFileImporterMsg;
+    }
+
+    // end of getters and setters-------------------------------------------------------------------------
 }
