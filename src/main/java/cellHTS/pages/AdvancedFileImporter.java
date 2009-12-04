@@ -146,6 +146,7 @@ public class AdvancedFileImporter {
             plateNameToNum = new LinkedHashMap<String,Integer>();
             wellCol=null;
             plateCol=null;
+            clickedWellsAndPlates=new ArrayList<Plate>();
         }
     }
           //this is for testing only
@@ -185,6 +186,7 @@ public class AdvancedFileImporter {
         plateNameToNum.clear();
         wellCol=null;
         plateCol=null;
+        clickedWellsAndPlates.clear();
 
     }
 
@@ -203,10 +205,7 @@ public class AdvancedFileImporter {
         else {
             containsHeadline=false;
         }
-                    
-
-         initDatafileHeaders();
-
+        initDatafileHeaders();
 
         convertedAllFiles=true;
         plateWellDefined=false;
@@ -378,6 +377,7 @@ public class AdvancedFileImporter {
 
 
             ArrayList<File> inputFiles= new ArrayList<File>();
+
         //these are the outputfiles from the cvs export function
             for(String tempFile : filesToImport) {
                 inputFiles.add(new File(tempFile));
@@ -388,8 +388,17 @@ public class AdvancedFileImporter {
                 return; 
             }
 
-            ArrayList<Plate> clickedWellsAndPlates = new ArrayList<Plate>();
+            clickedWellsAndPlates = new ArrayList<Plate>();
+            //add the plate zero to it
+            clickedWellsAndPlates.add(0,new Plate(0, 0, 0));
+
+            File plateConfFile= new File(uploadPath+"/PlateConfig.txt");
+            File screenLogFile = new File(uploadPath+"/Screenlog.txt");
+
             if(FileCreator.blablaXXX(inputFiles,
+                                    plateConfFile,
+                                    screenLogFile,
+                                    plateFormat,
                                     containsHeadline,                                     
                                      clickedWellsAndPlates,
                                      repChannelMap,
@@ -398,19 +407,12 @@ public class AdvancedFileImporter {
                                       )) {
 
 
-//               for(Plate p : clickedWellsAndPlates) {
-//                   System.out.println(p.getPlateNum());
-//                   HashMap<String,String> x = p.getWellsArray();
-//                   for(String well : x.keySet()) {
-//                       String content = x.get(well);
-//                       System.out.println(well+"-"+content);
-//                   }
-//               }
-
                plateConfigFileImporterMsg= "Plate config layout successfully generated";
-               cellHTS2.setPlateConfigWellsFromAdvancedFileImporter(clickedWellsAndPlates); 
-             //  cellHTS2.setDatafilesFromAdvancedFileImporter(outputFiles);     //send the files to cellHTS2 so if
-                                                                              //we switch later to it, this will be used
+
+               System.out.println(plateConfFile.getAbsolutePath()); 
+               cellHTS2.setPlateConfScreenlogFileFromAdvancedFileImporter(plateConfFile,screenLogFile);
+
+
 
            }
             else {

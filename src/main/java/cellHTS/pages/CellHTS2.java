@@ -316,8 +316,9 @@ public class CellHTS2 {
     @Persist
     private ArrayList<File> datafilesFromAdvancedFileImporter;
     @Persist
-    private ArrayList<Plate> plateConfigWellsFromAdvancedFileImporter;
-
+    private File plateConfigFileFromAdvancedFileImporter;
+    @Persist
+    private File screenlogFileFromAdvancedFileImporter;
 
 
     /**
@@ -466,32 +467,30 @@ public class CellHTS2 {
                
                 //check and parse all the uploaded filesnames for plate,replicate,channel combinations in the file NAME
                checkAndPutSingleFileToDataFileList(datafilesFromAdvancedFileImporter);
-               
-               //after uploading any file the clickedWellsAndPlates list is empty so if this is true we have to put
-              //in possible annotation wells to make it permanent
+               //parse the file params to make them visible
 
-               if(plateConfigWellsFromAdvancedFileImporter!=null ) {
-                   for(Plate clickedWellPlate  : clickedWellsAndPlates) {
-                       int plate = clickedWellPlate.getPlateNum();
-                       int rep = clickedWellPlate.getReplicateNum();
-                       for(Plate p : plateConfigWellsFromAdvancedFileImporter)  {
-                           int pPl = p.getPlateNum();
-                           int pRep = p.getReplicateNum();
-                           if(plate==pPl && rep==pRep) {
-                               clickedWellPlate.setWellsArray(p.getWellsArray());
-                           }
-                       }
-                   }
-               }
-                //rearange anything
+                //clear the submitted datafiles....we dont need them anymore
+               datafilesFromAdvancedFileImporter=null;
 
 
+                if(plateConfigFileFromAdvancedFileImporter!=null|| screenlogFileFromAdvancedFileImporter!=null)  {
+                    //update our parameters...this will be done in the uploadfilegrid component too but we have to do this
+                    //before because we are relying on it
+                    FileParser.parseDataFilenameParams(dataFileList, excludeFilesFromParsing,fixRegExp);
+                    initalizePlateNWellMap();
+                }
 
+                //if we generated Annotation make a new annotation file
+                if(plateConfigFileFromAdvancedFileImporter!=null) {
+                    plateConfFileToPlateDesignerLayout(plateConfigFileFromAdvancedFileImporter);
+                    plateConfigFileFromAdvancedFileImporter=null;
+                }
                 //go to the data file upload step
                currentPagePointer=2;
-               //clear the submitted datafiles....
-               datafilesFromAdvancedFileImporter.clear();
-               plateConfigWellsFromAdvancedFileImporter.clear(); 
+
+                
+
+               
 
 
             }
@@ -552,8 +551,7 @@ public class CellHTS2 {
      *  it just counts on which step were at
      *
      */
-    public void onActionFromBackLink
-            () {
+    public void onActionFromBackLink() {
         //if we slide back...no errors can be possible
         errorNextLink = false;
         //default:no error msg
@@ -1163,21 +1161,18 @@ public class CellHTS2 {
      * this will be called if you drop all uploaded files
      *
      */
-    public void onActionFromDropDataFileList
-            () {
-        //TODO:should we erase the files on the server
+    public void onActionFromDropDataFileList() {
+        //TODO:should we erase the files on the server??
         dataFileList.clear();
         excludeFilesFromParsing.clear();
         noErrorUploadFile=false;
         errorDatafileMsg ="";             
         errorPlatelistFileMsg="";
+        
         //if we drop all the datafiles the uploaded plate list file should dissapear too
         this.uploadedPlatelistFile=null;
-       
-        //explicitly disable the next button if we cleared the list
-        //activatedPages.put(currentPagePointer, true);
-
-
+        this.uploadedPlateConfigFile=null;
+        
     }
 
     //
@@ -1196,6 +1191,10 @@ public class CellHTS2 {
         File copied = new File(newFilePath);
         uploadedPlateConfigFile.write(copied);
 
+        plateConfFileToPlateDesignerLayout(copied);
+    }
+
+        public void plateConfFileToPlateDesignerLayout(File copied) {
         //we use an array to simulate call by reference in the parsePlateConfigFile method
         Integer[] wells = {0};
 
@@ -3082,6 +3081,7 @@ public class CellHTS2 {
         while (dataFileIterator.hasNext()) {
             String fileName = (String) dataFileIterator.next();
             DataFile dataFile = (DataFile) dataFileList.get(fileName);
+            System.out.println(dataFile.toString());
             Integer plateNo = dataFile.getPlateNumber();
             Integer replicateNo = dataFile.getReplicate();
 
@@ -3519,12 +3519,10 @@ public class CellHTS2 {
         isFlashValid = flashValid;
     }
 
-    public ArrayList<Plate> getPlateConfigWellsFromAdvancedFileImporter() {
-        return plateConfigWellsFromAdvancedFileImporter;
+    public void setPlateConfScreenlogFileFromAdvancedFileImporter(File plateConf,File screenlog) {
+        plateConfigFileFromAdvancedFileImporter=plateConf;
+        screenlogFileFromAdvancedFileImporter=screenlog;
     }
-
-    public void setPlateConfigWellsFromAdvancedFileImporter(ArrayList<Plate> plateConfigWellsFromAdvancedFileImporter) {
-        this.plateConfigWellsFromAdvancedFileImporter = plateConfigWellsFromAdvancedFileImporter;
-    }
+    
 }
 

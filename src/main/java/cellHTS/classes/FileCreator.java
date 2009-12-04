@@ -905,12 +905,26 @@ public class FileCreator {
 
 
     public static boolean blablaXXX(ArrayList<File> inputFiles,
+                                    File plateConfOutfile,
+                                    File screenlogOutfile,
+                                    int plateFormat,
                                     boolean containsHeadline,
                                     ArrayList<Plate> clickedWellsAndPlates,
                                     LinkedHashMap<String, DataFile> repChannelMap,
                                     LinkedHashMap<String, Integer> colNameToID,
                                     LinkedHashMap<String, Integer> plateNameToNum
     ) {
+
+        //get if we got multichannels
+        boolean hasMultiChannel=false;
+        for(String key : repChannelMap.keySet()) {
+            DataFile df = repChannelMap.get(key);
+            int channel = df.getChannel();
+            if(channel>1) {
+                hasMultiChannel=true;
+                break;
+            }
+        }
 
 
         //get all the columns which contain different replicated
@@ -976,7 +990,7 @@ public class FileCreator {
                             if (plates.get(plateWellID).getWellsArray() == null) {
                                 plates.get(plateWellID).setWellsArray(new HashMap<String, String>());
                             }
-                            plates.get(plateWellID).getWellsArray().put(well, wellAnno);
+                            plates.get(plateWellID).getWellsArray().put("well_"+well, wellAnno);
 
                     } else {
                         for (Integer repNum : repNumToColID.keySet()) {
@@ -1000,7 +1014,7 @@ public class FileCreator {
                             if (plates.get(plateWellID).getWellsArray() == null) {
                                 plates.get(plateWellID).setWellsArray(new HashMap<String, String>());
                             }
-                            plates.get(plateWellID).getWellsArray().put(well, wellAnno);
+                            plates.get(plateWellID).getWellsArray().put("well_"+well, wellAnno);
 
 
                         }
@@ -1015,11 +1029,16 @@ public class FileCreator {
             }
         }
 
-        System.out.println("plate amount:" + plates.size());
+        //just copy everything to the clickedWellsAndPlates layout
         clickedWellsAndPlates.clear();
+        clickedWellsAndPlates.add(0,new Plate(0, 0, 0));
         for (String plateID : plates.keySet()) {
             clickedWellsAndPlates.add(plates.get(plateID));
         }
+        if(createPlateConfigFile(plateConfOutfile.getAbsolutePath(),screenlogOutfile.getAbsolutePath(), clickedWellsAndPlates, plateFormat, true)) {
+            return true;
+        }
+
         return true;
 
 
@@ -1078,8 +1097,9 @@ public class FileCreator {
             e.printStackTrace();
             return false;
         }
-        return true;
 
+
+        return true;
     }
 
 
