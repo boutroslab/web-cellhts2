@@ -319,6 +319,8 @@ public class CellHTS2 {
     private File plateConfigFileFromAdvancedFileImporter;
     @Persist
     private File screenlogFileFromAdvancedFileImporter;
+    @Persist
+    private File annotationFileFromAdvancedFileImporter;
 
 
     /**
@@ -472,12 +474,16 @@ public class CellHTS2 {
                 //clear the submitted datafiles....we dont need them anymore
                datafilesFromAdvancedFileImporter=null;
 
+               //go to the data file upload step
+               currentPagePointer=2;
 
                 if(plateConfigFileFromAdvancedFileImporter!=null|| screenlogFileFromAdvancedFileImporter!=null)  {
                     //update our parameters...this will be done in the uploadfilegrid component too but we have to do this
                     //before because we are relying on it
                     FileParser.parseDataFilenameParams(dataFileList, excludeFilesFromParsing,fixRegExp);
                     initalizePlateNWellMap();
+                   
+                    currentPagePointer=3;
                 }
 
                 //if we generated Annotation make a new annotation file
@@ -485,12 +491,20 @@ public class CellHTS2 {
                     plateConfFileToPlateDesignerLayout(plateConfigFileFromAdvancedFileImporter);
                     plateConfigFileFromAdvancedFileImporter=null;
                 }
-                //go to the data file upload step
-               currentPagePointer=2;
+                if(screenlogFileFromAdvancedFileImporter!=null) {
+                    screenlogFileToPlateDesignerLayout(screenlogFileFromAdvancedFileImporter);
+                    screenlogFileFromAdvancedFileImporter=null;
+                }
 
-                
+                //if we have got an annotation file from the advanced file importer
+                if(annotationFileFromAdvancedFileImporter!=null) {
+                    loadAnnotationFile(annotationFileFromAdvancedFileImporter);
+                    annotationFileFromAdvancedFileImporter=null;
 
-               
+                    currentPagePointer=5;
+                }
+
+
 
 
             }
@@ -612,17 +626,27 @@ public class CellHTS2 {
                 nextLinkErrorMsg = "Error: no valid files were uploaded";
             } else {
                 Iterator fileIterator = dataFileList.keySet().iterator();
-
+                HashSet<String> uniqueIDs = new HashSet<String>();
+                
                 while (fileIterator.hasNext()) {
                     String key = (String) fileIterator.next();
                     DataFile file = dataFileList.get(key);
-
+                    //if single channel
                     if (!isDualChannel) {
                         //check if all mandantory file params are there
                         if (file.getPlateNumber() == null || file.getReplicate() == null) {
                             errorNextLink = true;
                             nextLinkErrorMsg = "Error: mandantory file parameters plate number or replicate missing";
                         }
+                        String id = file.getPlateNumber()+"_"+file.getReplicate();
+                        if(!uniqueIDs.contains(id)) {
+                            uniqueIDs.add(id);
+                        }
+                        else {
+                            errorNextLink = true;
+                            nextLinkErrorMsg = "Error: two files cannot have the same plate, replicate combination";
+                        }
+
                     } else {
                         if (file.getPlateNumber() == null || file.getReplicate() == null || file.getChannel() == null) {
                             errorNextLink = true;
@@ -634,6 +658,14 @@ public class CellHTS2 {
                             channel1Amount++;
                         } else if (file.getChannel() == 2) {
                             channel2Amount++;
+                        }
+                        String id = file.getPlateNumber()+"_"+file.getReplicate()+"_"+file.getChannel();
+                        if(!uniqueIDs.contains(id)) {
+                            uniqueIDs.add(id);
+                        }
+                        else {
+                            errorNextLink = true;
+                            nextLinkErrorMsg = "Error: two files cannot have the same plate, replicate and channel combination";
                         }
                     }
 
@@ -1309,7 +1341,11 @@ public class CellHTS2 {
 
         File copied = new File(newFilePath);
         uploadedScreenlogFile.write(copied);
+        screenlogFileToPlateDesignerLayout(copied);
 
+    }
+    
+    public void screenlogFileToPlateDesignerLayout(File copied) {
         //we use an array to simulate call by reference in the parsePlateConfigFile method
         Pattern headerPattern = Configuration.SCREENLOG_HEADER_PATTERN;
 
@@ -1397,7 +1433,10 @@ public class CellHTS2 {
 
         File copied = new File(newFilePath);
         uploadedAnnotFile.write(copied);
+        loadAnnotationFile(copied);
+    }
 
+    public void loadAnnotationFile(File copied) {
         String result[] = FileParser.checkFileRegExp(annotBodyPattern, copied, annotHeaderPattern);
 
         if (result[0].equals("true")) {
@@ -1407,7 +1446,7 @@ public class CellHTS2 {
         } else {
             noErrorAnnotFile = false;
             errorAnnotFileMsg = result[1];
-            return;
+
         }
     }
 
@@ -1776,7 +1815,7 @@ public class CellHTS2 {
     }
 
     public Object onActionFromShowAdvancedFileImporter(){
-       
+       advancedFileImporter.setInit(false);
        advancedFileImporter.setUploadPath(jobNameDir.getAbsolutePath());         
        return advancedFileImporter;
     }
@@ -3503,8 +3542,13 @@ public class CellHTS2 {
         }
     }
 
+    public File getAnnotationFileFromAdvancedFileImporter() {
+        return annotationFileFromAdvancedFileImporter;
+    }
 
-
+    public void setAnnotationFileFromAdvancedFileImporter(File annotationFileFromAdvancedFileImporter) {
+        this.annotationFileFromAdvancedFileImporter = annotationFileFromAdvancedFileImporter;
+    }
 
     public void onClickWellEvent() {
                System.exit(1);

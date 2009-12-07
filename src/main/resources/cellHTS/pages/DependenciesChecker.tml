@@ -1,0 +1,46 @@
+<html t:id="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_0_0.xsd">
+    <head>
+        <title>web cellHTS2 dependecies checker</title>
+    </head>
+
+    <body onLoad="initJSCellHTS()">
+           <h1><FONT COLOR="red">${browserVersionMessage}</FONT></h1> <br/>
+    </body>
+    <script type="text/javascript">
+        var browserVersionLink = '${prop:browserVersionLink}'; // before the comment so Tapestry sees it!
+        var B_PARAMNAME = '${prop:B_PARAMNAME}'; 
+        <!-- //
+
+
+
+        //define an event so we skip the need to use a submit buttons
+        //on uploading stuff
+       function initJSCellHTS() {
+           isJSActivated();
+           checkBrowser();
+       }
+
+
+       function checkBrowser()  {
+            //get browser name and version
+            var browser = BrowserDetect.browser;
+            var version = BrowserDetect.version;
+
+            new Ajax.Request(
+                browserVersionLink,
+            {
+                method: 'post',
+                parameters: B_PARAMNAME+"="+browser+","+version
+            }
+        );
+
+       }
+
+
+// -->
+    </script>
+    <noscript>
+      <h1><FONT COLOR="red">Check 0 failed: Your browser does not support Javascript, cannot proceed!</FONT></h1>
+    </noscript>
+
+</html>

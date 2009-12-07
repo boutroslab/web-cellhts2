@@ -321,8 +321,8 @@ public class RInterface extends Thread {
                     cmdString="x=readPlateList(PlateList, name = Name, path = Indir)";
                     debugString+=cmdString+"\n";
                     getRengine().voidEval(cmdString);
-                    progressPercentage[0]="25_configuring layout";
-                    cmdString="x=configure(x, descripFile=Description, confFile=Plateconf, logFile=Screenlog,,path=Indir)";
+                    progressPercentage[0]="25_configuring layout";                    
+                    cmdString="x=configure(x, descripFile=Description, confFile=Plateconf, logFile=Screenlog,path=Indir)";
                     debugString+=cmdString+"\n";
                     getRengine().voidEval(cmdString);
                     progressPercentage[0]="45_normalizing plates";

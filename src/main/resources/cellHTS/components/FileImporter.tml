@@ -58,21 +58,46 @@
                        </p:columnamecell>
 
                         <p:mappedToColumncell>
-                            <t:select t:value="selectedColumn.mappedToColumn" model="plateDataModel"
+                            <t:select t:id="selectChangeEvent" t:value="selectedColumn.mappedToColumn" model="plateDataModel"
                                  t:blankOption="always"
-                                 t:blankLabel="please select"
+                                 t:blankLabel="please select"                                   
                                 />
                         </p:mappedToColumncell>
                     </t:grid>
 
+                <t:if test="moreThanOne">
+                    Add further columns: 
+                        <t:select t:id="multipleChangeSelect" model="plateDataModel"
+                                     t:blankOption="always"
+                                     t:blankLabel="drop all"
+                                     t:mixins="ck/OnEvent"
+                                     onCompleteCallback="onCompleteSelectChangeEvent"
+                                     event="change"
+                                    />
+                    <div id="showSelectedCols"/>
+                   <br/>
 
+                </t:if>
+                 <t:if test="errorFound">
+                    <font color="red">${errorMsg}</font>
+                </t:if>
                 <input t:type="submit" value="create files"/>
             </t:form>
         </div>
         <br/>
-        <t:if test="errorFound">
-           <font color="red">${errorMsg}</font>
-        </t:if>
+
         <br/>
-    </body>         
+    </body>
+    <script type="text/javascript">
+        <!-- //
+
+        function onCompleteSelectChangeEvent(response) {                
+            var selectedHeads  = response.selectHeader;
+            if(selectedHeads!="") {
+                document.getElementById('showSelectedCols').innerHTML="selected columns:"+selectedHeads;
+            }
+        }
+
+        //-->
+    </script>
 </html>

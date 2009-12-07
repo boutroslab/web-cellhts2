@@ -25,9 +25,7 @@ import cellHTS.components.FileImporter;
 import cellHTS.classes.FileCreator;
 import cellHTS.classes.FileParser;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.HashMap;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.io.File;
@@ -45,6 +43,7 @@ import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.internal.util.TapestryException;
 import data.DataFile;
 import data.Plate;
+import de.dkfz.signaling.signalingComponents.components.MultipleFileUploader;
 
 public class AdvancedFileImporter {
     @Persist
@@ -60,6 +59,11 @@ public class AdvancedFileImporter {
     private ArrayList<String> headsToFindPlateconfigfile;
     @Persist
     private ArrayList<String> headsToFindAnnotationfile;
+    @Persist
+    private ArrayList<String> headsToFindFurtherAnnotationfile;
+    @Persist
+    private TreeSet<Integer> additionalAnnotCols;
+
     @Persist
     private String uploadPath;
     @Persist
@@ -105,9 +109,13 @@ public class AdvancedFileImporter {
     @Persist
     private String plateConfigFileImporterMsg;
     @Persist
+    private String annotationfileImporterMsg;
+    @Persist
     private LinkedHashMap<String,Integer> plateNameToNum;
     @Persist
     private int plateFormat;
+    @InjectComponent
+    private MultipleFileUploader multipleUploadOne;
 
     public void setupRender() {
         if(!init) {
@@ -131,6 +139,8 @@ public class AdvancedFileImporter {
             headsToFindPlateconfigfile.add("WellAnno");
             headsToFindAnnotationfile=new ArrayList<String>();
             headsToFindAnnotationfile.add("GeneID");
+            headsToFindFurtherAnnotationfile=new ArrayList<String>();
+            headsToFindFurtherAnnotationfile.add("choose further cols");
             repChannelMap= new LinkedHashMap<String,DataFile>(); 
 
 
@@ -147,6 +157,7 @@ public class AdvancedFileImporter {
             wellCol=null;
             plateCol=null;
             clickedWellsAndPlates=new ArrayList<Plate>();
+            multipleUploadOne.setInit(false);
         }
     }
           //this is for testing only
@@ -214,45 +225,24 @@ public class AdvancedFileImporter {
        convertedAllFiles=false;
         //reinit everything
        dataFileImporter.setInit(false);
+       plateConfigImporter.setInit(false);
+       annotationImporter.setInit(false);
        initDatafileHeaders();
     }
 
-    //this is deprecated ...we dont have an actionlink anymore
-    public void onActionFromProcessFiles() {
-        if(uploadedFiles.size()>0) {
-            startFileImport=true;                     
-        }
-        else {
-            startFileImport=false;
-        }
-        //now create the headsToFindDatafile out of the number of replicates, and multichannel flags
 
-        //build a new datastructure which maps
-        // "repXchannelY"  to  a datafile structure
-        repChannelMap = generateHeadersReplicateChannel();
-        //this is caused if we have multichannel experiments
-        if(repChannelMap.size()<2) {
-            headsToFindDatafile.add("Value");
-        }
-        else {
-              initHeadsToFind();
-              headsToFindDatafile.addAll(repChannelMap.keySet());
-            //reinit the dataFileImporter so that new heads will shown
-              dataFileImporter.setInit(false);
-        }
-    }
-
-    public void initDatafileHeaders() {
+     public void initDatafileHeaders() {
         //build a new datastructure which maps
         // "repXchannelY"  to  a datafile structure
         LinkedHashMap<String,DataFile> repChannelMap = generateHeadersReplicateChannel();
         initHeadsToFind();
         System.out.println("size:"+repChannelMap.size());
-        //this is caused if we have multichannel experiments
+        //this is caused if we dont have multichannel experiments
         if(repChannelMap.size()==1) {
             headsToFindDatafile.add("Value");
+            dataFileImporter.setInit(false);
         }
-        if(repChannelMap.size()>1)  {
+        else if(repChannelMap.size()>1)  {
 
               headsToFindDatafile.addAll(repChannelMap.keySet());
             //reinit the dataFileImporter so that new heads will shown
@@ -321,7 +311,6 @@ public class AdvancedFileImporter {
                 tempFile+=".tab";
                 outputFiles.add(new File(tempFile));
             }
-           repChannelMap = generateHeadersReplicateChannel();
 
 
            if(FileCreator.createDataFilesFromCVSMultiFiles(inputFiles,outputFiles,
@@ -395,7 +384,7 @@ public class AdvancedFileImporter {
             File plateConfFile= new File(uploadPath+"/PlateConfig.txt");
             File screenLogFile = new File(uploadPath+"/Screenlog.txt");
 
-            if(FileCreator.blablaXXX(inputFiles,
+            if(FileCreator.createPlateconfigFromCVSMultiFiles(inputFiles,
                                     plateConfFile,
                                     screenLogFile,
                                     plateFormat,
@@ -424,8 +413,68 @@ public class AdvancedFileImporter {
            
         }
     }
+    //this will be fired from the annotation component fired successfully set up
+    public void onSuccessfullySetupColumnsFromAnnotationImporter(Object[]objs) {
+        if(processedDatafiles==null||plateCol==null||wellCol==null) {
+            return;
+        }
+
+        LinkedHashMap<String,Integer> returnMap = eventObjToColumnNamesAndNums(objs);
+        returnMap.put("Plate",plateCol);
+        returnMap.put("Well",wellCol);
+        if(returnMap.containsKey("GeneID")) {
 
 
+            ArrayList<File> inputFiles= new ArrayList<File>();
+
+        //these are the outputfiles from the cvs export function
+            for(String tempFile : filesToImport) {
+                inputFiles.add(new File(tempFile));
+            }
+
+            if(inputFiles.size()<1) {
+               plateConfigFileImporterMsg="error: cant access uploaded files";
+                return;
+            }
+            ArrayList<Integer> additionalCols = new ArrayList<Integer>(){};
+            String addColString = eventObjToColumValueString(objs,"multipleColumn");
+           
+            String[]additionalColsArr = addColString.split(",");
+
+            for(String addColsString : additionalColsArr) {
+                 additionalCols.add(Integer.parseInt(addColsString));
+            }
+            File annotationOutFile= new File(uploadPath+"/Annotation.txt");
+            
+
+            if(FileCreator.blablaXXX(inputFiles,
+                                     annotationOutFile,
+                                     returnMap.get("Plate"),
+                                      returnMap.get("Well"),
+                                     returnMap.get("GeneID"),
+                                     additionalCols,
+                                     containsHeadline)) {
+
+
+               annotationfileImporterMsg= "Annotation successfully generated";
+
+                System.out.println(annotationOutFile.getAbsolutePath());
+
+              cellHTS2.setAnnotationFileFromAdvancedFileImporter(annotationOutFile);
+
+
+
+           }
+            else {
+                plateConfigFileImporterMsg="general IO error occured. Please check your files";
+            }
+        }
+        else {
+            plateConfigFileImporterMsg="";
+
+        }
+    }
+    
     public boolean checkIfFileGotHeader(File file) {
         Pattern ps[] = new Pattern[6];
         ps[0]= Pattern.compile("plate",Pattern.CASE_INSENSITIVE);
@@ -464,27 +513,31 @@ public class AdvancedFileImporter {
         return cellHTS2;
     }
 
-
-    //this will be fired from the annotationImporter component
-    public void onSuccessfullySetupColumnsFromAnnotationImporter(Object[]objs) {
-        System.out.println("plateConfigImporter called");
-        LinkedHashMap<String,Integer> returnMap = eventObjToColumnNamesAndNums(objs);
-        for(String key : returnMap.keySet()) {
-            System.out.println(key+":"+returnMap.get(key));
-        }
-    }
     public LinkedHashMap<String,Integer> eventObjToColumnNamesAndNums(Object []objs) {
         LinkedHashMap<String,Integer> returnMap = new LinkedHashMap<String,Integer>();
-        try {
+
         for(int i=0;i<objs.length;i+=2) {
-            returnMap.put((String)objs[i],Integer.parseInt((String)objs[i+1]));
+            try {
+                returnMap.put((String)objs[i],Integer.parseInt((String)objs[i+1]));
+            }catch(NumberFormatException e) {
+                continue;
+            }
         }
 
-        }catch(NumberFormatException e) {
-            e.printStackTrace();
-            return null;
-        }
+
         return returnMap;
+    }
+    public String eventObjToColumValueString(Object []objs,String key) {
+        System.out.println("searching:"+key);
+        for(int i=0;i<objs.length;i++) {
+            System.out.println((String)objs[i]);
+          if(((String)objs[i]).equals(key)) {
+              return (String)objs[i+1];
+          }
+        }
+
+
+       return "";
     }
 
 
@@ -593,6 +646,14 @@ public class AdvancedFileImporter {
         this.headsToFindAnnotationfile = headsToFindAnnotationfile;
     }
 
+    public ArrayList<String> getHeadsToFindFurtherAnnotationfile() {
+        return headsToFindFurtherAnnotationfile;
+    }
+
+    public void setHeadsToFindFurtherAnnotationfile(ArrayList<String> headsToFindFurtherAnnotationfile) {
+        this.headsToFindFurtherAnnotationfile = headsToFindFurtherAnnotationfile;
+    }
+
     public boolean isPlateWellDefined() {
         return plateWellDefined;
     }
@@ -648,5 +709,20 @@ public class AdvancedFileImporter {
         this.plateConfigFileImporterMsg = plateConfigFileImporterMsg;
     }
 
+    public TreeSet<Integer> getAdditionalAnnotCols() {
+        return additionalAnnotCols;
+    }
+
+    public void setAdditionalAnnotCols(TreeSet<Integer> additionalAnnotCols) {
+        this.additionalAnnotCols = additionalAnnotCols;
+    }
+
+    public String getAnnotationfileImporterMsg() {
+        return annotationfileImporterMsg;
+    }
+
+    public void setAnnotationfileImporterMsg(String annotationfileImporterMsg) {
+        this.annotationfileImporterMsg = annotationfileImporterMsg;
+    }
     // end of getters and setters-------------------------------------------------------------------------
 }

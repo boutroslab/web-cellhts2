@@ -12,6 +12,8 @@ import org.apache.tapestry5.services.FormSupport;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.HashSet;
+import java.util.TreeSet;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
@@ -36,7 +38,11 @@ public class FileImporter{
     @Parameter(required=true)
     private Boolean compareHeader;
 
-
+    //one column can be selected multiple times
+    @Parameter(required=false)
+    private boolean moreThanOne;
+    @Parameter(required=false)
+    private TreeSet<Integer> moreThanOneCols;
 //parameters end ----------------------------------------------------------------------------
 
      private String loopVariable;
@@ -81,7 +87,9 @@ public class FileImporter{
     @Inject
     private ComponentResources componentResources;
      @Inject
-    private RenderSupport renderSupport;
+    private RenderSupport renderSupport;      
+    @Persist
+    private String multipleChangeSelect;
 
 
 
@@ -96,12 +104,16 @@ public class FileImporter{
 
             EVENTNAME="successfullySetupColumns";
             uniqueID = renderSupport.allocateClientId(componentResources);
+
+            if(moreThanOne) {
+                moreThanOneCols=new TreeSet<Integer>();
+            }
+
             selectedColumns=new SelectedColumn[headsToFind.size()];
             int i=0;
             for(String headToFind : headsToFind) {
                 selectedColumns[i++]  = new SelectedColumn(headToFind);
              }
-             
 
         }
        if(headerFields==null) {
@@ -254,6 +266,25 @@ public class FileImporter{
             tempColumns.add(name);
             tempColumns.add(number);
         }
+        if(moreThanOne)  {
+            //this will be the name of the column which has multiple col IDs in it
+
+            String colsString="";
+            for(Integer moreThanOne : moreThanOneCols){
+                if(colsString.equals("")) {
+                    colsString=""+moreThanOne;
+                }
+                else {
+                    colsString+=","+moreThanOne;
+                }
+
+            }
+            if(!colsString.equals(""))  {
+                tempColumns.add("multipleColumn");
+                tempColumns.add(colsString);
+                //System.out.println("XXXYYYZZZ:"+colsString);
+            }
+        }
         Object[] returnObjs = new Object[]{};
         if(tempColumns.size()>0) {
             returnObjs=new Object[tempColumns.size()];
@@ -289,6 +320,42 @@ public class FileImporter{
                 if(objs.length>0) {
                     componentResources.triggerEvent(EVENTNAME, objs, callback);
     }           }
+    //AJAX event handlers
+
+    @OnEvent(component = "multipleChangeSelect", value = "change")
+    public JSONObject onSelectChangeEvent(String type) {
+        if(!moreThanOne)  {
+            return new JSONObject().put("selectHeader", "");
+        }
+        //this is the empty one
+        if(type.equals("")) {
+            moreThanOneCols.clear();
+            return new JSONObject().put("selectHeader","");
+        }
+
+        String[] column = type.split(":");
+
+        if(column[0]!=null) {
+            Integer col = Integer.parseInt(column[0]);
+
+            moreThanOneCols.add(col);
+        }
+        else {
+            return new JSONObject().put("selectHeader", "");
+        }
+        
+        String colsString="";
+        for(Integer moreThanOne : moreThanOneCols){
+            if(colsString.equals("")) {
+                colsString=""+moreThanOne;
+            }
+            else {
+                colsString+=","+moreThanOne;
+            }
+        }
+        System.out.println(colsString);
+        return new JSONObject().put("selectHeader",colsString);
+    }
 
     //getters and setters -----------------------------------------------------------------------------
 
@@ -419,7 +486,23 @@ public class FileImporter{
     public void setInit(boolean init) {
         this.init = init;
     }
-//end of setters---------------------------------------------------
+
+    public boolean isMoreThanOne() {
+        return moreThanOne;
+    }
+
+    public void setMoreThanOne(boolean moreThanOne) {
+        this.moreThanOne = moreThanOne;
+    }
+
+    public String getMultipleChangeSelect() {
+        return multipleChangeSelect;
+    }
+
+    public void setMultipleChangeSelect(String multipleChangeSelect) {
+        this.multipleChangeSelect = multipleChangeSelect;
+    }
+    //end of setters---------------------------------------------------
 
 
     

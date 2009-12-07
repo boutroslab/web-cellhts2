@@ -13,6 +13,8 @@ package cellHTS.classes;
         private String columnName;
         private String mappedToColumn;
         private Integer columnNumber;
+    //if we map some column to more than one columns
+        private String mappedToColumns;
 
         public SelectedColumn(String columnName) {
             this.columnName = columnName;
@@ -54,4 +56,12 @@ package cellHTS.classes;
         public void setColumnNumber(Integer columnNumber) {
             this.columnNumber = columnNumber;
         }
+
+    public String getMappedToColumns() {
+        return mappedToColumns;
+    }
+
+    public void setMappedToColumns(String mappedToColumns) {
+        this.mappedToColumns = mappedToColumns;
+    }
 }

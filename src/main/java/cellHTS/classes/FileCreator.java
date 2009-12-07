@@ -904,7 +904,7 @@ public class FileCreator {
                                                                 ) {*/
 
 
-    public static boolean blablaXXX(ArrayList<File> inputFiles,
+    public static boolean createPlateconfigFromCVSMultiFiles(ArrayList<File> inputFiles,
                                     File plateConfOutfile,
                                     File screenlogOutfile,
                                     int plateFormat,
@@ -1042,6 +1042,84 @@ public class FileCreator {
         return true;
 
 
+    }
+    public static boolean blablaXXX(ArrayList<File>  inputFiles,
+                                 File annotationOutFile,
+                                 int plateCol,
+                                 int wellCol,
+                                 int geneIDCol,
+                                 ArrayList<Integer> additionalCols,
+                                 boolean containsHeadline) {
+        try {
+        FileWriter fileWriter = new FileWriter(annotationOutFile);
+        BufferedWriter writer = new BufferedWriter(fileWriter);
+
+
+        String headline =  "Plate\tWell\tGeneID";
+        
+        //get the header
+        String []headlineArr= new String[] {};
+
+        FileReader tmpReader = new FileReader(inputFiles.get(0));
+        BufferedReader tmpBuffer = new BufferedReader(tmpReader);
+        String firstLine =tmpBuffer.readLine();
+        tmpBuffer.close();
+
+        if (containsHeadline) {
+             //forward one line if we got headlines in first line
+             headlineArr=firstLine.split("\t");
+        }
+        else {
+               int sizeHeader = firstLine.split("\t").length;
+               for(int i=0;i<sizeHeader;i++) {
+                   headlineArr[i]="unknown_header_"+i;
+               }
+         }
+         for(Integer addHeadID : additionalCols) {
+             headline+="\t"+headlineArr[addHeadID-1];
+         }
+
+         writer.write(headline+"\n");
+
+        for (File file : inputFiles) {
+
+
+                FileReader reader = new FileReader(file);
+                BufferedReader buffer = new BufferedReader(reader);
+
+                String line;
+
+            if (containsHeadline) {
+                                //forward one line if we got headlines in first line
+                 buffer.readLine();
+            }
+
+
+                while ((line = buffer.readLine()) != null) {
+                    String[] cols = line.split("\t");
+                    String plate = cols[plateCol - 1];
+                    String well = cols[wellCol -1];
+                    String geneID = cols[geneIDCol - 1];
+
+                    String outputString=plate+"\t"+well+"\t"+geneID;
+                    for(Integer colID : additionalCols) {
+                        outputString+="\t"+cols[colID-1] ;
+                    }
+                    writer.write(outputString+"\n");
+                    
+                }
+
+               buffer.close();
+        }
+        writer.close();
+
+
+    }catch(IOException e) {
+                e.printStackTrace();
+                return false;
+
+    }
+        return true;
     }
 
 

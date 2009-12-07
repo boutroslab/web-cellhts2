@@ -25,22 +25,14 @@
     <body onLoad="initPage()">
         <div t:type="signaling/MultiplefileUploader" t:id="multipleUploadOne" t:uploadPath="uploadPath"/>
         <br/>
-
-
-
-
-
-
        <!-- <t:actionlink t:id="processFiles">Go on</t:actionlink> -->
 
         <!--<t:if test="startFileImport">    -->
             <div t:type="ck/Tooltip" clientId="tooltip1"
                  value="If an excel file cannot be read, save it as Excel97-2004 Worksheet(xls)."
                  effect="appear">
-            <t:ExportCSV t:id="exportCSV" t:filesToProcess="uploadedFiles"/>
-            </div>
-            <t:if test="convertedAllFiles">
-                <t:form>
+
+            <t:form>
                 <t:checkbox t:id="containsHeadline"
                             t:mixins="ck/OnEvent"
                             onCompleteCallback="onCompleteChangeEventDummy"
@@ -59,7 +51,14 @@
                      onCompleteCallback="onCompleteFromReplicateNumber"
                      event="blur"
                             />
-                  </t:form>
+                   
+
+             </t:form>    
+
+            <t:ExportCSV t:id="exportCSV" t:filesToProcess="uploadedFiles"/>
+            </div>
+            <t:if test="convertedAllFiles">
+
 
 
                 <t:FileImporter t:id="datafileImporter" filesToProcess="filesToImport" headsToFind="headsToFindDatafile"
@@ -78,11 +77,14 @@
                     <font color="red">${plateConfigFileImporterMsg}</font>
                     <br/>
 
-                    Please select if your files contain Annotation data
+
                     <br/>
+                    Please select if your files contain Annotation data
                     <t:FileImporter t:id="annotationImporter" filesToProcess="filesToImport"
                                     headsToFind="headsToFindAnnotationfile" showHeadline="literal:false"
-                                    compareHeader="containsHeadline"/>
+                                    compareHeader="containsHeadline"  moreThanOne="true" moreThanOneCols="additionalAnnotCols"/>
+                    <font color="red">${annotationfileImporterMsg}</font>
+
                 </t:if>
 
                 <!--<t:actionlink t:id="proceedWebCellHTS2">Proceed to webCellHTS2</t:actionlink>  -->
