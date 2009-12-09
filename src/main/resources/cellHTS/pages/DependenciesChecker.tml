@@ -1,46 +1,43 @@
-<html t:id="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_0_0.xsd">
+<html xmlns:t="http://tapestry.apache.org/schema/tapestry_5_0_0.xsd">
     <head>
         <title>web cellHTS2 dependecies checker</title>
     </head>
 
-    <body onLoad="initJSCellHTS()">
-           <h1><FONT COLOR="red">${browserVersionMessage}</FONT></h1> <br/>
+    <body>
+         <div id="generalErrorBox"/>
+        <div id="javascriptMessage"/>         
+        <div id="ajaxMessage"/>
+        <div id="browserVersionMessage"/>
+        <div id="flashMessage"/>
+        <div id="temporaryFolderAccess"/>
+        <div id="rVersionMessage"/>
+        <div id="cellHTS2Message"/>
+        <br/>
+        <br/>
+        <div id="resultMessage"/>
     </body>
-    <script type="text/javascript">
-        var browserVersionLink = '${prop:browserVersionLink}'; // before the comment so Tapestry sees it!
-        var B_PARAMNAME = '${prop:B_PARAMNAME}'; 
-        <!-- //
-
-
-
-        //define an event so we skip the need to use a submit buttons
-        //on uploading stuff
-       function initJSCellHTS() {
-           isJSActivated();
-           checkBrowser();
-       }
-
-
-       function checkBrowser()  {
-            //get browser name and version
-            var browser = BrowserDetect.browser;
-            var version = BrowserDetect.version;
-
-            new Ajax.Request(
-                browserVersionLink,
-            {
-                method: 'post',
-                parameters: B_PARAMNAME+"="+browser+","+version
-            }
-        );
-
-       }
-
-
-// -->
+    <script type="text/javascript">     
     </script>
     <noscript>
-      <h1><FONT COLOR="red">Check 0 failed: Your browser does not support Javascript, cannot proceed!</FONT></h1>
+      <FONT COLOR="red">0 : Your browser does not support Javascript, Can't proceed!</FONT>
     </noscript>
+
+    <!--this if for detecting flash version in internet explorers-->
+    <script language="VBScript" type="text/vbscript">
+<!-- // Visual Basic-Hilfsprogramm ist zur Ermittlung der Versionsinformationen des Flash Player ActiveX-Steuerelements erforderlich
+Function VBGetSwfVer(i)
+  on error resume next
+  Dim swControl, swVersion
+  swVersion = 0
+
+  set swControl = CreateObject("ShockwaveFlash.ShockwaveFlash." + CStr(i))
+  if (IsObject(swControl)) then
+    swVersion = swControl.GetVariable("$version")
+  end if
+  VBGetSwfVer = swVersion
+End Function
+// -->
+</script>
+   
 
 </html>

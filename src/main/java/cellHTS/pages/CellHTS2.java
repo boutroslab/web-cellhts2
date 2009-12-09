@@ -328,7 +328,11 @@ public class CellHTS2 {
      * this will be started everytime the page gets reloaded
      *
      */
-    public void onActivate() {
+
+
+
+   // public void onActivate() {
+       public void setupRender() {
         //coming from different pages result in different destinies
         activatedFromPageDestiny();
 
