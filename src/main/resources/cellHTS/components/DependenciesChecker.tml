@@ -4,56 +4,84 @@
     </head>
 
     <body>
+
         <t:unless test="allDependenciesAreMet">
-        <div id="dependencyChecker" class="overlay">
-        <br/>
-        Checking dependencies: <br/>
-         <div id="waitMsg"/>
-         <div id="generalErrorBox"/>
-        <div id="javascriptMessage"/>         
-        <div id="ajaxMessage"/>
-        <div id="browserVersionMessage"/>
-        <div id="flashMessage"/>
-        <div id="temporaryFolderAccess"/>
-        <div id="rVersionMessage"/>
-        <div id="cellHTS2Message"/>
-        <br/>
-        <br/>
-        <div id="resultMessage"/>
-        </div>
+            <p>
+                <div id="dependencyChecker">
+                    <div id="wrapper">
+                        <div id="container">
+                            <br/>
+                            Checking dependencies:
+                            <br/>
+                            <div id="waitMsg"/>
+                            <div id="generalErrorBox"/>
+                            <div id="javascriptMessage"/>
+                            <div id="ajaxMessage"/>
+                            <div id="browserVersionMessage"/>
+                            <div id="flashMessage"/>
+                            <div id="temporaryFolderAccess"/>
+                            <div id="rVersionMessage"/>
+                            <div id="cellHTS2Message"/>
+                            <br/>
+                            <br/>
+                            <div id="resultMessage"/>
+                        </div>
+                    </div>
+                </div>
+            </p>
         </t:unless>
     </body>
     <style>
         HTML, BODY { height: 100%; }
-        div.pagewrapper { width: 100%; height: 100% overflow: auto; }
-        div.overlay {
-            position: absolute; left: 100px; top: 100px;
-            background: lightgrey;
+
+        .transparent
+        {
+            filter:alpha(opacity=60);
+            -moz-opacity: 0.6;
+            opacity: 0.6;
+        }
+        #wrapper, #container {
+        height: 500px;
+        width: 600px;
+
+        }
+        #wrapper {
+        bottom: 50%;
+        right: 50%;
+        position: absolute;
+
+        }
+        #container {
+        left: 50%;
+        position: relative;
+        top: 50%;
+        background: lightgrey;
+        border: 1px solid #000;
         }
 
-</style>
-    <script type="text/javascript">     
+    </style>
+    <script type="text/javascript">
     </script>
     <noscript>
-      <FONT COLOR="red">0 : Your browser does not support Javascript, Can't proceed!</FONT>
+        <FONT COLOR="red">0 : Your browser does not support Javascript, Can't proceed!</FONT>
     </noscript>
 
     <!--this if for detecting flash version in internet explorers-->
     <script language="VBScript" type="text/vbscript">
-<!-- // Visual Basic-Hilfsprogramm ist zur Ermittlung der Versionsinformationen des Flash Player ActiveX-Steuerelements erforderlich
-Function VBGetSwfVer(i)
-  on error resume next
-  Dim swControl, swVersion
-  swVersion = 0
+        <!-- // Visual Basic-Hilfsprogramm ist zur Ermittlung der Versionsinformationen des Flash Player ActiveX-Steuerelements erforderlich
+       Function VBGetSwfVer(i)
+         on error resume next
+         Dim swControl, swVersion
+         swVersion = 0
 
-  set swControl = CreateObject("ShockwaveFlash.ShockwaveFlash." + CStr(i))
-  if (IsObject(swControl)) then
-    swVersion = swControl.GetVariable("$version")
-  end if
-  VBGetSwfVer = swVersion
-End Function
-// -->
-</script>
-   
+         set swControl = CreateObject("ShockwaveFlash.ShockwaveFlash." + CStr(i))
+         if (IsObject(swControl)) then
+           swVersion = swControl.GetVariable("$version")
+         end if
+         VBGetSwfVer = swVersion
+       End Function
+       // -->
+    </script>
+
 
 </html>

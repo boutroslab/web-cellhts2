@@ -10,14 +10,12 @@ import org.apache.tapestry5.ioc.Messages;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.FileInputStream;
-import java.util.jar.Manifest;
-import java.util.jar.Attributes;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
 import cellHTS.classes.RInterface;
 import cellHTS.pages.CellHTS2;
+import data.RCellHTS2Version;
 
 /**
  * Created by IntelliJ IDEA.
@@ -57,8 +55,8 @@ public class DependenciesChecker {
     @Persist
     private boolean allDependenciesAreMet;
     @SessionState
-    private String cellHTS2Version;
-    private boolean cellHTS2VersionExists;
+    private RCellHTS2Version rCellHTS2Version;
+    private boolean rCellHTS2VersionExists;
     
     @Parameter(required=true, defaultPrefix="literal")
     private String enableDIVOnSuccess;
@@ -160,44 +158,41 @@ public class DependenciesChecker {
         returnJSON.put("UPLOADPATH","4. "+checkAndCreateUploadDirectory());
 
         //get R and cellHTS Version
-        String cellHTS2AndRVersion = getRVersion();
-        System.out.println(cellHTS2AndRVersion);
-        if(cellHTS2AndRVersion.equals("not found")||cellHTS2AndRVersion.equals("<not available>")) {
+        String cellHTS2AndRVersion="";
+        String rVersionFetched = getRVersion();
+        System.out.println("cellHTS2Version:"+rVersionFetched);
+        if(rVersionFetched.equals("not found")||rVersionFetched.equals("<not available>")) {
            cellHTS2AndRVersion="R or cellHTS2 version can't be fetched. Maybe can't connect to RServer. Can't proceed"; 
-        } else {
+        }
+        else {
             // get R and cellHTS2 version and check if we are above the minimum version needs
-            Pattern p = Pattern.compile("([\\d\\.]+)\\s*\\(([\\d\\.]+)\\)");
-            Matcher m = p.matcher(cellHTS2AndRVersion);
+            Pattern p = Pattern.compile("([\\d\\.]+)\\s*\\(R:([\\d\\.]+)\\)");
+            Matcher m = p.matcher(rVersionFetched);
             if(m.find()) {
-                String rVer = m.group(1);
-                String cellHTS2Ver = m.group(2);
-                float rVerFloat=0.0f;
-                float rVerFloatDep=0.1f;
-                try {
-                    rVerFloat = Float.parseFloat(rVer);
-                    rVerFloatDep = Float.parseFloat(msg.get("required-R-version"));
-                }
-                catch(NumberFormatException e) {
-                    cellHTS2AndRVersion="R or cellHTS2 version can't be fetched. Maybe can't connect to RServer. Can't proceed";
-                    returnJSON.put("CELLHTS2VERSION","5. "+cellHTS2AndRVersion);
-                    return returnJSON;
-                }
+                String rVer = m.group(2);
+                String cellHTS2Ver = m.group(1);
+
                
                 String requiredCellHTS2Ver = msg.get("required-cellHTS2-version");
-                if(rVerFloat>=rVerFloatDep && cellHTS2Ver.equals(requiredCellHTS2Ver)) {
-                    cellHTS2AndRVersion="R or cellHTS2 version can't be fetched. Maybe can't connect to RServer. Can't proceed";
+
+                if(compareTwoRVersions(rVer, msg.get("required-R-version"))&&cellHTS2Ver.equals(requiredCellHTS2Ver)) {
+                    cellHTS2AndRVersion="R, cellHTS2 and RServer could be fe fetched and are in the right version.";
                 }
                 else {
-                    cellHTS2AndRVersion="Fetched R and cellHTS2 version "+cellHTS2AndRVersion+" do not match the required Versions "+rVerFloatDep++". Maybe can't connect to RServer. Can't proceed";
+                    cellHTS2AndRVersion="Fetched R and cellHTS2 version "+rVersionFetched+" do not match the required <br/>   " +
+                            "R version:"+msg.get("required-R-version")+" and cellHTS2 version:"+requiredCellHTS2Ver+". Maybe can't connect to RServer. Can't proceed";
 
                 }
                 
             }
             else {
-                cellHTS2AndRVersion="R or cellHTS2 version can't be fetched. Maybe can't connect to RServer. Can't proceed";
+                cellHTS2AndRVersion="R or cellHTS2 version exists but can't be fetched. Maybe can't connect to RServer. Can't proceed";
             }
 
 
+        }
+        if(cellHTS2AndRVersion.equals("")) {
+            cellHTS2AndRVersion="R or cellHTS2 version can't be fetched. Maybe can't connect to RServer. Can't proceed"; 
         }
         returnJSON.put("CELLHTS2VERSION","5. "+cellHTS2AndRVersion);
         return returnJSON;
@@ -240,6 +235,33 @@ public class DependenciesChecker {
     }
 
 
+    public boolean compareTwoRVersions(String version, String minimumVersion) {               
+        String cellHTS2AndRVersion;
+                try {
+                    String[] versionPoints = version.split("\\.");
+                    String[] versionPointsDep = minimumVersion.split("\\.");
+
+                    if(versionPoints.length!=versionPointsDep.length) {
+                        return false;
+                    }
+
+                    int i=0;
+                    for(String versionPoint : versionPoints) {
+                        int ver = Integer.parseInt(versionPoint);
+                        int verDep = Integer.parseInt(versionPointsDep[i++]);
+                        System.out.println(ver+"|"+verDep);
+                        if(ver<verDep) {
+                            return false;
+                        }
+                    }
+
+                }
+                catch(NumberFormatException e) {
+                    return false;
+                }
+        return true;
+    }
+
     public String checkAndCreateUploadDirectory() {
             String uploadPath = msg.get("upload-path");
             if(!uploadPath.endsWith(File.pathSeparator)) {
@@ -249,7 +271,8 @@ public class DependenciesChecker {
             File uploadPathObj = new File(uploadPath);
             if(!uploadPathObj.exists()) {
                 if(!uploadPathObj.mkdirs()) {
-                    return "Cannot create directory on the server to upload files: "+uploadPath+".\nCheck read/write permissions or change file upload property in apps.properties file. Can't proceed";
+                    return "Cannot create directory on the server to upload files: "+uploadPath+". <br/>   " +
+                            "Check read/write permissions or change file upload property in apps.properties file. Can't proceed";
                 }
             }
             if(uploadPathObj.canRead()&&uploadPathObj.canWrite()) {
@@ -268,7 +291,8 @@ public class DependenciesChecker {
                     if(tmpFile.exists()){
                         tmpFile.delete();
                     }
-                    return "Cannot write a test file in the upload path: "+uploadPath+"tmp.txt"+".\nCheck read/write permissions or change file upload property in apps.properties file. Can't proceed";
+                    return "Cannot write a test file in the upload path: "+uploadPath+"tmp.txt"+"<br/>   " +
+                            "Check read/write permissions or change file upload property in apps.properties file. Can't proceed";
                 }
 
              }else {
@@ -277,12 +301,14 @@ public class DependenciesChecker {
              return "Cannot read or write directory: "+uploadPath+".\nCheck read/write permissions. Can't proceed";
         }
     public String getRVersion() {
-        //THIS is sessionstate do this only once ...we dont want to do this in the layout again
-        if (!cellHTS2VersionExists) {
+        if(!rCellHTS2VersionExists)  {
                 RInterface rInterface = new RInterface();
-                cellHTS2Version  = rInterface.getCellHTS2Version();
-         }
-        return cellHTS2Version;
+                return rInterface.getCellHTS2Version();
+        }
+        else {
+            return rCellHTS2Version.getCellHTS2Version();
+        }
+
     }
 
     public String getB_PARAMNAME() {

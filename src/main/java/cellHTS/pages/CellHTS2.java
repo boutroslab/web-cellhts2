@@ -330,8 +330,6 @@ public class CellHTS2 {
      *
      */
 
-
-
     public void onActivate() {
    //    public void setupRender() {
         //coming from different pages result in different destinies

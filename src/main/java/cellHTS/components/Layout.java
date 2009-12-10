@@ -31,6 +31,7 @@ import java.util.jar.Manifest;
 import java.util.jar.Attributes;
 
 import cellHTS.classes.RInterface;
+import data.RCellHTS2Version;
 
 /**
  * This class generates the general layout of the webtool so its like a frame where the different sites
@@ -47,17 +48,12 @@ public class Layout {
     @Inject
     private ApplicationGlobals applicationGlobals;
 
-    @SessionState
-    private String buildCellHTS2Version;
-    private boolean buildCellHTS2VersionExists;
-    @SessionState
-    private String versionCellHTS2Version;
-    private boolean versionCellHTS2VersionExists;
     @Persist
     private boolean initOnce;
+
     @SessionState
-    private String cellHTS2Version;
-    private boolean cellHTS2VersionExists;
+    private RCellHTS2Version rCellHTS2Version;
+    private boolean rCellHTS2VersionExists;
 
     /**
      * initalize stuff, do this only once such as retriving cellHTS version (Singleton call)
@@ -68,17 +64,14 @@ public class Layout {
         if (!initOnce) {
             initOnce = true;
             //check the sessionstate variables 
-            if (!buildCellHTS2VersionExists && !versionCellHTS2VersionExists) {
-                buildCellHTS2Version = "";
-                versionCellHTS2Version = "";
-
 
                 String path = applicationGlobals.getServletContext().getRealPath(File.separator);
                 //this will actually start and end a rserver instance
-                if(cellHTS2VersionExists) {
-                    RInterface rInterface = new RInterface();
-                    cellHTS2Version = rInterface.getCellHTS2Version();
-                }
+
+                RInterface rInterface = new RInterface();
+                String cellHTS2Version = rInterface.getCellHTS2Version();
+                String buildCellHTS2Version="";
+                String versionCellHTS2Version = "";
 
                 try {
                     File manifestFile = new File(path, "META-INF/MANIFEST.MF");
@@ -92,15 +85,25 @@ public class Layout {
                     versionCellHTS2Version = atts.getValue("Implementation-Version");
 
 
+
+
                 } catch (Exception e) {
                     e.printStackTrace();
+
+                }
+                finally {
+                   if(!rCellHTS2VersionExists)  {
+                        rCellHTS2Version = new RCellHTS2Version(buildCellHTS2Version,versionCellHTS2Version,cellHTS2Version);
+                    } 
                 }
             }
-        }
     }
 
+
+
     public String getBuild() {
-        if (!buildCellHTS2VersionExists) {
+        String buildCellHTS2Version= rCellHTS2Version.getBuildCellHTS2Version();
+        if (buildCellHTS2Version==null) {
             buildCellHTS2Version = "<not available>";
         }
         if (buildCellHTS2Version.equals("")) {
@@ -112,7 +115,8 @@ public class Layout {
     }
 
     public String getVersion() {
-        if (!versionCellHTS2VersionExists) {
+        String versionCellHTS2Version = rCellHTS2Version.getVersionCellHTS2Version();
+        if (versionCellHTS2Version==null) {
             versionCellHTS2Version = "<not available>";
         }
         if (versionCellHTS2Version.equals("")) {
@@ -122,7 +126,7 @@ public class Layout {
     }
 
     public String getCellHTS2Version() {
-        return cellHTS2Version;
+        return rCellHTS2Version.getCellHTS2Version();
     }
 
 

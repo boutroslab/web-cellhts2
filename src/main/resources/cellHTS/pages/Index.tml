@@ -22,7 +22,7 @@
  <head>
      <title>cellHTS2 WebTool</title>
      <!--redirect the page to the cellhts2 startpage-->
-     <meta HTTP-EQUIV="REFRESH" content="0; url=CellHTS2"/>
+      <meta HTTP-EQUIV="REFRESH" content="0; url=CellHTS2"/>
  </head>
   <body>
       

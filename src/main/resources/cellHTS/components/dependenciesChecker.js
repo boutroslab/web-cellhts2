@@ -29,7 +29,7 @@ function checkAll(checkAllCallbackLink, successCallbackLink, C_PARAMNAME,F_PARAM
 
                         var ajax = jsonObj.AJAX;
                         var regExp=/Can't/i;
-                        var color="black";
+                        var color="green";
                         if(regExp.test(ajax))  {
                            color = "red";
                            allCorrect=false;
@@ -39,14 +39,14 @@ function checkAll(checkAllCallbackLink, successCallbackLink, C_PARAMNAME,F_PARAM
 
                         $('ajaxMessage').innerHTML="<font color=\""+color+"\">"+ajax+"</font color>" ;
                         var js = jsonObj.JAVASCRIPT;
-                        color = "black";
+                        color = "green";
                         if(regExp.test(js))  {
                            color = "red";
                            allCorrect=false;
                         }
                         $('javascriptMessage').innerHTML="<font color=\""+color+"\">"+js+"</font color>";
                         var browser = jsonObj.BROWSER;
-                        color = "black";
+                        color = "green";
                         if(regExp.test(browser))  {
                            color = "red";
                            allCorrect=false;
@@ -56,10 +56,10 @@ function checkAll(checkAllCallbackLink, successCallbackLink, C_PARAMNAME,F_PARAM
 
 
                         //flash is optional so no need to make allCorrect false
-                         $('flashMessage').innerHTML="<font color=\"black\">"+jsonObj.FLASH+"</font color>";
+                         $('flashMessage').innerHTML="<font color=\"green\">"+jsonObj.FLASH+"</font color>";
 
                         var uploadPath=jsonObj.UPLOADPATH;
-                        color = "black";
+                        color = "green";
                         if(regExp.test(uploadPath))  {
                            color = "red";
                            allCorrect=false;
@@ -67,7 +67,7 @@ function checkAll(checkAllCallbackLink, successCallbackLink, C_PARAMNAME,F_PARAM
                         $('temporaryFolderAccess').innerHTML="<font color=\""+color+"\">"+uploadPath+"</font color>";
 
                         var cellHTS2Version=jsonObj.CELLHTS2VERSION;
-                        color = "black";
+                        color = "green";
                         if(regExp.test(cellHTS2Version))  {
                            color = "red";
                            allCorrect=false;
@@ -95,7 +95,9 @@ function checkAll(checkAllCallbackLink, successCallbackLink, C_PARAMNAME,F_PARAM
 
                         }
                         else {
-                             $(enableDIV).style.visibility = "hidden";
+                            // myPopupRelocate(disableDIV);
+                             //$(enableDIV).className="hidden";
+                             $(enableDIV).style.visibility ="hidden";
                              $(disableDIV).style.visibility = "visible";
                              $('resultMessage').innerHTML="missing dependencies, can't start web cellHTS2. Please fix and restart webapp.";
                             //doing nothing
@@ -118,4 +120,44 @@ function checkAll(checkAllCallbackLink, successCallbackLink, C_PARAMNAME,F_PARAM
 
 
 
+}
+
+function myPopupRelocate(divID) {
+
+   
+
+ var scrolledX, scrolledY;
+ if( self.pageYOffset ) {
+   scrolledX = self.pageXOffset;
+   scrolledY = self.pageYOffset;
+ } else if( document.documentElement && document.documentElement.scrollTop ) {
+   scrolledX = document.documentElement.scrollLeft;
+   scrolledY = document.documentElement.scrollTop;
+ } else if( document.body ) {
+   scrolledX = document.body.scrollLeft;
+   scrolledY = document.body.scrollTop;
+ }
+
+ var centerX, centerY;
+ if( self.innerHeight ) {
+   centerX = self.innerWidth;
+   centerY = self.innerHeight;
+ } else if( document.documentElement && document.documentElement.clientHeight ) {
+   centerX = document.documentElement.clientWidth;
+   centerY = document.documentElement.clientHeight;
+ } else if( document.body ) {
+   centerX = document.body.clientWidth;
+   centerY = document.body.clientHeight;
+ }
+
+ var divWidth = $(divID).style.width;
+ var divHeight = $(divID).style.height;
+
+
+ var leftOffset = scrolledX + (centerX - divWidth) / 2;
+ var topOffset = scrolledY + (centerY - divHeight) / 2;
+
+ $(divID).style.top = topOffset + "px";
+ $(divID).style.left = leftOffset + "px";
+ $(divID).style.display = "block";
 }
