@@ -381,8 +381,8 @@ public class AdvancedFileImporter {
             //add the plate zero to it
             clickedWellsAndPlates.add(0,new Plate(0, 0, 0));
 
-            File plateConfFile= new File(uploadPath+"/PlateConfig.txt");
-            File screenLogFile = new File(uploadPath+"/Screenlog.txt");
+            File plateConfFile= new File(uploadPath+File.pathSeparator+"PlateConfig.txt");
+            File screenLogFile = new File(uploadPath+File.pathSeparator+"Screenlog.txt");
 
             if(FileCreator.createPlateconfigFromCVSMultiFiles(inputFiles,
                                     plateConfFile,
@@ -444,7 +444,7 @@ public class AdvancedFileImporter {
             for(String addColsString : additionalColsArr) {
                  additionalCols.add(Integer.parseInt(addColsString));
             }
-            File annotationOutFile= new File(uploadPath+"/Annotation.txt");
+            File annotationOutFile= new File(uploadPath+File.pathSeparator+"Annotation.txt");
             
 
             if(FileCreator.blablaXXX(inputFiles,

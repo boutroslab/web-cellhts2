@@ -23,7 +23,11 @@
 
     </head>
     <body onLoad="initPage()">
+        <div t:type="ck/Tooltip" clientId="tooltip0"
+                 value="You can upload multiple files by holding down mouse button or using Shift+arrow key"
+                 effect="appear">
         <div t:type="signaling/MultiplefileUploader" t:id="multipleUploadOne" t:uploadPath="uploadPath"/>
+        </div>
         <br/>
        <!-- <t:actionlink t:id="processFiles">Go on</t:actionlink> -->
 

@@ -58,7 +58,7 @@ import cellHTS.dao.Semaphore;
  * Time: 11:09:37
  * To change this template use File | Settings | File Templates.
  */
-@IncludeJavaScriptLibrary(value = {"${tapestry.scriptaculous}/prototype.js", "divEnabler.js","browserDetect.js"})
+@IncludeJavaScriptLibrary(value = {"${tapestry.scriptaculous}/prototype.js", "divEnabler.js","../components/browserDetect.js","leightbox.js"})
 public class CellHTS2 {
 
     @Inject
@@ -321,6 +321,7 @@ public class CellHTS2 {
     private File screenlogFileFromAdvancedFileImporter;
     @Persist
     private File annotationFileFromAdvancedFileImporter;
+    
 
 
     /**
@@ -331,8 +332,8 @@ public class CellHTS2 {
 
 
 
-   // public void onActivate() {
-       public void setupRender() {
+    public void onActivate() {
+   //    public void setupRender() {
         //coming from different pages result in different destinies
         activatedFromPageDestiny();
 
@@ -2180,8 +2181,6 @@ public class CellHTS2 {
         return model;
 
     }
-
-
     public String getChannelLabel1
             () {
         return channelLabel1;
@@ -3571,6 +3570,5 @@ public class CellHTS2 {
         plateConfigFileFromAdvancedFileImporter=plateConf;
         screenlogFileFromAdvancedFileImporter=screenlog;
     }
-    
 }
 

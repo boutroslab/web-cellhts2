@@ -1,13 +1,14 @@
 
-function checkAll(checkAllCallbackLink, C_PARAMNAME,F_PARAMNAME) {
+function checkAll(checkAllCallbackLink, successCallbackLink, C_PARAMNAME,F_PARAMNAME,enableDIV,disableDIV) {
 
-    
+   // alert(enableDIV);
     //alert(browserVersionLink);
     //get browser name and version
     var browser = BrowserDetect.browser;
     var version = BrowserDetect.version;
     var hasRightFlashVersion = DetectFlashVer(requiredMajorVersion, requiredMinorVersion, requiredRevision);
-   
+     //lets display a wait msg until everything is fetched
+     $('waitMsg').innerHTML="please wait while fetching dependencies...";
     //alert(browser);
             new Ajax.Request(
                     checkAllCallbackLink,
@@ -18,8 +19,11 @@ function checkAll(checkAllCallbackLink, C_PARAMNAME,F_PARAMNAME) {
                             },
                 onSuccess: function(transport) {
                         var response = transport.responseText;
+
+                    
                       //  alert(response);
                         var jsonObj = response.evalJSON();
+
 
                         var allCorrect=true;
 
@@ -30,6 +34,9 @@ function checkAll(checkAllCallbackLink, C_PARAMNAME,F_PARAMNAME) {
                            color = "red";
                            allCorrect=false;
                         }
+
+
+
                         $('ajaxMessage').innerHTML="<font color=\""+color+"\">"+ajax+"</font color>" ;
                         var js = jsonObj.JAVASCRIPT;
                         color = "black";
@@ -49,7 +56,7 @@ function checkAll(checkAllCallbackLink, C_PARAMNAME,F_PARAMNAME) {
 
 
                         //flash is optional so no need to make allCorrect false
-                         $('flashMessage').innerHTML="<font color=\"blue\">"+jsonObj.FLASH+"</font color>";
+                         $('flashMessage').innerHTML="<font color=\"black\">"+jsonObj.FLASH+"</font color>";
 
                         var uploadPath=jsonObj.UPLOADPATH;
                         color = "black";
@@ -66,16 +73,31 @@ function checkAll(checkAllCallbackLink, C_PARAMNAME,F_PARAMNAME) {
                            allCorrect=false;
                         }
                         $('rVersionMessage').innerHTML="<font color=\""+color+"\">"+cellHTS2Version+"</font color>";
-                        $('cellHTS2Message').innerHTML="<font color=\""+color+"\">"+cellHTS2Version+"</font color>";
+                       // $('cellHTS2Message').innerHTML="<font color=\""+color+"\">"+cellHTS2Version+"</font color>";
 
                         //produce an result-summary message
                         if(allCorrect) {
                              $('resultMessage').innerHTML="every dependency have been met, redirecting to web cellHTS2";
+                            //erase waiting message
+                             $('waitMsg').innerHTML="";
                             //redirecting to web cellHTS2
-                            alert("simulating redirect");
+                           // alert("simulating redirect");
+                            //send a new Ajax request to notify the server we are done
+                            new Ajax.Request(
+                              successCallbackLink,{
+                              onSuccess: function(transport) {
+                                 // alert(enableDIV+"_"+disableDIV);
+                                  $(enableDIV).style.visibility = "visible";
+                                  $(disableDIV).style.visibility = "hidden";
+
+                              }
+                            });
+
                         }
                         else {
-                             $('resultMessage').innerHTML="missing dependencies, can't start web cellHTS2";
+                             $(enableDIV).style.visibility = "hidden";
+                             $(disableDIV).style.visibility = "visible";
+                             $('resultMessage').innerHTML="missing dependencies, can't start web cellHTS2. Please fix and restart webapp.";
                             //doing nothing
                         }
 

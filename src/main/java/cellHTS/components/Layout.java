@@ -55,8 +55,9 @@ public class Layout {
     private boolean versionCellHTS2VersionExists;
     @Persist
     private boolean initOnce;
-    @Persist
+    @SessionState
     private String cellHTS2Version;
+    private boolean cellHTS2VersionExists;
 
     /**
      * initalize stuff, do this only once such as retriving cellHTS version (Singleton call)
@@ -74,8 +75,10 @@ public class Layout {
 
                 String path = applicationGlobals.getServletContext().getRealPath(File.separator);
                 //this will actually start and end a rserver instance
-                RInterface rInterface = new RInterface();
-                cellHTS2Version = rInterface.getCellHTS2Version();
+                if(cellHTS2VersionExists) {
+                    RInterface rInterface = new RInterface();
+                    cellHTS2Version = rInterface.getCellHTS2Version();
+                }
 
                 try {
                     File manifestFile = new File(path, "META-INF/MANIFEST.MF");

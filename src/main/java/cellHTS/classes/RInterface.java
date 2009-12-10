@@ -230,8 +230,8 @@ public class RInterface extends Thread {
                 getRengine().voidEval(evalOutput);
 
 
-                rOutputFile=outputDir+"/R_OUTPUT.TXT";
-                rOutputScriptFile=outputDir+"/R_OUTPUT.SCRIPT";
+                rOutputFile=outputDir+File.pathSeparator+"R_OUTPUT.TXT";
+                rOutputScriptFile=outputDir+File.pathSeparator+"R_OUTPUT.SCRIPT";
 
                 //getRengine().voidEval("options(warn=1)");
                 String openFile = "zz <- file(\""+rOutputFile+"\", open=\"w\")";
@@ -558,7 +558,7 @@ public class RInterface extends Thread {
             String runName=this.extractRunName(stringParams.get("runNameDir"));
             //create a recycable downloadlink as well...therefore we have to keep track about how often a file is allowed to be downloaded
             //which we will write into a properties file
-            File dlPropertiesFile = new File(uploadPath+stringParams.get("jobName")+"/.dlProperties");
+            File dlPropertiesFile = new File(uploadPath+stringParams.get("jobName")+File.pathSeparator+".dlProperties");
             
             String downloadLink = stringParams.get("emailDownloadLink");
 

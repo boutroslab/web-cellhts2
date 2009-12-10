@@ -4,6 +4,11 @@
     </head>
 
     <body>
+        <t:unless test="allDependenciesAreMet">
+        <div id="dependencyChecker" class="overlay">
+        <br/>
+        Checking dependencies: <br/>
+         <div id="waitMsg"/>
          <div id="generalErrorBox"/>
         <div id="javascriptMessage"/>         
         <div id="ajaxMessage"/>
@@ -15,7 +20,18 @@
         <br/>
         <br/>
         <div id="resultMessage"/>
+        </div>
+        </t:unless>
     </body>
+    <style>
+        HTML, BODY { height: 100%; }
+        div.pagewrapper { width: 100%; height: 100% overflow: auto; }
+        div.overlay {
+            position: absolute; left: 100px; top: 100px;
+            background: lightgrey;
+        }
+
+</style>
     <script type="text/javascript">     
     </script>
     <noscript>

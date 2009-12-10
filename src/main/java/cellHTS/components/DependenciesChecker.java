@@ -1,9 +1,6 @@
-package cellHTS.pages;
+package cellHTS.components;
 
-import org.apache.tapestry5.Link;
-import org.apache.tapestry5.ComponentResources;
-import org.apache.tapestry5.MarkupWriter;
-import org.apache.tapestry5.RenderSupport;
+import org.apache.tapestry5.*;
 import org.apache.tapestry5.json.JSONObject;
 import org.apache.tapestry5.services.Request;
 import org.apache.tapestry5.annotations.*;
@@ -13,8 +10,14 @@ import org.apache.tapestry5.ioc.Messages;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.FileInputStream;
+import java.util.jar.Manifest;
+import java.util.jar.Attributes;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 import cellHTS.classes.RInterface;
+import cellHTS.pages.CellHTS2;
 
 /**
  * Created by IntelliJ IDEA.
@@ -32,6 +35,8 @@ public class DependenciesChecker {
     @Persist
     private String checkAllLink;
     @Persist
+    private String successSentLink;
+    @Persist
     private String flashInstallLink;
     @Persist
     private String reloadPagelink;
@@ -39,6 +44,8 @@ public class DependenciesChecker {
     private String B_PARAMNAME;
     @Persist
     private String F_PARAMNAME;
+    @Persist
+    private String SUCCESSEVENTNAME;
     @Inject
     private Request request;
     @InjectPage
@@ -47,17 +54,28 @@ public class DependenciesChecker {
     private RenderSupport pageRenderSupport;
     @Inject
     private Messages msg;
+    @Persist
+    private boolean allDependenciesAreMet;
+    @SessionState
+    private String cellHTS2Version;
+    private boolean cellHTS2VersionExists;
+    
+    @Parameter(required=true, defaultPrefix="literal")
+    private String enableDIVOnSuccess;
 
     public void setupRender() {
             if(!init) {
                 init=true;
                 Link checkAllL = componentResources.createEventLink("checkAllSent", new Object[]{});
+                Link successAllL = componentResources.createEventLink("successSent", new Object[]{});
                 checkAllLink = checkAllL.toAbsoluteURI();
+                successSentLink = successAllL.toAbsoluteURI();
                 B_PARAMNAME="B_PARAMNAME";
            
                 F_PARAMNAME="F_PARAMNAME";
 
-
+                SUCCESSEVENTNAME="allDependenciesMet";
+                allDependenciesAreMet=false;
             }
 
     }
@@ -139,16 +157,49 @@ public class DependenciesChecker {
 
         returnJSON.put("FLASH", flashMessage);
 
-        returnJSON.put("UPLOADPATH",checkAndCreateUploadDirectory());
+        returnJSON.put("UPLOADPATH","4. "+checkAndCreateUploadDirectory());
 
         //get R and cellHTS Version
         String cellHTS2AndRVersion = getRVersion();
-        if(cellHTS2AndRVersion.equals("not found")) {
-           cellHTS2AndRVersion="R, cellHTS2 version can't be fetched. Maybe can't connect to RServer. Can't proceed"; 
+        System.out.println(cellHTS2AndRVersion);
+        if(cellHTS2AndRVersion.equals("not found")||cellHTS2AndRVersion.equals("<not available>")) {
+           cellHTS2AndRVersion="R or cellHTS2 version can't be fetched. Maybe can't connect to RServer. Can't proceed"; 
         } else {
-           cellHTS2AndRVersion+="cellHTS2 and R Version: "; 
+            // get R and cellHTS2 version and check if we are above the minimum version needs
+            Pattern p = Pattern.compile("([\\d\\.]+)\\s*\\(([\\d\\.]+)\\)");
+            Matcher m = p.matcher(cellHTS2AndRVersion);
+            if(m.find()) {
+                String rVer = m.group(1);
+                String cellHTS2Ver = m.group(2);
+                float rVerFloat=0.0f;
+                float rVerFloatDep=0.1f;
+                try {
+                    rVerFloat = Float.parseFloat(rVer);
+                    rVerFloatDep = Float.parseFloat(msg.get("required-R-version"));
+                }
+                catch(NumberFormatException e) {
+                    cellHTS2AndRVersion="R or cellHTS2 version can't be fetched. Maybe can't connect to RServer. Can't proceed";
+                    returnJSON.put("CELLHTS2VERSION","5. "+cellHTS2AndRVersion);
+                    return returnJSON;
+                }
+               
+                String requiredCellHTS2Ver = msg.get("required-cellHTS2-version");
+                if(rVerFloat>=rVerFloatDep && cellHTS2Ver.equals(requiredCellHTS2Ver)) {
+                    cellHTS2AndRVersion="R or cellHTS2 version can't be fetched. Maybe can't connect to RServer. Can't proceed";
+                }
+                else {
+                    cellHTS2AndRVersion="Fetched R and cellHTS2 version "+cellHTS2AndRVersion+" do not match the required Versions "+rVerFloatDep++". Maybe can't connect to RServer. Can't proceed";
+
+                }
+                
+            }
+            else {
+                cellHTS2AndRVersion="R or cellHTS2 version can't be fetched. Maybe can't connect to RServer. Can't proceed";
+            }
+
+
         }
-        returnJSON.put("CELLHTS2VERSION",cellHTS2AndRVersion);
+        returnJSON.put("CELLHTS2VERSION","5. "+cellHTS2AndRVersion);
         return returnJSON;
 
     }
@@ -156,12 +207,45 @@ public class DependenciesChecker {
 
 
      public void afterRender(MarkupWriter writer){
-        pageRenderSupport.addScript("checkAll('%s','%s','%s')",checkAllLink, B_PARAMNAME,F_PARAMNAME);
-
+        if(!allDependenciesAreMet) {
+            pageRenderSupport.addScript("checkAll('%s','%s','%s','%s','%s','dependencyChecker')",checkAllLink, successSentLink, B_PARAMNAME,F_PARAMNAME,enableDIVOnSuccess);
+        }
     }
+
+    @OnEvent(value = "successSent")
+    public JSONObject  successReceiver() {
+        if(!request.isXHR()) {
+            String ajaxMessage="1. Testing if your ISP proxy supports AJAX failed, Can't proceed. Please check your Proxy settings. Can't proceed";
+            //what happens?
+            throw new TapestryException(ajaxMessage,null);
+        }
+    //send out an tapestry event that we are done and successfully checked everything    
+       //triggerSuccessEvent();
+     
+        allDependenciesAreMet=true;
+        JSONObject returnJSON = new JSONObject();
+        returnJSON.put("dummy","dummy");
+       return returnJSON;
+    }
+
+     public void triggerSuccessEvent() {
+        //trigger an event that everything has been converted successfully and
+        //parameters are the converted files
+        ComponentEventCallback callback = new ComponentEventCallback() {
+            public boolean handleResult(Object result) {
+                return true;
+            }
+        };
+        componentResources.triggerEvent(SUCCESSEVENTNAME, new Object[]{}, callback);
+    }
+
 
     public String checkAndCreateUploadDirectory() {
             String uploadPath = msg.get("upload-path");
+            if(!uploadPath.endsWith(File.pathSeparator)) {
+                uploadPath+=File.pathSeparator;
+            }
+
             File uploadPathObj = new File(uploadPath);
             if(!uploadPathObj.exists()) {
                 if(!uploadPathObj.mkdirs()) {
@@ -193,8 +277,12 @@ public class DependenciesChecker {
              return "Cannot read or write directory: "+uploadPath+".\nCheck read/write permissions. Can't proceed";
         }
     public String getRVersion() {
-        RInterface rInterface = new RInterface();
-        return rInterface.getCellHTS2Version();
+        //THIS is sessionstate do this only once ...we dont want to do this in the layout again
+        if (!cellHTS2VersionExists) {
+                RInterface rInterface = new RInterface();
+                cellHTS2Version  = rInterface.getCellHTS2Version();
+         }
+        return cellHTS2Version;
     }
 
     public String getB_PARAMNAME() {
@@ -227,5 +315,13 @@ public class DependenciesChecker {
 
     public void setReloadPagelink(String reloadPagelink) {
         this.reloadPagelink = reloadPagelink;
+    }
+
+    public boolean isAllDependenciesAreMet() {
+        return allDependenciesAreMet;
+    }
+
+    public void setAllDependenciesAreMet(boolean allDependenciesAreMet) {
+        this.allDependenciesAreMet = allDependenciesAreMet;
     }
 }

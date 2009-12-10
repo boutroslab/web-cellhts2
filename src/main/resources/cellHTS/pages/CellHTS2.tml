@@ -24,6 +24,12 @@
     </head>
 
     <body onload="initJSCellHTS();">
+        
+
+       <t:dependenciesChecker  t:id="dependenciesChecker" enableDIVOnSuccess="cellHTS2DIV"/>
+
+
+       <div id="cellHTS2DIV">
 <!--this anchor will be used to jump to the top everytime-->
         <a href="#TOPJUMP"></a>         
 
@@ -357,7 +363,7 @@
                                 </td>
                                 <td>Plate effects are corrected by dividing each measurement by the median value across
                                     wells
-                                    annotated as 'sample' in
+                                    annotated as 'sample' in. <a href="#median" rel="median" class="lbOn">Help</a>
                                 </td>
                                 <td width="50px" align="right">
                                     <t:radio t:id="normalMedian"
@@ -376,7 +382,7 @@
                                 <td>for each plate and replicate, the midpoint of the 'shorth' of the distribution of
                                     values
                                     in
-                                    the wells annotated as 'sample' is calculated
+                                    the wells annotated as 'sample' is calculated. <a href="#shorth" rel="shorth" class="lbOn">Help</a>
                                 </td>
                                 <td width="50px" align="right">
                                     <t:radio t:id="normalShort"
@@ -389,7 +395,7 @@
                                 <td>
                                     <strong>Mean:</strong>
                                 </td>
-                                <td>the average in the 'sample' wells is considered</td>
+                                <td>the average in the 'sample' wells is considered. <a href="#mean" rel="mean" class="lbOn">Help</a></td>
                                 <td width="50px" align="right">
                                     <t:radio t:id="normalMean"
                                              t:mixins="ck/OnEvent"
@@ -405,7 +411,7 @@
                                 </td>
                                 <td>for each plate and replicate, each measurement is divided by the median of the
                                     measurements
-                                    on the plate negative controls.
+                                    on the plate negative controls. <a href="#negatives" rel="negatives" class="lbOn">Help</a>
                                 </td>
                                 <td width="50px" align="right">
                                     <t:radio t:id="normalNegatives"
@@ -421,7 +427,7 @@
                                 </td>
 
                                 <td>for each plate and replicate, each measurement is divided by the average of the
-                                    measurements on the plate positive controls, and multiplied by 100
+                                    measurements on the plate positive controls, and multiplied by 100. <a href="#poc" rel="poc" class="lbOn">Help</a>
                                 </td>
                                 <td width="50px" align="right">
                                     <t:radio t:id="normalPOC"
@@ -438,7 +444,7 @@
                                 <td>each measurement is subtracted from the average of the intensities on the plate
                                     positive
                                     controls, and this result is divided by the difference between the means of the
-                                    measurements on the positive and the negative controls.
+                                    measurements on the positive and the negative controls. <a href="#npi" rel="npi" class="lbOn">Help</a>
                                 </td>
                                 <td width="50px" align="right">
                                     <t:radio t:id="normalNPI"
@@ -455,7 +461,7 @@
                                 </td>
                                 <td>for each plate and replicate, the 'B score method' (based on a 2-way median polish)
                                     is
-                                    applied to remove plate effects and row and column biases.
+                                    applied to remove plate effects and row and column biases.<a href="#bscore" rel="bscore" class="lbOn">Help</a>
                                 </td>
                                 <td width="50px" align="right">
                                     <t:radio t:id="normalBScore"
@@ -472,7 +478,7 @@
 
                                 <td>for each plate and replicate, spatial effects are removed by fitting a bivariate
                                     local
-                                    regression (see 'spatial normalization function').
+                                    regression (see 'spatial normalization function'). <a href="#lfr" rel="lfr" class="lbOn">Help</a>
                                 </td>
                                 <td width="50px" align="right">
                                     <t:radio t:id="normalLocfit"
@@ -492,7 +498,7 @@
                                 </td>
                                 <td>for each plate and replicate, spatial effects are removed by fitting a loess curve
                                     (see
-                                    'spatial normalization function').
+                                    'spatial normalization function'). <a href="#loess" rel="loess" class="lbOn">Help</a>
                                 </td>
                                 <td width="50px" align="right">
                                     <t:radio t:id="normalLoess"
@@ -962,7 +968,109 @@
                 </script>
             </t:if>
         </t:if>
+       </div>
 
+
+        <!---the help bullets-->
+        <div id="median" class="leightbox">
+            <h1>Median</h1>
+            <p><b>Description:</b></p>
+            <p> Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec aliquet. Donec sit amet elit at nisl commodo pellentesque. Proin vel odio. Proin vitae mi eu libero consequat rhoncus. Pellentesque aliquam varius purus. Etiam ac mauris sit amet purus facilisis dapibus. Nulla tellus. In aliquam sem. Duis nisi velit, scelerisque egestas, feugiat id, suscipit et, mi. Vestibulum id erat eu enim nonummy fringilla.</p>
+            <p><b>Under which condition this should be applied:</b></p>
+            <p> Etiam fermentum. Aenean aliquam erat sit amet ante eleifend consequat. Pellentesque aliquam eros eu sapien. Donec urna leo, sagittis ut, semper at, tristique eget, risus. Vivamus et dui egestas elit pulvinar facilisis. Maecenas arcu ligula, sollicitudin at, dictum vitae, vestibulum in, enim. Morbi luctus risus ut ante. Ut id lorem facilisis felis vehicula eleifend. Aliquam erat volutpat. Ut at arcu. Integer elementum congue nibh. In eros est, sollicitudin at, tempus ut, mollis vel, nisl. Nulla nisl risus, varius vitae, suscipit ut, sodales a, risus. Quisque sit amet dui viverra nunc tincidunt vehicula. Pellentesque vitae ipsum vel justo euismod blandit. Nullam molestie ligula quis sem eleifend rhoncus. </p>
+
+            <p class="footy">
+            <a href="#" class="lbAction" rel="deactivate">Close</a>
+            </p>
+        </div>
+        <div id="shorth" class="leightbox">
+            <h1>Shorth</h1>
+            <p><b>Description:</b></p>
+            <p> Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec aliquet. Donec sit amet elit at nisl commodo pellentesque. Proin vel odio. Proin vitae mi eu libero consequat rhoncus. Pellentesque aliquam varius purus. Etiam ac mauris sit amet purus facilisis dapibus. Nulla tellus. In aliquam sem. Duis nisi velit, scelerisque egestas, feugiat id, suscipit et, mi. Vestibulum id erat eu enim nonummy fringilla.</p>
+            <p><b>Under which condition this should be applied:</b></p>
+            <p> Etiam fermentum. Aenean aliquam erat sit amet ante eleifend consequat. Pellentesque aliquam eros eu sapien. Donec urna leo, sagittis ut, semper at, tristique eget, risus. Vivamus et dui egestas elit pulvinar facilisis. Maecenas arcu ligula, sollicitudin at, dictum vitae, vestibulum in, enim. Morbi luctus risus ut ante. Ut id lorem facilisis felis vehicula eleifend. Aliquam erat volutpat. Ut at arcu. Integer elementum congue nibh. In eros est, sollicitudin at, tempus ut, mollis vel, nisl. Nulla nisl risus, varius vitae, suscipit ut, sodales a, risus. Quisque sit amet dui viverra nunc tincidunt vehicula. Pellentesque vitae ipsum vel justo euismod blandit. Nullam molestie ligula quis sem eleifend rhoncus. </p>
+
+            <p class="footy">
+            <a href="#" class="lbAction" rel="deactivate">Close</a>
+            </p>
+        </div>
+        <div id="mean" class="leightbox">
+            <h1>Mean</h1>
+            <p><b>Description:</b></p>
+            <p> Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec aliquet. Donec sit amet elit at nisl commodo pellentesque. Proin vel odio. Proin vitae mi eu libero consequat rhoncus. Pellentesque aliquam varius purus. Etiam ac mauris sit amet purus facilisis dapibus. Nulla tellus. In aliquam sem. Duis nisi velit, scelerisque egestas, feugiat id, suscipit et, mi. Vestibulum id erat eu enim nonummy fringilla.</p>
+            <p><b>Under which condition this should be applied:</b></p>
+            <p> Etiam fermentum. Aenean aliquam erat sit amet ante eleifend consequat. Pellentesque aliquam eros eu sapien. Donec urna leo, sagittis ut, semper at, tristique eget, risus. Vivamus et dui egestas elit pulvinar facilisis. Maecenas arcu ligula, sollicitudin at, dictum vitae, vestibulum in, enim. Morbi luctus risus ut ante. Ut id lorem facilisis felis vehicula eleifend. Aliquam erat volutpat. Ut at arcu. Integer elementum congue nibh. In eros est, sollicitudin at, tempus ut, mollis vel, nisl. Nulla nisl risus, varius vitae, suscipit ut, sodales a, risus. Quisque sit amet dui viverra nunc tincidunt vehicula. Pellentesque vitae ipsum vel justo euismod blandit. Nullam molestie ligula quis sem eleifend rhoncus. </p>
+
+            <p class="footy">
+            <a href="#" class="lbAction" rel="deactivate">Close</a>
+            </p>
+        </div>
+        <div id="negatives" class="leightbox">
+            <h1>Negatives</h1>
+            <p><b>Description:</b></p>
+            <p> Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec aliquet. Donec sit amet elit at nisl commodo pellentesque. Proin vel odio. Proin vitae mi eu libero consequat rhoncus. Pellentesque aliquam varius purus. Etiam ac mauris sit amet purus facilisis dapibus. Nulla tellus. In aliquam sem. Duis nisi velit, scelerisque egestas, feugiat id, suscipit et, mi. Vestibulum id erat eu enim nonummy fringilla.</p>
+            <p><b>Under which condition this should be applied:</b></p>
+            <p> Etiam fermentum. Aenean aliquam erat sit amet ante eleifend consequat. Pellentesque aliquam eros eu sapien. Donec urna leo, sagittis ut, semper at, tristique eget, risus. Vivamus et dui egestas elit pulvinar facilisis. Maecenas arcu ligula, sollicitudin at, dictum vitae, vestibulum in, enim. Morbi luctus risus ut ante. Ut id lorem facilisis felis vehicula eleifend. Aliquam erat volutpat. Ut at arcu. Integer elementum congue nibh. In eros est, sollicitudin at, tempus ut, mollis vel, nisl. Nulla nisl risus, varius vitae, suscipit ut, sodales a, risus. Quisque sit amet dui viverra nunc tincidunt vehicula. Pellentesque vitae ipsum vel justo euismod blandit. Nullam molestie ligula quis sem eleifend rhoncus. </p>
+
+            <p class="footy">
+            <a href="#" class="lbAction" rel="deactivate">Close</a>
+            </p>
+        </div>
+        <div id="poc" class="leightbox">
+            <h1>Percent of Control</h1>
+            <p><b>Description:</b></p>
+            <p> Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec aliquet. Donec sit amet elit at nisl commodo pellentesque. Proin vel odio. Proin vitae mi eu libero consequat rhoncus. Pellentesque aliquam varius purus. Etiam ac mauris sit amet purus facilisis dapibus. Nulla tellus. In aliquam sem. Duis nisi velit, scelerisque egestas, feugiat id, suscipit et, mi. Vestibulum id erat eu enim nonummy fringilla.</p>
+            <p><b>Under which condition this should be applied:</b></p>
+            <p> Etiam fermentum. Aenean aliquam erat sit amet ante eleifend consequat. Pellentesque aliquam eros eu sapien. Donec urna leo, sagittis ut, semper at, tristique eget, risus. Vivamus et dui egestas elit pulvinar facilisis. Maecenas arcu ligula, sollicitudin at, dictum vitae, vestibulum in, enim. Morbi luctus risus ut ante. Ut id lorem facilisis felis vehicula eleifend. Aliquam erat volutpat. Ut at arcu. Integer elementum congue nibh. In eros est, sollicitudin at, tempus ut, mollis vel, nisl. Nulla nisl risus, varius vitae, suscipit ut, sodales a, risus. Quisque sit amet dui viverra nunc tincidunt vehicula. Pellentesque vitae ipsum vel justo euismod blandit. Nullam molestie ligula quis sem eleifend rhoncus. </p>
+
+            <p class="footy">
+            <a href="#" class="lbAction" rel="deactivate">Close</a>
+            </p>
+        </div>
+        <div id="npi" class="leightbox">
+            <h1>Normalized Percent Inhibition</h1>
+            <p><b>Description:</b></p>
+            <p> Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec aliquet. Donec sit amet elit at nisl commodo pellentesque. Proin vel odio. Proin vitae mi eu libero consequat rhoncus. Pellentesque aliquam varius purus. Etiam ac mauris sit amet purus facilisis dapibus. Nulla tellus. In aliquam sem. Duis nisi velit, scelerisque egestas, feugiat id, suscipit et, mi. Vestibulum id erat eu enim nonummy fringilla.</p>
+            <p><b>Under which condition this should be applied:</b></p>
+            <p> Etiam fermentum. Aenean aliquam erat sit amet ante eleifend consequat. Pellentesque aliquam eros eu sapien. Donec urna leo, sagittis ut, semper at, tristique eget, risus. Vivamus et dui egestas elit pulvinar facilisis. Maecenas arcu ligula, sollicitudin at, dictum vitae, vestibulum in, enim. Morbi luctus risus ut ante. Ut id lorem facilisis felis vehicula eleifend. Aliquam erat volutpat. Ut at arcu. Integer elementum congue nibh. In eros est, sollicitudin at, tempus ut, mollis vel, nisl. Nulla nisl risus, varius vitae, suscipit ut, sodales a, risus. Quisque sit amet dui viverra nunc tincidunt vehicula. Pellentesque vitae ipsum vel justo euismod blandit. Nullam molestie ligula quis sem eleifend rhoncus. </p>
+
+            <p class="footy">
+            <a href="#" class="lbAction" rel="deactivate">Close</a>
+            </p>
+        </div>
+         <div id="bscore" class="leightbox">
+            <h1>B-Score</h1>
+            <p><b>Description:</b></p>
+            <p> Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec aliquet. Donec sit amet elit at nisl commodo pellentesque. Proin vel odio. Proin vitae mi eu libero consequat rhoncus. Pellentesque aliquam varius purus. Etiam ac mauris sit amet purus facilisis dapibus. Nulla tellus. In aliquam sem. Duis nisi velit, scelerisque egestas, feugiat id, suscipit et, mi. Vestibulum id erat eu enim nonummy fringilla.</p>
+            <p><b>Under which condition this should be applied:</b></p>
+            <p> Etiam fermentum. Aenean aliquam erat sit amet ante eleifend consequat. Pellentesque aliquam eros eu sapien. Donec urna leo, sagittis ut, semper at, tristique eget, risus. Vivamus et dui egestas elit pulvinar facilisis. Maecenas arcu ligula, sollicitudin at, dictum vitae, vestibulum in, enim. Morbi luctus risus ut ante. Ut id lorem facilisis felis vehicula eleifend. Aliquam erat volutpat. Ut at arcu. Integer elementum congue nibh. In eros est, sollicitudin at, tempus ut, mollis vel, nisl. Nulla nisl risus, varius vitae, suscipit ut, sodales a, risus. Quisque sit amet dui viverra nunc tincidunt vehicula. Pellentesque vitae ipsum vel justo euismod blandit. Nullam molestie ligula quis sem eleifend rhoncus. </p>
+
+            <p class="footy">
+            <a href="#" class="lbAction" rel="deactivate">Close</a>
+            </p>
+        </div>
+         <div id="lfr" class="leightbox">
+            <h1>Robust Local Fit Regression</h1>
+            <p><b>Description:</b></p>
+            <p> Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec aliquet. Donec sit amet elit at nisl commodo pellentesque. Proin vel odio. Proin vitae mi eu libero consequat rhoncus. Pellentesque aliquam varius purus. Etiam ac mauris sit amet purus facilisis dapibus. Nulla tellus. In aliquam sem. Duis nisi velit, scelerisque egestas, feugiat id, suscipit et, mi. Vestibulum id erat eu enim nonummy fringilla.</p>
+            <p><b>Under which condition this should be applied:</b></p>
+            <p> Etiam fermentum. Aenean aliquam erat sit amet ante eleifend consequat. Pellentesque aliquam eros eu sapien. Donec urna leo, sagittis ut, semper at, tristique eget, risus. Vivamus et dui egestas elit pulvinar facilisis. Maecenas arcu ligula, sollicitudin at, dictum vitae, vestibulum in, enim. Morbi luctus risus ut ante. Ut id lorem facilisis felis vehicula eleifend. Aliquam erat volutpat. Ut at arcu. Integer elementum congue nibh. In eros est, sollicitudin at, tempus ut, mollis vel, nisl. Nulla nisl risus, varius vitae, suscipit ut, sodales a, risus. Quisque sit amet dui viverra nunc tincidunt vehicula. Pellentesque vitae ipsum vel justo euismod blandit. Nullam molestie ligula quis sem eleifend rhoncus. </p>
+
+            <p class="footy">
+            <a href="#" class="lbAction" rel="deactivate">Close</a>
+            </p>
+        </div>
+        <div id="loess" class="leightbox">
+            <h1>Loess Regression</h1>
+            <p><b>Description:</b></p>
+            <p> Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec aliquet. Donec sit amet elit at nisl commodo pellentesque. Proin vel odio. Proin vitae mi eu libero consequat rhoncus. Pellentesque aliquam varius purus. Etiam ac mauris sit amet purus facilisis dapibus. Nulla tellus. In aliquam sem. Duis nisi velit, scelerisque egestas, feugiat id, suscipit et, mi. Vestibulum id erat eu enim nonummy fringilla.</p>
+            <p><b>Under which condition this should be applied:</b></p>
+            <p> Etiam fermentum. Aenean aliquam erat sit amet ante eleifend consequat. Pellentesque aliquam eros eu sapien. Donec urna leo, sagittis ut, semper at, tristique eget, risus. Vivamus et dui egestas elit pulvinar facilisis. Maecenas arcu ligula, sollicitudin at, dictum vitae, vestibulum in, enim. Morbi luctus risus ut ante. Ut id lorem facilisis felis vehicula eleifend. Aliquam erat volutpat. Ut at arcu. Integer elementum congue nibh. In eros est, sollicitudin at, tempus ut, mollis vel, nisl. Nulla nisl risus, varius vitae, suscipit ut, sodales a, risus. Quisque sit amet dui viverra nunc tincidunt vehicula. Pellentesque vitae ipsum vel justo euismod blandit. Nullam molestie ligula quis sem eleifend rhoncus. </p>
+
+            <p class="footy">
+            <a href="#" class="lbAction" rel="deactivate">Close</a>
+            </p>
+        </div>
     </body>
     <script type="text/javascript">
         <!-- //

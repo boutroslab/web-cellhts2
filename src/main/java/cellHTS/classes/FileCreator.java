@@ -764,7 +764,7 @@ public class FileCreator {
                             if (hasDualChannel) {
                                 plateRepAddition += "_1";
                             }
-                            String newFilename = outputFile.getParent() + "/" + plateName + plateRepAddition + "-" + outputFile.getName();
+                            String newFilename = outputFile.getParent() + File.pathSeparator + plateName + plateRepAddition + "-" + outputFile.getName();
                             allNewMultiOutputFiles.add(newFilename);
                             outfilesForInfile.put(plateName, new BufferedWriter(new FileWriter(newFilename)));
                         }
@@ -795,7 +795,7 @@ public class FileCreator {
                             String newFilename = id + "_" + outputFile.getName();
                             String path = outputFile.getParent();
 
-                            newFilename = path + "/" + newFilename;
+                            newFilename = path + File.pathSeparator + newFilename;
                             //store this for later-->submission
                             allNewMultiOutputFiles.add(newFilename);
                             outfilesForInfile.put(id, new BufferedWriter(new FileWriter(newFilename)));
