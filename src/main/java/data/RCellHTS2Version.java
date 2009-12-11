@@ -26,9 +26,6 @@ public class RCellHTS2Version {
         this.versionCellHTS2Version = versionCellHTS2Version;
         this.cellHTS2Version = cellHTS2Version;
     }
-
-    
-
     public String getBuildCellHTS2Version() {
         return buildCellHTS2Version;
     }

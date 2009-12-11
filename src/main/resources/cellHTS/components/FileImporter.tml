@@ -36,22 +36,6 @@
 
             <!--now show the config opportunity for plate data files-->
             <t:form t:id="bigForm1" t:context="prop:uniqueID">
-
-
-                        <!--cannot figure out how to use loops with objects-->
-                        <!--<t:loop t:source="selectedColumns" t:value="selectedColumn">-->
-						<!--<tr>-->
-							<!--<th id="tcon">${selectedColumn.columnName}</th>-->
-							<!--<td align="center" width="160px">-->
-                                <!--<t:select  t:value="selectedColumn.mappedToColumn" model="plateDataModel"-->
-                                 <!--t:blankOption="always"-->
-                                 <!--t:blankLabel="please select"-->
-                                <!--/>-->
-<!---->
-							<!--</td>-->
-						<!--</tr>-->
-                        <!--</t:loop>-->
-
                     <t:grid t:source="selectedColumns" t:row="selectedColumn" t:include="columnName,mappedToColumn">
                          <p:columnamecell>
                             ${selectedColumn.columnName}
@@ -64,7 +48,6 @@
                                 />
                         </p:mappedToColumncell>
                     </t:grid>
-
                 <t:if test="moreThanOne">
                     Add further columns: 
                         <t:select t:id="multipleChangeSelect" model="plateDataModel"
@@ -74,19 +57,15 @@
                                      onCompleteCallback="onCompleteSelectChangeEvent"
                                      event="change"
                                     />
-                    <div id="showSelectedCols"/>
-                   <br/>
-
+                    <div id="showSelectedCols"/>   
                 </t:if>
-                 <t:if test="errorFound">
+                <t:if test="errorFound">
                     <font color="red">${errorMsg}</font>
                 </t:if>
                 <input t:type="submit" value="create files"/>
-            </t:form>
-        </div>
-        <br/>
 
-        <br/>
+            </t:form>
+        </div>         
     </body>
     <script type="text/javascript">
         <!-- //

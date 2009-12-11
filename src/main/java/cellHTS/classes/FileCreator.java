@@ -750,25 +750,26 @@ public class FileCreator {
                 // plateNumString->Datafil->outputfile buffer writer index
 
                 //single file will be mapped to single outputfile
-                BufferedWriter singleBufferedWriter = null;
+                //BufferedWriter singleBufferedWriter = null;
                 if (!multiRepOrChannel) {
 
                     //if we do only have one unique plate per outputfile
-                    if (plateNames.size() < 2) {
-                        singleBufferedWriter = new BufferedWriter(new FileWriter(outputFile));
-                    } else {
+                    //if (plateNames.size() < 2) {
+                    //    singleBufferedWriter = new BufferedWriter(new FileWriter(outputFile));
+                    //} else {
                         //if we have more than one plate per outputfile  ...generate multiple buffered outputstreams
                         for (String plateName : plateNames) {
+                            int plateN = plateNameToNum.get(plateName);
                             //get the unique plateNumber
                             String plateRepAddition = "_1";
                             if (hasDualChannel) {
                                 plateRepAddition += "_1";
                             }
-                            String newFilename = outputFile.getParent() + File.pathSeparator + plateName + plateRepAddition + "-" + outputFile.getName();
+                            String newFilename = outputFile.getParent() + File.separator + plateN + plateRepAddition + "-" + outputFile.getName();
                             allNewMultiOutputFiles.add(newFilename);
                             outfilesForInfile.put(plateName, new BufferedWriter(new FileWriter(newFilename)));
                         }
-                    }
+                   // }
                 }  //multi channel files
                 else {
                     //get all the columns which contain multichannel data
@@ -795,7 +796,7 @@ public class FileCreator {
                             String newFilename = id + "_" + outputFile.getName();
                             String path = outputFile.getParent();
 
-                            newFilename = path + File.pathSeparator + newFilename;
+                            newFilename = path + File.separator + newFilename;
                             //store this for later-->submission
                             allNewMultiOutputFiles.add(newFilename);
                             outfilesForInfile.put(id, new BufferedWriter(new FileWriter(newFilename)));
@@ -819,23 +820,37 @@ public class FileCreator {
                 }
 
                 while ((line = buffer.readLine()) != null) {
+                    //empty lines
+                    if(line.length()==0) {
+                        continue;
+                    }
                     String[] cols = line.split("\t");
+                    //empty lines
+                    if(cols.length<1) {
+                        continue;
+                    }
                     String outline = "";
 
-                    String plateName = cols[colNameToID.get("Plate") - 1];
-                    String well = cols[colNameToID.get("Well") - 1];
+                    String plateName;
+                    String well;
+                    try {
+                        plateName = cols[colNameToID.get("Plate") - 1];
+                        well = cols[colNameToID.get("Well") - 1];
+                    }catch(ArrayIndexOutOfBoundsException e)  {
+                        continue;
+                    }
 
                     //this is a correct data line
                     outline = plateName + "\t" + well;
                     //if single data files just write
                     if (!multiRepOrChannel) {
-                        if (plateNames.size() < 2) {
-                            singleBufferedWriter.write(outline + "\t" + cols[colNameToID.get("Value") - 1] + "\n");
-                        } else {
+                        //if (plateNames.size() < 2) {
+                        //    singleBufferedWriter.write(outline + "\t" + cols[colNameToID.get("Value") - 1] + "\n");
+                        //} else {
                             int plateNum = plateNameToNum.get(plateName);
                             BufferedWriter writer = outfilesForInfile.get(plateName);
                             writer.write(outline + "\t" + cols[colNameToID.get("Value") - 1] + "\n");
-                        }
+                        //}
                     }
                     //Multichannel data
                     else {
@@ -865,7 +880,7 @@ public class FileCreator {
                 buffer.close();
                 if (!multiRepOrChannel && outfilesForInfile.size() < 1) {
 
-                    singleBufferedWriter.close();
+                    //singleBufferedWriter.close();
 
                 } else {
                     for (String id : outfilesForInfile.keySet()) {

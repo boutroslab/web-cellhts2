@@ -263,9 +263,19 @@ public class DependenciesChecker {
     }
 
     public String checkAndCreateUploadDirectory() {
-            String uploadPath = msg.get("upload-path");
-            if(!uploadPath.endsWith(File.pathSeparator)) {
-                uploadPath+=File.pathSeparator;
+            String uploadPath;
+            if(System.getProperty("upload-path")!=null) {
+
+                //get from command line
+                uploadPath=System.getProperty("upload-path");
+            }
+            else {
+                //else get from properties file
+                uploadPath=msg.get("upload-path");
+            }        
+
+            if(!uploadPath.endsWith(File.separator)) {
+                uploadPath=uploadPath+File.separator;
             }
 
             File uploadPathObj = new File(uploadPath);
@@ -282,7 +292,7 @@ public class DependenciesChecker {
 
                     tmpFile.createNewFile();
                     if(tmpFile.canWrite()) {
-                        tmpFile.delete();
+                        //tmpFile.delete();
                         return "Reading/Writing in temp folder: "+uploadPath+" succeeded!";
                     }
 

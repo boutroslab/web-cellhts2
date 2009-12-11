@@ -68,7 +68,8 @@ public class ExportCSV {
         if (!init) {
             System.out.println("we init!");
             init = true;
-            //fileType = "excel";
+            //this will be the please chose label:
+            fileType = null;
             csvDelimter = "\\t";
             SUCCESSEVENTNAME = "successfullyConvertedToCVS";
             FAILEVENTNAME= "failedConvertedToCVS";

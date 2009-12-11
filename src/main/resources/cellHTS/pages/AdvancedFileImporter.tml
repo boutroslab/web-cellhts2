@@ -101,6 +101,7 @@
 
             </t:if>
         <!--</t:if>  -->
+        <br/>
         <t:actionlink t:id="goBackwebCellHTS2">import generated files to web cellHTS2</t:actionlink>
     </body>
     <script type="text/javascript">

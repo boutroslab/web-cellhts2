@@ -79,8 +79,6 @@ public class AdvancedFileImporter {
     @Persist
     private ArrayList<Plate> clickedWellsAndPlates;
     @Persist
-    private ArrayList<File> processedDatafiles;
-    @Persist
     private Integer wellCol;
     @Persist
     private Integer plateCol;
@@ -152,7 +150,6 @@ public class AdvancedFileImporter {
             replicateNumbers=1;
             datafileImporterMsg="";
             plateConfigFileImporterMsg="";
-            processedDatafiles=new ArrayList<File>();
             plateNameToNum = new LinkedHashMap<String,Integer>();
             wellCol=null;
             plateCol=null;
@@ -193,11 +190,14 @@ public class AdvancedFileImporter {
         plateWellDefined=false;
         datafileImporterMsg="";
         plateConfigFileImporterMsg="";
-        processedDatafiles=null;
         plateNameToNum.clear();
         wellCol=null;
         plateCol=null;
         clickedWellsAndPlates.clear();
+        containsHeadline=true;
+        containsMultiChannelData=false;
+        replicateNumbers=1;
+        
 
     }
 
@@ -234,7 +234,7 @@ public class AdvancedFileImporter {
      public void initDatafileHeaders() {
         //build a new datastructure which maps
         // "repXchannelY"  to  a datafile structure
-        LinkedHashMap<String,DataFile> repChannelMap = generateHeadersReplicateChannel();
+        repChannelMap = generateHeadersReplicateChannel();
         initHeadsToFind();
         System.out.println("size:"+repChannelMap.size());
         //this is caused if we dont have multichannel experiments
@@ -289,6 +289,10 @@ public class AdvancedFileImporter {
     public void onSuccessfullySetupColumnsFromDatafileImporter(Object[]objs) {
         //get the column num for headline header
         LinkedHashMap<String,Integer> returnMap = eventObjToColumnNamesAndNums(objs);
+        for(String dbg : returnMap.keySet()) {
+            System.out.println(dbg);
+        }
+        
         if(returnMap.containsKey("Plate")&&returnMap.containsKey("Well")) {
             plateWellDefined=true;
             plateCol=returnMap.get("Plate");
@@ -298,7 +302,7 @@ public class AdvancedFileImporter {
             plateWellDefined=false;
         }
         //now generate the data files if everything was defined           //for singlechannel              //for multichannel
-        if(returnMap.containsKey("Plate")&&returnMap.containsKey("Well")&&(returnMap.containsKey("Value")||returnMap.size()>2)) {
+        if((returnMap.containsKey("Plate")&&returnMap.containsKey("Well")&&(returnMap.containsKey("Value"))||returnMap.size()>2)) {
            ArrayList<File> inputFiles= new ArrayList<File>();
         //these are the outputfiles from the cvs export function
             for(String tempFile : filesToImport) {
@@ -343,19 +347,19 @@ public class AdvancedFileImporter {
            }
             else {
                 datafileImporterMsg="general IO error occured. Please check your files";
-                processedDatafiles=null;
+
            }
 
         }
         else {
             datafileImporterMsg="";
-            processedDatafiles=null;
+
         }
 
     }
     //this will be fired from the plateConfigImporter component
     public void onSuccessfullySetupColumnsFromPlateConfigImporter(Object[]objs) {
-        if(processedDatafiles==null||plateCol==null||wellCol==null) {
+        if(plateCol==null||wellCol==null) {
             return;
         }
 
@@ -381,8 +385,8 @@ public class AdvancedFileImporter {
             //add the plate zero to it
             clickedWellsAndPlates.add(0,new Plate(0, 0, 0));
 
-            File plateConfFile= new File(uploadPath+File.pathSeparator+"PlateConfig.txt");
-            File screenLogFile = new File(uploadPath+File.pathSeparator+"Screenlog.txt");
+            File plateConfFile= new File(uploadPath+File.separator+"PlateConfig.txt");
+            File screenLogFile = new File(uploadPath+File.separator+"Screenlog.txt");
 
             if(FileCreator.createPlateconfigFromCVSMultiFiles(inputFiles,
                                     plateConfFile,
@@ -415,7 +419,7 @@ public class AdvancedFileImporter {
     }
     //this will be fired from the annotation component fired successfully set up
     public void onSuccessfullySetupColumnsFromAnnotationImporter(Object[]objs) {
-        if(processedDatafiles==null||plateCol==null||wellCol==null) {
+        if(plateCol==null||wellCol==null) {
             return;
         }
 
@@ -444,7 +448,7 @@ public class AdvancedFileImporter {
             for(String addColsString : additionalColsArr) {
                  additionalCols.add(Integer.parseInt(addColsString));
             }
-            File annotationOutFile= new File(uploadPath+File.pathSeparator+"Annotation.txt");
+            File annotationOutFile= new File(uploadPath+File.separator+"Annotation.txt");
             
 
             if(FileCreator.blablaXXX(inputFiles,
