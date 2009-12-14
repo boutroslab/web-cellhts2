@@ -707,6 +707,9 @@ public class FileCreator {
             multiRepOrChannel = true;
         }
 
+        Pattern wellPat = Pattern.compile("^\\w\\d{2}",Pattern.CASE_INSENSITIVE);
+        Pattern valuePat = Pattern.compile("^-*[.\\d]+",Pattern.CASE_INSENSITIVE);
+
 
         //plate names to generated plate nums
 
@@ -821,8 +824,7 @@ public class FileCreator {
                     //forward one line if we got headlines in first line
                     buffer.readLine();
                 }
-                Pattern wellPat = Pattern.compile("^\\w\\d{2}");
-                Pattern valuePat = Pattern.compile("^-*[.\\d]+");
+
                 while ((line = buffer.readLine()) != null) {
                     //empty lines
                     if(line.length()==0) {
@@ -840,11 +842,7 @@ public class FileCreator {
                                                                         colNameToID.get("Well") - 1}))  {
                         continue;
                     }
-                     //now check if the well and value column are valid ones
-                    if(!wellPat.matcher(cols[colNameToID.get("Well")-1]).matches()
-                            ||!valuePat.matcher(cols[colNameToID.get("Value")-1]).matches()) {
-                         return false;
-                    }
+                    
 
                     String plateName;
                     String well;
@@ -853,6 +851,10 @@ public class FileCreator {
                         well = cols[colNameToID.get("Well") - 1];
                     }catch(ArrayIndexOutOfBoundsException e)  {
                         continue;
+                    }
+                    //check if well is valid
+                    if(!wellPat.matcher(cols[colNameToID.get("Well")-1]).matches()) {
+                        return false;
                     }
 
                     //this is a correct data line
@@ -865,6 +867,11 @@ public class FileCreator {
                             int plateNum = plateNameToNum.get(plateName);
                             BufferedWriter writer = outfilesForInfile.get(plateName);
                         try{
+                            //check if the value is valid
+                           if(!valuePat.matcher(cols[colNameToID.get("Value")-1]).matches() ) {
+                               return false;
+                           }
+
                             writer.write(outline + "\t" + cols[colNameToID.get("Value") - 1] + "\n");
                            }catch(ArrayIndexOutOfBoundsException e) {
 
@@ -988,6 +995,8 @@ public class FileCreator {
             }
         }
 
+        Pattern wellAnnoPat = Pattern.compile("pos|neg|sample|other|empty|cont1|flagged|contaminated|cont",Pattern.CASE_INSENSITIVE);
+        Pattern flagPat = Pattern.compile("flagged|cont1|contaminated",Pattern.CASE_INSENSITIVE);
 
         for (File file : inputFiles) {
 
@@ -1001,7 +1010,7 @@ public class FileCreator {
                     buffer.readLine();
                 }
 
-
+        
                 while ((line = buffer.readLine()) != null) {
                     if(line.length()==0) {
                         continue;
@@ -1021,6 +1030,15 @@ public class FileCreator {
                     Integer plate = plateNameToNum.get(plateName);
                     String well = cols[colNameToID.get("Well") - 1];
                     String wellAnno = cols[colNameToID.get("WellAnno") - 1];
+                    //check if the wellAnno is valid
+                    if(!wellAnnoPat.matcher(wellAnno).find()) {                         
+                        return false;
+                    }
+                    if(flagPat.matcher(wellAnno).find()) {
+                        //this is the real deal
+                        wellAnno="cont1";
+                    }
+
                     //if we only have one replicate
                     if (!containsMultiRep) {
                          String plateWellID = plate + "_1";

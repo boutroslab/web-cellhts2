@@ -72,8 +72,13 @@
 
         function onCompleteSelectChangeEvent(response) {                
             var selectedHeads  = response.selectHeader;
+
             if(selectedHeads!="") {
                 document.getElementById('showSelectedCols').innerHTML="selected columns:"+selectedHeads;
+            }
+            else {
+
+                document.getElementById('showSelectedCols').innerHTML="";                    
             }
         }
 

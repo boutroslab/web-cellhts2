@@ -357,7 +357,7 @@ public class FileImporter{
                 colsString+=","+moreThanOne;
             }
         }
-        System.out.println(colsString);
+       
         return new JSONObject().put("selectHeader",colsString);
     }
 

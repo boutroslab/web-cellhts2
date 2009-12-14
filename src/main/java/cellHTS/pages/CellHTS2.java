@@ -487,6 +487,10 @@ public class CellHTS2 {
                     initalizePlateNWellMap();
                    
                     currentPagePointer=3;
+                    if(!errorScreenlogFileMsg.equals(""))  {
+                        //dont show if no screenlog file data was found
+                        errorScreenlogFileMsg="";
+                    }
                 }
 
                 //if we generated Annotation make a new annotation file
@@ -1365,7 +1369,7 @@ public class CellHTS2 {
 
              if(contaminatedData.size()<1) {
                 noErrorScreenlogFile = false;
-                errorScreenlogFileMsg = "Error: no entry found in Screenlogfile";
+                errorScreenlogFileMsg = "Warning: no entry found in Screenlogfile";
                 return;
              }
 

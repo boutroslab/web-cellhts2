@@ -344,7 +344,7 @@ public class AdvancedFileImporter {
 
            }
             else {
-                datafileImporterMsg="general IO error occured or you associated the value columns with a non-number column. Please check your files";
+                datafileImporterMsg="Association of well or value columns e.g. value column contains letters failed or general IO problem. Please check your files.";
 
            }
 
@@ -404,7 +404,7 @@ public class AdvancedFileImporter {
 
            }
             else {
-                plateConfigFileImporterMsg="general IO error occured. Please check your files";
+                plateConfigFileImporterMsg="Association of wellAnno failed (only pos,neg,sample,empty, other and contaminated are allowed) or general IO problem. Please check your files.";
             }
         }
         else {
@@ -512,9 +512,9 @@ public class AdvancedFileImporter {
        return false;
     }
 
-    public Object onActionFromGoBackwebCellHTS2() {
-        System.out.println("BAM: "+this.getClass().getName());
+    public Object onActionFromGoBackwebCellHTS2() {        
         cellHTS2.activatedFromOtherPage(this.getClass().getName());
+        cellHTS2.setErrorDatafileMsg("");
         return cellHTS2;
     }
 

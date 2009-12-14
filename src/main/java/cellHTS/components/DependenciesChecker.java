@@ -111,13 +111,16 @@ public class DependenciesChecker {
 
        
         //these are all three browser plus tested versions cellHTS2 was successfully run on
-            if(!(browser.equals("Firefox")||browser.equals("Explorer")||browser.equals("Safari"))) {
+            if(!(browser.equals("Firefox")||browser.equals("Mozilla")||browser.equals("Explorer")||browser.equals("Safari"))) {
                 browserVersionMessage="2. Your browser: "+browser+" is not supported by web CellHTS2. Can't proceed";
 
             }
 
             else if(browser.equals("Firefox") && version<3) {
                 browserVersionMessage="2. Your firefox version is too old (<3). Can't proceed.";
+            }
+            else if(browser.equals("Mozilla") && version<1.7) {
+                browserVersionMessage="2. Your Mozilla version is too old (<2). Can't proceed:"+version;
             }
             else if(browser.equals("Explorer") && version<8) {
              browserVersionMessage="2. Your Internet Explorer version is too old (<8). Can't proceed.";
