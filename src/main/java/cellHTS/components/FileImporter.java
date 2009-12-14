@@ -108,12 +108,16 @@ public class FileImporter{
             if(moreThanOne) {
                 moreThanOneCols=new TreeSet<Integer>();
             }
+           
 
             selectedColumns=new SelectedColumn[headsToFind.size()];
             int i=0;
             for(String headToFind : headsToFind) {
                 selectedColumns[i++]  = new SelectedColumn(headToFind);
              }
+            //to show nothing on reload 
+             multipleChangeSelect=null;
+
 
         }
        if(headerFields==null) {

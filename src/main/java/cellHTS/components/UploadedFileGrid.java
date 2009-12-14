@@ -95,10 +95,13 @@ public final class UploadedFileGrid {
     //this obj holds all the files manually annotated
     @Parameter(required = false)
     private HashSet<String> excludeFilesFromParsing;
+    @Parameter(required=true)
+    private boolean dualChannel;
 
     //this variable holds the name of the parameter sent from js to tapestry which we can access our JSON from request obj
     private final String PARAM_NAME ="fileParamUpdateInfo";
-
+    @Persist
+    private String exclude;
     
     /**
      *
@@ -152,7 +155,12 @@ public final class UploadedFileGrid {
             DataFile value = (DataFile) dataFileList.get(validFile);
             gridDataFileList.add(value);
         }
-
+        if(!dualChannel) {
+            exclude="channel";
+        }
+        else {
+            exclude="";
+        }
 
     }
 
@@ -276,5 +284,13 @@ public final class UploadedFileGrid {
 
     public String getPARAM_NAME() {
         return PARAM_NAME;
+    }
+
+    public String getExclude() {
+        return exclude;
+    }
+
+    public void setExclude(String exclude) {
+        this.exclude = exclude;
     }
 }

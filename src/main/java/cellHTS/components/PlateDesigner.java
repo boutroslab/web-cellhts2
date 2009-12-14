@@ -338,6 +338,8 @@ public class PlateDesigner {
                 String wellID = (String) tempJSONObj.get("wellID");
                 String jsID = (String) tempJSONObj.get("plateNum");
 
+                System.out.println("component received this well:"+wellType+" "+wellID+" "+jsID);
+
                 if (wellType==null || wellType.equals("")) {
                         System.out.println("error occured");
                         System.exit(1);
@@ -359,13 +361,13 @@ public class PlateDesigner {
                 //now lets see if we already have information in the well before clicking it (again)
                 //otherwise we are sample
                 String oldWellType = getWellTypeForJsPlate(jsIDNum,wellID);
-                
+                System.out.println("old well type: "+oldWellType);
 
                 //now we have lots of different rules...........
 
                 //first select the type for the clicked well depending on what was before and what we are and if we are a single element or clicked a whole row/column 
                 wellType = selectNewWellType(jsIDNum,oldWellType,wellType,wellID,arrLength);
-
+                System.out.println("new well type: "+wellType);
 
                 //now set the well new in real :-)
                 setWellForJsPlate(jsIDNum,wellID,wellType);
@@ -377,7 +379,7 @@ public class PlateDesigner {
                         memorizeOldWells.get(jsIDNum).put(wellID,oldWellType);
                     }
                 }
-
+                System.out.println("jsIDNum:"+jsIDNum);
 
                 //first plate is the all plate
                 if (jsIDNum == 0) {
@@ -471,6 +473,8 @@ public class PlateDesigner {
                     resources.triggerEvent(SELECTED_EVENT, new Object[]{runVariable}, callback);
         }
 
+        //printAllPlatesAndWells();
+        
         //rebuild json and return it
         return HashMapToJSONArr();
     }

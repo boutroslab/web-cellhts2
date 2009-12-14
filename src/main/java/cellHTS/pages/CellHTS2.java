@@ -504,6 +504,8 @@ public class CellHTS2 {
                     loadAnnotationFile(annotationFileFromAdvancedFileImporter);
                     annotationFileFromAdvancedFileImporter=null;
 
+                    //dont show message Error no screen log file
+                   //dont show message error no well could be parsed
                     currentPagePointer=5;
                 }
 
@@ -692,14 +694,13 @@ public class CellHTS2 {
         //(step3) we can only carry on if at least one positive well was selected in the all plate
         else if (currentPagePointer == 3) {
             errorNextLink = true;
-            nextLinkErrorMsg = "Error: please define at least one well position at all";
+            nextLinkErrorMsg = "Error: please define at least one positive or negative well position at all";
 
             posWellAmount = getWellTypeAmountOfAllPlates("pos");
             negWellAmount = getWellTypeAmountOfAllPlates("neg");
             //these is only temporary we dont need the information later
-            Integer otherWellAmount = getWellAmountOfAllPlates();
-
-            if(otherWellAmount >0) {
+            Integer posNegWellAmount = getPosNegWellAmountOfAllPlates();
+            if(posNegWellAmount >0) {
                errorNextLink = false;
                resetErrorMsgs();
                 
@@ -1242,7 +1243,7 @@ public class CellHTS2 {
 
             if(tempParseResult.size()==0) {
                 result[0]="false";
-                result[1]="Error: cannot find Plate Config file entry at all";
+                result[1]="Error: cannot find pos/neg Plate Config file entry at all";
             }
 
             //add them to sampleWellMap (the first plate)  and all the other plates
@@ -3008,7 +3009,7 @@ public class CellHTS2 {
      *
      * @return amount of setted wells
      */
-    public int getWellAmountOfAllPlates() {
+    public int getPosNegWellAmountOfAllPlates() {
         int returnCnt=0;
         for(int i=0; i < clickedWellsAndPlates.size(); i++) {
             HashMap<String,String> wellsArray =clickedWellsAndPlates.get(i).getWellsArray();
@@ -3017,8 +3018,9 @@ public class CellHTS2 {
                 String wellID = (String)wellIterator.next();
                 String thisWellType = wellsArray.get(wellID);
                 if(thisWellType !=null&& wellID!=null) {
-                    if(!thisWellType.equals("empty")) {
+                    if(thisWellType.equals("pos")||thisWellType.equals("neg")) {
                         returnCnt++;
+                     //   System.out.println("this is the result:"+returnCnt+":"+wellID+" "+thisWellType+" plate "+i);
                     }
 
                  }

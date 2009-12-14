@@ -34,6 +34,7 @@
             <div id="dataFileGrid">
                 <t:grid source="gridDataFileList"                         
                         pagerPosition="bottom"
+                        exclude="prop:exclude"
                         t:mixins="GridEditor"
                         divElement="literal:dataFileGrid"
                         gridDataStructureModifyLink="gridDataStructureModifyLink"

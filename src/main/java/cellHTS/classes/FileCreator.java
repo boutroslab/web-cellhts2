@@ -652,6 +652,9 @@ public class FileCreator {
 
 
                 while ((line = buffer.readLine()) != null) {
+                    if(line.length()==0) {
+                        continue;
+                    }
                     String[] cols = line.split("\t");
                     String outline = "";
                     for (Integer colID : tempColNums) {
@@ -818,18 +821,30 @@ public class FileCreator {
                     //forward one line if we got headlines in first line
                     buffer.readLine();
                 }
-
+                Pattern wellPat = Pattern.compile("^\\w\\d{2}");
+                Pattern valuePat = Pattern.compile("^-*[.\\d]+");
                 while ((line = buffer.readLine()) != null) {
                     //empty lines
                     if(line.length()==0) {
                         continue;
                     }
+
                     String[] cols = line.split("\t");
                     //empty lines
                     if(cols.length<1) {
                         continue;
                     }
+
                     String outline = "";
+                     if(!checkIfAllColumnsAreAvailable(cols,new Integer[]{colNameToID.get("Plate") - 1,
+                                                                        colNameToID.get("Well") - 1}))  {
+                        continue;
+                    }
+                     //now check if the well and value column are valid ones
+                    if(!wellPat.matcher(cols[colNameToID.get("Well")-1]).matches()
+                            ||!valuePat.matcher(cols[colNameToID.get("Value")-1]).matches()) {
+                         return false;
+                    }
 
                     String plateName;
                     String well;
@@ -849,7 +864,11 @@ public class FileCreator {
                         //} else {
                             int plateNum = plateNameToNum.get(plateName);
                             BufferedWriter writer = outfilesForInfile.get(plateName);
+                        try{
                             writer.write(outline + "\t" + cols[colNameToID.get("Value") - 1] + "\n");
+                           }catch(ArrayIndexOutOfBoundsException e) {
+
+                           }
                         //}
                     }
                     //Multichannel data
@@ -868,7 +887,13 @@ public class FileCreator {
                                 String id = plateNum + "_" + rep + "_" + cha;
 
                                 BufferedWriter writer = outfilesForInfile.get(id);
-                                writer.write(outline + "\t" + cols[multiChannelCol] + "\n");
+                                try{
+                                    String tmpString =cols[multiChannelCol-1];
+                                    writer.write(outline + "\t" + tmpString + "\n");
+                                }catch(ArrayIndexOutOfBoundsException e) {
+
+                                }
+
                             }
                         }
 
@@ -908,15 +933,6 @@ public class FileCreator {
         return true;
     }
 
-    /* public static boolean createPlateConfigFromCVSMultiFiles(ArrayList<File> inputFiles,
-                                                      HashMap<File,Integer> fileToPlateNum,
-                                                      HashMap<File,Integer> fileToReplicateNum,
-                                                      int wellColNum,
-                                                      int wellAnnoColNum, //this is the number (not array index) of the wellAnno column
-                                                      ArrayList<Plate> clickedWellsAndPlates,
-                                                      boolean containsHeadline,
-                                                      int plateFormat
-                                                                ) {*/
 
 
     public static boolean createPlateconfigFromCVSMultiFiles(ArrayList<File> inputFiles,
@@ -958,7 +974,7 @@ public class FileCreator {
                         repNumToColID.put(rep, colNameToID.get(colName));
                     }
                 }
-            }
+            }                
         }
 
         TreeMap<String, Plate> plates = new TreeMap<String, Plate>();
@@ -987,8 +1003,18 @@ public class FileCreator {
 
 
                 while ((line = buffer.readLine()) != null) {
+                    if(line.length()==0) {
+                        continue;
+                    }
                     String[] cols = line.split("\t");
                     Integer id = colNameToID.get("Plate") - 1;
+                    if(!checkIfAllColumnsAreAvailable(cols,new Integer[]{id,
+                                                                        colNameToID.get("Well") - 1,
+                                                                        colNameToID.get("WellAnno") - 1}))  {
+                        continue;
+                    }
+
+
 
                     String plateName = cols[id];
 
@@ -1009,9 +1035,12 @@ public class FileCreator {
 
                     } else {
                         for (Integer repNum : repNumToColID.keySet()) {
-
-                            String repValue = cols[repNum - 1];
-
+                            String repValue;
+                            try {
+                                repValue = cols[repNum - 1];
+                            } catch(ArrayIndexOutOfBoundsException e) {
+                                continue;
+                            }
 
                             Integer replicateNum = 0;
                             try {
@@ -1050,6 +1079,8 @@ public class FileCreator {
         for (String plateID : plates.keySet()) {
             clickedWellsAndPlates.add(plates.get(plateID));
         }
+        //for debugging only
+        //printAllPlatesAndWells(clickedWellsAndPlates);
         if(createPlateConfigFile(plateConfOutfile.getAbsolutePath(),screenlogOutfile.getAbsolutePath(), clickedWellsAndPlates, plateFormat, true)) {
             return true;
         }
@@ -1058,7 +1089,31 @@ public class FileCreator {
 
 
     }
-    public static boolean blablaXXX(ArrayList<File>  inputFiles,
+     /**
+     *
+     *  this is for debugging only
+     *
+     */
+    public static void printAllPlatesAndWells(ArrayList<Plate> clickedWellsAndPlates) {           
+        for(int i=0; i < clickedWellsAndPlates.size(); i++) {
+            HashMap<String,String> wellsArray =clickedWellsAndPlates.get(i).getWellsArray();
+            Integer jsID = clickedWellsAndPlates.get(i).getJavaScriptID();
+            Integer plateNumber = clickedWellsAndPlates.get(i).getPlateNum();
+            Integer repliNum = clickedWellsAndPlates.get(i).getReplicateNum();
+            System.out.print("Array element:"+i+" jsID: "+jsID+" plateNumber: "+plateNumber+" repliNum: "+repliNum);
+            Iterator wellIterator = wellsArray.keySet().iterator();
+            while(wellIterator.hasNext()) {
+                String wellID = (String)wellIterator.next();
+                String thisWellType = wellsArray.get(wellID);
+                System.out.print(" wellID: "+wellID+" thisWellType: "+thisWellType);
+            }
+            System.out.println();
+
+        }
+
+    }
+
+    public static boolean createAnnotFileFromCVSMultiFiles(ArrayList<File>  inputFiles,
                                  File annotationOutFile,
                                  int plateCol,
                                  int wellCol,
@@ -1111,14 +1166,25 @@ public class FileCreator {
 
 
                 while ((line = buffer.readLine()) != null) {
+                    if(line.length()==0) {
+                        continue;
+                    }
+
                     String[] cols = line.split("\t");
+                    if(!checkIfAllColumnsAreAvailable(cols,new Integer[]{plateCol-1,wellCol-1,geneIDCol-1}))  {
+                        continue;
+                    }
                     String plate = cols[plateCol - 1];
                     String well = cols[wellCol -1];
                     String geneID = cols[geneIDCol - 1];
 
                     String outputString=plate+"\t"+well+"\t"+geneID;
                     for(Integer colID : additionalCols) {
-                        outputString+="\t"+cols[colID-1] ;
+                        try {
+                            outputString+="\t"+cols[colID-1] ;
+                        }catch(ArrayIndexOutOfBoundsException e) {
+                            continue;
+                        }
                     }
                     writer.write(outputString+"\n");
                     
@@ -1176,7 +1242,13 @@ public class FileCreator {
                 }
 
                 while ((line = buffer.readLine()) != null) {
+                    if(line.length()==0) {
+                        continue;
+                    }
                     String[] cols = line.split("\t");
+                    if(!checkIfAllColumnsAreAvailable(cols,new Integer[]{wellColNum - 1,wellAnnoColNum - 1}))  {
+                        continue;
+                    }
                     String wellCol = cols[wellColNum - 1];
                     String wellAnno = cols[wellAnnoColNum - 1];
                     wellMap.put(wellCol, wellAnno);
@@ -1249,13 +1321,19 @@ public class FileCreator {
 
 
             String line;
-
             while ((line = buffer.readLine()) != null) {
+                if(line.length()==0) {
+                        continue;
+                    }
+
                 String[] cols = line.split("\t");
-
+                if(!checkIfAllColumnsAreAvailable(cols,new Integer[]{rowNumber}))  {
+                    continue;
+                }                
                 String field = cols[rowNumber];   //the columns are index based
-
                 returnArr.add(field);
+
+
             }
             buffer.close();
             reader.close();
@@ -1264,5 +1342,16 @@ public class FileCreator {
             return null;
         }
         return returnArr;
+    }
+    public static boolean checkIfAllColumnsAreAvailable(String []col,Integer[] list) {
+          for(Integer listItem : list) {
+              try{
+                  String dummy = col[listItem];
+              }
+              catch(ArrayIndexOutOfBoundsException e) {
+                  return false;
+              }
+          }
+        return true;
     }
 }

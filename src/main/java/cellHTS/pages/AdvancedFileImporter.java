@@ -78,13 +78,6 @@ public class AdvancedFileImporter {
     private LinkedHashMap<String,DataFile> repChannelMap;
     @Persist
     private ArrayList<Plate> clickedWellsAndPlates;
-    @Persist
-    private Integer wellCol;
-    @Persist
-    private Integer plateCol;
-    
-  
-
 
     @InjectComponent
     private ExportCSV exportCSV;
@@ -114,6 +107,8 @@ public class AdvancedFileImporter {
     private int plateFormat;
     @InjectComponent
     private MultipleFileUploader multipleUploadOne;
+    @Persist
+    private LinkedHashMap<String,Integer> plateDatafileColMap;
 
     public void setupRender() {
         if(!init) {
@@ -141,7 +136,7 @@ public class AdvancedFileImporter {
             headsToFindFurtherAnnotationfile.add("choose further cols");
             repChannelMap= new LinkedHashMap<String,DataFile>(); 
 
-
+            plateDatafileColMap= new LinkedHashMap<String,Integer>();
             startFileImport=false;
             convertedAllFiles=false;
 
@@ -150,11 +145,14 @@ public class AdvancedFileImporter {
             replicateNumbers=1;
             datafileImporterMsg="";
             plateConfigFileImporterMsg="";
+            annotationfileImporterMsg="";
             plateNameToNum = new LinkedHashMap<String,Integer>();
-            wellCol=null;
-            plateCol=null;
             clickedWellsAndPlates=new ArrayList<Plate>();
             multipleUploadOne.setInit(false);
+            dataFileImporter.setInit(false);
+            plateConfigImporter.setInit(false);
+            annotationImporter.setInit(false);
+            exportCSV.setInit(false);
         }
     }
           //this is for testing only
@@ -191,13 +189,11 @@ public class AdvancedFileImporter {
         datafileImporterMsg="";
         plateConfigFileImporterMsg="";
         plateNameToNum.clear();
-        wellCol=null;
-        plateCol=null;
         clickedWellsAndPlates.clear();
         containsHeadline=true;
         containsMultiChannelData=false;
         replicateNumbers=1;
-        
+        plateDatafileColMap.clear();
 
     }
 
@@ -289,21 +285,23 @@ public class AdvancedFileImporter {
     public void onSuccessfullySetupColumnsFromDatafileImporter(Object[]objs) {
         //get the column num for headline header
         LinkedHashMap<String,Integer> returnMap = eventObjToColumnNamesAndNums(objs);
+
         for(String dbg : returnMap.keySet()) {
             System.out.println(dbg);
         }
         
         if(returnMap.containsKey("Plate")&&returnMap.containsKey("Well")) {
             plateWellDefined=true;
-            plateCol=returnMap.get("Plate");
-            wellCol=returnMap.get("Well");
+
         }
         else {
             plateWellDefined=false;
         }
         //now generate the data files if everything was defined           //for singlechannel              //for multichannel
         if((returnMap.containsKey("Plate")&&returnMap.containsKey("Well")&&(returnMap.containsKey("Value"))||returnMap.size()>2)) {
-           ArrayList<File> inputFiles= new ArrayList<File>();
+            plateDatafileColMap.clear();
+            plateDatafileColMap.putAll(returnMap);
+            ArrayList<File> inputFiles= new ArrayList<File>();
         //these are the outputfiles from the cvs export function
             for(String tempFile : filesToImport) {
                 inputFiles.add(new File(tempFile));
@@ -346,7 +344,7 @@ public class AdvancedFileImporter {
 
            }
             else {
-                datafileImporterMsg="general IO error occured. Please check your files";
+                datafileImporterMsg="general IO error occured or you associated the value columns with a non-number column. Please check your files";
 
            }
 
@@ -359,16 +357,13 @@ public class AdvancedFileImporter {
     }
     //this will be fired from the plateConfigImporter component
     public void onSuccessfullySetupColumnsFromPlateConfigImporter(Object[]objs) {
-        if(plateCol==null||wellCol==null) {
+        if(plateDatafileColMap.get("Plate")==null || plateDatafileColMap.get("Well")==null) {
             return;
         }
-
         LinkedHashMap<String,Integer> returnMap = eventObjToColumnNamesAndNums(objs);
-        returnMap.put("Plate",plateCol);
-        returnMap.put("Well",wellCol);
+        returnMap.putAll(plateDatafileColMap);
+
         if(returnMap.containsKey("WellAnno")) {
-
-
             ArrayList<File> inputFiles= new ArrayList<File>();
 
         //these are the outputfiles from the cvs export function
@@ -419,13 +414,13 @@ public class AdvancedFileImporter {
     }
     //this will be fired from the annotation component fired successfully set up
     public void onSuccessfullySetupColumnsFromAnnotationImporter(Object[]objs) {
-        if(plateCol==null||wellCol==null) {
+         if(plateDatafileColMap.get("Plate")==null || plateDatafileColMap.get("Well")==null) {
             return;
         }
 
+
         LinkedHashMap<String,Integer> returnMap = eventObjToColumnNamesAndNums(objs);
-        returnMap.put("Plate",plateCol);
-        returnMap.put("Well",wellCol);
+        returnMap.putAll(plateDatafileColMap);
         if(returnMap.containsKey("GeneID")) {
 
 
@@ -446,12 +441,18 @@ public class AdvancedFileImporter {
             String[]additionalColsArr = addColString.split(",");
 
             for(String addColsString : additionalColsArr) {
-                 additionalCols.add(Integer.parseInt(addColsString));
+                Integer intObj;
+                try{
+                 intObj = Integer.parseInt(addColsString);
+                }catch(NumberFormatException e) {
+                    continue;
+                }
+                 additionalCols.add(intObj);
             }
             File annotationOutFile= new File(uploadPath+File.separator+"Annotation.txt");
             
 
-            if(FileCreator.blablaXXX(inputFiles,
+            if(FileCreator.createAnnotFileFromCVSMultiFiles(inputFiles,
                                      annotationOutFile,
                                      returnMap.get("Plate"),
                                       returnMap.get("Well"),

@@ -19,9 +19,12 @@
   -->
 <t:layout xmlns:t="http://tapestry.apache.org/schema/tapestry_5_0_0.xsd">
     <head>
-        <title>cellHTS2 Debug Page</title>
+        <title>cellHTS2 Advanced File Upload Page</title>
 
     </head>
+    A manual can be found <a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/AdvancedFileImporterManual">here</a>.
+    A quickstart guide  <a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/AdvancedFileImporterQuickstartGuide">here</a>.
+    A set of example files to upload <a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/download/attachments/5570583/advancedFileImporterDemo.zip">here</a> (Please use extracted files only).<br/>
     <body onLoad="initPage()">
         <div t:type="ck/Tooltip" clientId="tooltip0"
                  value="You can upload multiple files by holding down mouse button or using Shift+arrow key"
@@ -73,7 +76,7 @@
 
                 <t:if test="plateWellDefined">
 
-                    Please select if your files contain Plate Config data
+                    Please select if your files contain Plate Config / Screenlog data
                     <br/>
                     <t:FileImporter t:id="plateConfigImporter" filesToProcess="filesToImport"
                                     headsToFind="headsToFindPlateconfigfile" showHeadline="literal:false"
