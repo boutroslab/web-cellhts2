@@ -27,7 +27,7 @@
     A set of example files to upload <a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/download/attachments/5570583/advancedFileImporterDemo.zip">here</a> (Please use extracted files only).<br/>
     <body onLoad="initPage()">
         <div t:type="ck/Tooltip" clientId="tooltip0"
-                 value="You can upload multiple files by holding down mouse button or using Shift+arrow key"
+                 value="If flash >V.7 is enabled multiple files can be uploaded by holding down mouse button or using Shift+arrow key"
                  effect="appear">
         <div t:type="signaling/MultiplefileUploader" t:id="multipleUploadOne" t:uploadPath="uploadPath"/>
         </div>
@@ -67,21 +67,26 @@
             <t:if test="convertedAllFiles">
 
 
-
+                <div t:type="ck/Tooltip" clientId="tooltip2"
+                 value="The well column must be of standard well format, e.g.: A01, D15. The actual signal value column must be positive or negative floating point numbers."
+                 effect="appear">
                 <t:FileImporter t:id="datafileImporter" filesToProcess="filesToImport" headsToFind="headsToFindDatafile"
                                 showHeadline="literal:true" compareHeader="literal:false"/>
                
                 <font color="red">${datafileImporterMsg}</font>
                 <br/>
-
-                <t:if test="plateWellDefined">
+                </div>
+                <t:if test="dataFileCreated">
 
                     Please select if your files contain Plate Config / Screenlog data
                     <br/>
+                    <div t:type="ck/Tooltip" clientId="tooltip2"
+                 value="valid column values here are pos, neg, sample, empty, other, cont1, cont and contaminated." effect="appear">
                     <t:FileImporter t:id="plateConfigImporter" filesToProcess="filesToImport"
                                     headsToFind="headsToFindPlateconfigfile" showHeadline="literal:false"
                                     compareHeader="containsHeadline"/>
                     <font color="red">${plateConfigFileImporterMsg}</font>
+                    </div>
                     <br/>
 
 
@@ -105,7 +110,7 @@
             </t:if>
         <!--</t:if>  -->
         <br/>
-        <t:actionlink t:id="goBackwebCellHTS2">import generated files to web cellHTS2</t:actionlink>
+        <t:actionlink t:id="goBackwebCellHTS2">import generated files to web cellHTS2/ go back</t:actionlink>
     </body>
     <script type="text/javascript">
         <!-- //

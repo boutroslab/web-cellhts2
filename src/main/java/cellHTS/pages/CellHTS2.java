@@ -1824,7 +1824,8 @@ public class CellHTS2 {
 
     public Object onActionFromShowAdvancedFileImporter(){
        advancedFileImporter.setInit(false);
-       advancedFileImporter.setUploadPath(jobNameDir.getAbsolutePath());         
+       advancedFileImporter.setUploadPath(jobNameDir.getAbsolutePath());
+       advancedFileImporter.setContainsMultiChannelData(isDualChannel);
        return advancedFileImporter;
     }
 

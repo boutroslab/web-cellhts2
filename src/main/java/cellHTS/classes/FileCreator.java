@@ -896,6 +896,10 @@ public class FileCreator {
                                 BufferedWriter writer = outfilesForInfile.get(id);
                                 try{
                                     String tmpString =cols[multiChannelCol-1];
+                                     //check if the value is valid
+                                    if(!valuePat.matcher(tmpString).matches() ) {
+                                        return false;
+                                    }
                                     writer.write(outline + "\t" + tmpString + "\n");
                                 }catch(ArrayIndexOutOfBoundsException e) {
 
@@ -1143,26 +1147,30 @@ public class FileCreator {
         BufferedWriter writer = new BufferedWriter(fileWriter);
 
 
-        String headline =  "Plate\tWell\tGeneID";
-        
-        //get the header
-        String []headlineArr= new String[] {};
 
+
+        //get the firt line of the file
         FileReader tmpReader = new FileReader(inputFiles.get(0));
         BufferedReader tmpBuffer = new BufferedReader(tmpReader);
         String firstLine =tmpBuffer.readLine();
         tmpBuffer.close();
 
+        //get the header
+        String []headlineArr= new String[] {};
         if (containsHeadline) {
              //forward one line if we got headlines in first line
              headlineArr=firstLine.split("\t");
         }
         else {
-               int sizeHeader = firstLine.split("\t").length;
-               for(int i=0;i<sizeHeader;i++) {
-                   headlineArr[i]="unknown_header_"+i;
-               }
+              int sizeHeader = firstLine.split("\t").length;
+              headlineArr=new String[sizeHeader];
+              for(int i=0;i<sizeHeader;i++) {
+                  headlineArr[i]="unknown_header_"+(i+1);
+              }
          }
+         //build a headline for the output   
+         String headline =  "Plate\tWell\tGeneID";
+
          for(Integer addHeadID : additionalCols) {
              headline+="\t"+headlineArr[addHeadID-1];
          }

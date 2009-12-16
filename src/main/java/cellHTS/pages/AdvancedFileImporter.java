@@ -73,7 +73,7 @@ public class AdvancedFileImporter {
     @InjectPage
     private CellHTS2 cellHTS2;
     @Persist
-    private boolean plateWellDefined;
+    private boolean dataFileCreated;
     @Persist
     private LinkedHashMap<String,DataFile> repChannelMap;
     @Persist
@@ -125,7 +125,7 @@ public class AdvancedFileImporter {
             init=true;
             uploadedFiles = new ArrayList<String>();
             filesToImport = new ArrayList<String>();
-            plateWellDefined=false;
+            dataFileCreated=false;
             headsToFindDatafile= new  ArrayList<String>();
             initHeadsToFind();
             headsToFindPlateconfigfile = new ArrayList<String>();
@@ -141,7 +141,7 @@ public class AdvancedFileImporter {
             convertedAllFiles=false;
 
             containsHeadline=true;
-            containsMultiChannelData=false;
+            //containsMultiChannelData=false;
             replicateNumbers=1;
             datafileImporterMsg="";
             plateConfigFileImporterMsg="";
@@ -185,13 +185,13 @@ public class AdvancedFileImporter {
         dataFileImporter.setInit(false);
         plateConfigImporter.setInit(false);
         annotationImporter.setInit(false);
-        plateWellDefined=false;
+        dataFileCreated=false;
         datafileImporterMsg="";
         plateConfigFileImporterMsg="";
         plateNameToNum.clear();
         clickedWellsAndPlates.clear();
         containsHeadline=true;
-        containsMultiChannelData=false;
+       // containsMultiChannelData=false;
         replicateNumbers=1;
         plateDatafileColMap.clear();
 
@@ -215,7 +215,7 @@ public class AdvancedFileImporter {
         initDatafileHeaders();
 
         convertedAllFiles=true;
-        plateWellDefined=false;
+        dataFileCreated=false;
     }
     public void onFailedConvertedToCVSFromExportCSV(Object []dummy) {
        convertedAllFiles=false;
@@ -289,16 +289,8 @@ public class AdvancedFileImporter {
         for(String dbg : returnMap.keySet()) {
             System.out.println(dbg);
         }
-        
-        if(returnMap.containsKey("Plate")&&returnMap.containsKey("Well")) {
-            plateWellDefined=true;
-
-        }
-        else {
-            plateWellDefined=false;
-        }
         //now generate the data files if everything was defined           //for singlechannel              //for multichannel
-        if((returnMap.containsKey("Plate")&&returnMap.containsKey("Well")&&(returnMap.containsKey("Value"))||returnMap.size()>2)) {
+        if((returnMap.containsKey("Plate")&&returnMap.containsKey("Well")&&(returnMap.containsKey("Value"))||returnMap.size()==headsToFindDatafile.size())) {
             plateDatafileColMap.clear();
             plateDatafileColMap.putAll(returnMap);
             ArrayList<File> inputFiles= new ArrayList<File>();
@@ -322,6 +314,7 @@ public class AdvancedFileImporter {
                                                       returnMap,
                                                       plateNameToNum
                    )) {
+               dataFileCreated=true;
                datafileImporterMsg= "creation of "+outputFiles.size()+" datafiles succeeded";
                
                for(File outfile: outputFiles) {
@@ -333,7 +326,7 @@ public class AdvancedFileImporter {
                 plateFormat = FileParser.countNumberOfLinesForFile(outputFiles.get(0));
 
                 if(! (plateFormat==96|| plateFormat==384|| plateFormat==1536)) {
-                   datafileImporterMsg="plate format of uploaded file isnt valid: "+plateFormat;
+                   datafileImporterMsg="plate format of uploaded file isnt valid: "+plateFormat+" must be one of 96,384,1536";
                    return;
 
                 }
@@ -344,14 +337,14 @@ public class AdvancedFileImporter {
 
            }
             else {
-                datafileImporterMsg="Association of well or value columns e.g. value column contains letters failed or general IO problem. Please check your files.";
-
+                datafileImporterMsg="Association of well or value columns e.g. value column contains letters failed or general IO problem. Please check your selected columns/files.";
+                dataFileCreated=false;
            }
 
         }
         else {
             datafileImporterMsg="";
-
+            dataFileCreated=false;
         }
 
     }
@@ -659,12 +652,12 @@ public class AdvancedFileImporter {
         this.headsToFindFurtherAnnotationfile = headsToFindFurtherAnnotationfile;
     }
 
-    public boolean isPlateWellDefined() {
-        return plateWellDefined;
+    public boolean getDataFileCreated() {
+        return dataFileCreated;
     }
 
-    public void setPlateWellDefined(boolean plateWellDefined) {
-        this.plateWellDefined = plateWellDefined;
+    public void setDataFileCreated(boolean dataFileCreated) {
+        this.dataFileCreated = dataFileCreated;
     }
 
     public boolean isContainsMultiChannelData() {
