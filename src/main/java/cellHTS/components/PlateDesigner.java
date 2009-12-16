@@ -341,8 +341,8 @@ public class PlateDesigner {
                 System.out.println("component received this well:"+wellType+" "+wellID+" "+jsID);
 
                 if (wellType==null || wellType.equals("")) {
-                        System.out.println("error occured");
-                        System.exit(1);
+                        System.out.println("error occured in receiving welltype");
+                        wellType="sample";
                 }
 
                 int jsIDNum = Integer.parseInt(jsID);

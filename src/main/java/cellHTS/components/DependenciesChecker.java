@@ -118,10 +118,7 @@ public class DependenciesChecker {
 
             else if(browser.equals("Firefox") && version<3) {
                 browserVersionMessage="2. Your firefox version is too old (<3). Can't proceed.";
-            }
-            else if(browser.equals("Mozilla") && version<1.7) {
-                browserVersionMessage="2. Your Mozilla version is too old (<2). Can't proceed:"+version;
-            }
+            }             
             else if(browser.equals("Explorer") && version<8) {
              browserVersionMessage="2. Your Internet Explorer version is too old (<8). Can't proceed.";
             }

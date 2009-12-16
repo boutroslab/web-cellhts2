@@ -486,7 +486,7 @@ public class CellHTS2 {
                     FileParser.parseDataFilenameParams(dataFileList, excludeFilesFromParsing,fixRegExp);
                     initalizePlateNWellMap();
                    
-                    currentPagePointer=3;
+                    //currentPagePointer=3;
                     if(!errorScreenlogFileMsg.equals(""))  {
                         //dont show if no screenlog file data was found
                         errorScreenlogFileMsg="";
@@ -510,7 +510,7 @@ public class CellHTS2 {
 
                     //dont show message Error no screen log file
                    //dont show message error no well could be parsed
-                    currentPagePointer=5;
+                    //currentPagePointer=5;
                 }
 
 
@@ -3557,12 +3557,6 @@ public class CellHTS2 {
     public void setAnnotationFileFromAdvancedFileImporter(File annotationFileFromAdvancedFileImporter) {
         this.annotationFileFromAdvancedFileImporter = annotationFileFromAdvancedFileImporter;
     }
-
-    public void onClickWellEvent() {
-               System.exit(1);
-
-    }
-
     public Boolean getIsFlashValid() {
         return isFlashValid;
     }

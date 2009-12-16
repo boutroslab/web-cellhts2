@@ -779,11 +779,11 @@ public class FileCreator {
                 }  //multi channel files
                 else {
                     //get all the columns which contain multichannel data
-                    for (String colName : colNameToID.keySet()) {
-                        if (repChannelMap.containsKey(colName)) {
-                            colsContainMultiChannelData.put(colNameToID.get(colName), colName);
-                        }
-                    }
+//                    for (String colName : colNameToID.keySet()) {
+//                        if (repChannelMap.containsKey(colName)) {
+//                            colsContainMultiChannelData.put(colNameToID.get(colName), colName);
+//                        }
+//                    }
 
                     //generate outputwriter buffer streams for every plate,repl,channel combi
                     for (String plateName : plateNames) {
@@ -882,8 +882,10 @@ public class FileCreator {
                     else {
                         int plateNum = plateNameToNum.get(plateName);
                         //for all the columns in the file
-                        for (int multiChannelCol : colsContainMultiChannelData.keySet()) {
-                            String colName = colsContainMultiChannelData.get(multiChannelCol);
+                        //for (int multiChannelCol : colsContainMultiChannelData.keySet()) {
+                        for(String colName : repChannelMap.keySet()) {
+                            int multiChannelCol=colNameToID.get(colName);
+                            //String colName = colsContainMultiChannelData.get(multiChannelCol);
                             //if the column is one of the rep_X_channel_Y channels
 
                             if (repChannelMap.containsKey(colName)) {
