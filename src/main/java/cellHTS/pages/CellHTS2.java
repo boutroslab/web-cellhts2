@@ -58,9 +58,9 @@ import cellHTS.dao.Semaphore;
  * Time: 11:09:37
  * To change this template use File | Settings | File Templates.
  */
-@IncludeJavaScriptLibrary(value = {"${tapestry.scriptaculous}/prototype.js", "divEnabler.js","../components/browserDetect.js","leightbox.js"})
+@IncludeJavaScriptLibrary(value = {"${tapestry.scriptaculous}/prototype.js","divEnabler.js","../components/browserDetect.js","leightbox.js","cellHTS2.js"})
 public class CellHTS2 {
-
+     //wtf> 
     @Inject
     private ComponentResources resc;
     @Inject
