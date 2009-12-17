@@ -68,10 +68,10 @@ public class Layout {
                 String path = applicationGlobals.getServletContext().getRealPath(File.separator);
                 //this will actually start and end a rserver instance
 
-                RInterface rInterface = new RInterface();
-                String cellHTS2Version = rInterface.getCellHTS2Version();
-                String buildCellHTS2Version="";
-                String versionCellHTS2Version = "";
+
+
+                    String buildCellHTS2Version="";
+                    String versionCellHTS2Version = "";
 
                 try {
                     File manifestFile = new File(path, "META-INF/MANIFEST.MF");
@@ -84,15 +84,14 @@ public class Layout {
                     buildCellHTS2Version = atts.getValue("Implementation-Build");
                     versionCellHTS2Version = atts.getValue("Implementation-Version");
 
-
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
 
                 }
                 finally {
                    if(!rCellHTS2VersionExists)  {
+                        RInterface rInterface = new RInterface();
+                        String cellHTS2Version = rInterface.getCellHTS2Version();
                         rCellHTS2Version = new RCellHTS2Version(buildCellHTS2Version,versionCellHTS2Version,cellHTS2Version);
                     } 
                 }
