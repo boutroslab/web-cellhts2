@@ -993,7 +993,7 @@
                 alert("Your firefox version is too old (<3). Use this program at your own risk");
             }
             if(browser=="Explorer" && version<8) {
-             alert("Your Internet Explorer version is too old (<8). Use this program at your own risk");
+             alert("Your Internet Explorer version is too old (<8). This program cannot be used !! Please upgrade your browser");
             }
             if(browser=="Safari" && version <3) {
             alert("Your Safari version is too old (<3). Use this program at your own risk");
