@@ -464,7 +464,7 @@ of a Tapestry Maven plugin is not required.   -->
     <properties>
         <tapestry-release-version>5.1.0.5</tapestry-release-version>
         <!--<tapestry-release-version>5.0.18</tapestry-release-version>-->
-        <chenillekit-release-version>1.1.0</chenillekit-release-version>
+        <chenillekit-release-version>1.2.0</chenillekit-release-version>
     </properties>
     <!---->
     <!--where to deploy/upload the project onto which server-->
