@@ -1,5 +1,4 @@
-<t:layout xmlns:t="http://tapestry.apache.org/schema/tapestry_5_0_0.xsd">
-
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_0_0.xsd">
     <head>
            <title>cellHTS2 WebTool Download Page</title>
       </head>
@@ -7,6 +6,6 @@
     Thank you for using web cellHTS2. Click <t:actionlink t:id="goBackWebCellHTS2">here</t:actionlink> to go back to web cellHTS2.<br/>
     Click <t:actionlink t:id="downloadResults">here</t:actionlink> to download your results.
 </body>
-</t:layout>
+</html>
 
         

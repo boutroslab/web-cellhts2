@@ -58,9 +58,9 @@ import cellHTS.dao.Semaphore;
  * Time: 11:09:37
  * To change this template use File | Settings | File Templates.
  */
-@IncludeJavaScriptLibrary(value = {"${tapestry.scriptaculous}/prototype.js","divEnabler.js","../components/browserDetect.js","leightbox.js","cellHTS2.js"})
+@IncludeJavaScriptLibrary(value = {"${tapestry.scriptaculous}/prototype.js", "divEnabler.js","../components/browserDetect.js","leightbox.js"})
 public class CellHTS2 {
-     //wtf> 
+
     @Inject
     private ComponentResources resc;
     @Inject
@@ -237,6 +237,10 @@ public class CellHTS2 {
     //    private boolean showAllNext = false;
     @Persist
     private Map<String, String> descriptionMap;
+
+    //this time we use the component annotation instead of tml component
+    @Component
+    private Layout layout;
 
     @Persist
     private Experiment experiment;
@@ -2879,7 +2883,17 @@ public class CellHTS2 {
         datafilesFromAdvancedFileImporter=outputFiles;
     }
 
-    
+    public Layout getLayout
+            () {
+        return layout;
+    }
+
+    public void setLayout
+            (Layout
+                    layout) {
+        this.layout = layout;
+    }
+
     public Experiment getExperiment
             () {
         return experiment;

@@ -17,8 +17,7 @@
   ~
   ~
   -->
-<t:layout xmlns:t="http://tapestry.apache.org/schema/tapestry_5_0_0.xsd">
-
+<html t:id="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_0_0.xsd">
     <head>
            <title>cellHTS2 WebTool Download Page</title>
       </head>
@@ -49,4 +48,4 @@
 
         </t:if>
 </body>
-  </t:layout>
+    </html>

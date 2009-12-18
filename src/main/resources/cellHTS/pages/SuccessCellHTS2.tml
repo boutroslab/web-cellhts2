@@ -18,11 +18,10 @@
   ~
   -->
 
-<t:layout xmlns:t="http://tapestry.apache.org/schema/tapestry_5_0_0.xsd">
-
+<html t:type="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_0_0.xsd">
     <head>
         <title>CellHTS2 Results page</title>
     </head>
     <body>
     </body>    
-</t:layout>
+</html>

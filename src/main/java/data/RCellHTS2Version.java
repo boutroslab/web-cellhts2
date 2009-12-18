@@ -1,5 +1,6 @@
 package data;
 
+import org.apache.tapestry5.annotations.SessionState;
 import org.apache.tapestry5.annotations.Persist;
 
 /**
