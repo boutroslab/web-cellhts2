@@ -44,6 +44,11 @@ of where to look for pages, components and mixins. -->
         <param-value>cellHTS</param-value>
     </context-param>
 
+    <context-param>
+        <!-- we need to do the following because tapestry.js will otherwise be missing in some scripts -->
+        <param-name>tapestry.combine-scripts</param-name>
+        <param-value>false</param-value>
+    </context-param>
 
     <filter>
         <filter-name>app</filter-name>
