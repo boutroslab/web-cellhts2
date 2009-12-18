@@ -18,7 +18,9 @@
   ~
   -->
 
-<html t:id="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_0_0.xsd">
+
+<t:layout xmlns:t="http://tapestry.apache.org/schema/tapestry_5_0_0.xsd">
+
     <head>
         <title>web cellHTS2</title>
     </head>
@@ -981,4 +983,5 @@
     <noscript>
       <h1><FONT COLOR="red">Your browser does not support Javascript, cannot proceed!</FONT></h1>
     </noscript>
-</html>
+<!--</html>-->
+</t:layout>

@@ -18,7 +18,8 @@
   ~
   -->
 
-<html t:id="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_0_0.xsd">
+<t:layout xmlns:t="http://tapestry.apache.org/schema/tapestry_5_0_0.xsd">
+
     <head>
         <title>CellHTS2 Results page</title>
     </head>
@@ -49,4 +50,4 @@
         </tr>
         </table>
     </body>
-</html>    
+</t:layout>  

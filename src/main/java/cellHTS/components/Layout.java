@@ -20,8 +20,11 @@
 
 package cellHTS.components;
 
-import org.apache.tapestry5.annotations.*;
+
 import org.apache.tapestry5.MarkupWriter;
+import org.apache.tapestry5.annotations.Persist;
+import org.apache.tapestry5.annotations.SetupRender;
+import org.apache.tapestry5.annotations.SessionState;
 import org.apache.tapestry5.services.ApplicationGlobals;
 import org.apache.tapestry5.ioc.annotations.Inject;
 

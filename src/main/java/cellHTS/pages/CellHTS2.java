@@ -238,10 +238,6 @@ public class CellHTS2 {
     @Persist
     private Map<String, String> descriptionMap;
 
-    //this time we use the component annotation instead of tml component
-    @Component
-    private Layout layout;
-
     @Persist
     private Experiment experiment;
 
@@ -2883,17 +2879,7 @@ public class CellHTS2 {
         datafilesFromAdvancedFileImporter=outputFiles;
     }
 
-    public Layout getLayout
-            () {
-        return layout;
-    }
-
-    public void setLayout
-            (Layout
-                    layout) {
-        this.layout = layout;
-    }
-
+    
     public Experiment getExperiment
             () {
         return experiment;
