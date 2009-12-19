@@ -24,7 +24,5 @@
      <!--redirect the page to the cellhts2 startpage-->
       <meta HTTP-EQUIV="REFRESH" content="0; url=CellHTS2"/>
  </head>
-  <body>
-      
- </body>
+
 </html>

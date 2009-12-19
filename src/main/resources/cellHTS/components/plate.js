@@ -133,7 +133,7 @@ PlateDesigner.prototype = {
                 
                 //for every element
                 var element = cells[j];
-
+               //TODO: label classname
                 var wellName = element.id;
 
                 //now categorize and bind to appropriate event handlers regarding their name
@@ -306,11 +306,10 @@ PlateDesigner.prototype = {
 
         //IE8 has relatedTarget, Netscape fromElement
         var element = mouseEvent.target ? mouseEvent.target : mouseEvent.srcElement;
-        
-        //this is cool: if we click in the table element in the border we will get the HTMLTableCellElement which we want BUT
-        //if we click in the text in the middle we would get a HTMLFontElement which we dont want here!
-        
-        if(element instanceof HTMLFontElement) {
+
+        var classID = element.id;
+         var headingPatt = /well_[a-zA-Z]\d+$/;
+        if(!headingPatt.test(classID)) {
             //redirect to embedded element which will be the HTMLTableCellElement
             element = element.parentNode;
         }
