@@ -20,13 +20,6 @@
 
 package cellHTS.pages;
 
-import org.apache.tapestry5.annotations.Persist;
-import org.apache.tapestry5.annotations.InjectComponent;
-import org.apache.tapestry5.Block;
-import org.apache.tapestry5.ioc.annotations.Inject;
-
-import java.io.File;
-
 /**
  * Created by IntelliJ IDEA.
  * User: oliverpelz

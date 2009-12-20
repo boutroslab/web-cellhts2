@@ -1002,7 +1002,7 @@ public class FileCreator {
         }
 
         Pattern wellAnnoPat = Pattern.compile("pos|neg|sample|other|empty|cont1|flagged|contaminated|cont",Pattern.CASE_INSENSITIVE);
-        Pattern flagPat = Pattern.compile("flagged|cont1|contaminated",Pattern.CASE_INSENSITIVE);
+        Pattern flagPat = Pattern.compile("flagged|cont1|contaminated|cont",Pattern.CASE_INSENSITIVE);
 
         for (File file : inputFiles) {
 
