@@ -3098,6 +3098,11 @@ public class CellHTS2 {
     public String getEmailAddress() {
         return emailAddress;
     }
+
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
+    }
+
     public boolean getIsEmailMandantory() {
         return isEmailMandantory;
     }

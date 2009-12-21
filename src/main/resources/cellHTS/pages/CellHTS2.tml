@@ -364,8 +364,8 @@
                                 </td>
                                 <td>Plate effects are corrected by dividing each measurement by the median value across
                                     wells
-                                    annotated as 'sample' in. <a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/Median">Help</a>
-                                </td>
+                                    annotated as 'sample' in. <a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/Median+normalization">Help</a>
+                                </td>                                  
                                 <td width="50px" align="right">
                                     <t:radio t:id="normalMedian"
                                              t:mixins="ck/OnEvent"
@@ -383,7 +383,7 @@
                                 <td>for each plate and replicate, the midpoint of the 'shorth' of the distribution of
                                     values
                                     in
-                                    the wells annotated as 'sample' is calculated. <a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/Shorth" >Help</a>
+                                    the wells annotated as 'sample' is calculated. <a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/Shorth+normalization" >Help</a>
                                 </td>
                                 <td width="50px" align="right">
                                     <t:radio t:id="normalShort"
@@ -396,7 +396,7 @@
                                 <td>
                                     <strong>Mean:</strong>
                                 </td>
-                                <td>the average in the 'sample' wells is considered. <a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/Mean">Help</a></td>
+                                <td>the average in the 'sample' wells is considered. <a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/Mean+normalization">Help</a></td>
                                 <td width="50px" align="right">
                                     <t:radio t:id="normalMean"
                                              t:mixins="ck/OnEvent"

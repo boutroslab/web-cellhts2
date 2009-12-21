@@ -111,7 +111,7 @@ public class DependenciesChecker {
 
        
         //these are all three browser plus tested versions cellHTS2 was successfully run on
-            if(!(browser.equals("Firefox")||browser.equals("Mozilla")||browser.equals("Explorer")||browser.equals("Safari"))) {
+            if(!(browser.equals("Firefox")||browser.equals("Explorer")||browser.equals("Safari"))) {
                 browserVersionMessage="2. Your browser: "+browser+" is not supported by web CellHTS2. Can't proceed";
 
             }
