@@ -1,12 +1,13 @@
 
 function checkAll(checkAllCallbackLink, successCallbackLink, C_PARAMNAME,F_PARAMNAME,enableDIV,disableDIV) {
+    var majorVersion = 8;
+    var minorVersion = 0;
+    var revision = 0;
 
-   // alert(enableDIV);
-    //alert(browserVersionLink);
     //get browser name and version
     var browser = BrowserDetect.browser;
     var version = BrowserDetect.version;
-    var hasRightFlashVersion = DetectFlashVer(requiredMajorVersion, requiredMinorVersion, requiredRevision);
+    var hasRightFlashVersion = DetectFlashVer(majorVersion, minorVersion, revision);
      //lets display a wait msg until everything is fetched
      $('waitMsg').innerHTML="please wait while fetching dependencies...";
     //alert(browser);
