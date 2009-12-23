@@ -3524,7 +3524,23 @@ public class CellHTS2 {
     }
     
     public void checkAndCreateUploadDirectory() {
-        String uploadPath = msg.get("upload-path");
+        String uploadPath;
+        if(System.getProperty("upload-path")!=null) {
+
+                //get from command line
+                uploadPath=System.getProperty("upload-path");
+
+
+            }
+            else {
+                //else get from properties file
+                uploadPath=msg.get("upload-path");
+            }
+
+        if(!uploadPath.endsWith(File.separator)) {
+                    uploadPath=uploadPath+File.separator;
+            }
+
         File uploadPathObj = new File(uploadPath);
         if(!uploadPathObj.exists()) {
             if(!uploadPathObj.mkdirs()) {
