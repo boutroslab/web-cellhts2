@@ -97,9 +97,8 @@
                 The cellHTS2 package is an updated version of the cellHTS package,
                 offering a broader set of normalization functionality and the integration of multi-channel screens.
                 <br/>
-                <br/>
-                <br/>
-                <br/>
+
+
                 
 
                 <!--Please cite the following paper when using cellHTS2:-->
@@ -112,9 +111,7 @@
 
                 A set of example files can be downloaded from the online tutorial <a
                     href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/web+cellHTS2+quickstart+guide"
-                    target="_parent">here</a>.
-                <br/>
-                More sample files can be found in the latest cellHTS2 source package (in source folder: inst) <a
+                    target="_parent">here</a>. Additional sample files can also be found in the latest cellHTS2 source package (in source folder: inst) <a
                     href="http://www.bioconductor.org/packages/devel/bioc/html/cellHTS2.html" target="_parent">here</a>.
                 <br/>
 
@@ -143,8 +140,7 @@
             </div>
 
 
-            <b>Step 1:</b>
-            What type of of screen should be analysed?
+            <b>Step 1:</b> Select type of experiment
             <t:form t:id="channelTypes">
 
 
@@ -214,27 +210,27 @@
         </div>
         <div id="step2DIV" style="display:none">
             <!--<t:if t:test="${nextStep2}">-->
-            (Step 2) Please upload and assign your data files:
-            <br/>
-            (For more information click <a
+            <b>Step 2:</b> Upload and assign data files to channels and replicates (<a
                 href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/web+cellHTS2+Manual#webcellHTS2Manual-uploaddatafiles"
-                target="_blank">here</a>)
-            <p>You can upload csv raw plate result reader files, single text files in cellHTS2 format or ZIP files
-                containing multiple data files.
+                target="_blank">help</a>).
+            <br/>
+
+            <p>Data Files can be uploaded as raw plate reader, text files in cellHTS2 format or ZIP archives (recommended). Alternatively, the
+               Advanced FileImporter module can be used for more complex file types (<a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/AdvancedFileImporterManual">help</a>).                 
             </p>
-              <br/>
+              
                 <t:actionlink t:id="showAdvancedFileImporter">Advanced File Importer</t:actionlink>
               <br/>
-            <div t:type="ck/Tooltip" clientId="tooltip2"
-                 value="If the experiment has a lot of data files, it is best to pack them into a ZIP file and upload it."
-                 effect="appear">
+            <!--<div t:type="ck/Tooltip" clientId="tooltip2"-->
+                 <!--value="If the experiment has a lot of data files, it is best to pack them into a ZIP file and upload it."-->
+                 <!--effect="appear">t-->
                 <t:form t:id="dataFileUpload">
                     <input t:type="upload" t:id="dataFileUploadInput" validate="required" t:value="uploadedDataFile"/>
                 </t:form>
-            </div>
+            <!--</div>-->
             Filename Parsing:
             <input type="checkbox" t:type="ck/InPlaceCheckbox" context="literal:10" value="parseFileParams"
-                   onCompleteCallback="onCompleteFunction"/>
+                   onCompleteCallback="onCompleteOnEvent"/>
             <!--target element for the servers side results-->
             <!--if successful upload show grid component-->
 
@@ -938,16 +934,21 @@
         <br/>
         <br/>
         <!--this will be shown on every page-->
-        <table border="2">
+        <table border="3">
             <tr>
                 <td>
                     [
                     <t:actionlink t:id="backLink" disabled="backDisable">${backLinkName}</t:actionlink>
                     ]
                 </td>
+                <td>[
+                <t:actionlink t:id="restartCellHTS2Page">restart</t:actionlink>
+                    ]
+                </td>
                 <td>
                     [<t:actionlink t:id="nextLink" disabled="nextDisable">${nextLinkName}</t:actionlink>]
                 </td>
+
             </tr>
         </table>
         <a name="TOPJUMP"></a>

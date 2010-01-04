@@ -24,7 +24,9 @@
     </head>
     A manual can be found <a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/AdvancedFileImporterManual">here</a>.
     A quickstart guide  <a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/AdvancedFileImporterQuickstartGuide">here</a>.
-    A set of example files to upload <a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/download/attachments/5570583/advancedFileImporterDemo.zip">here</a> (Please use extracted files only).<br/>
+    A set of example files to upload <a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/download/attachments/5570583/advancedFileImporterDemo.zip">here</a> (Please use extracted files only).
+    <br/>
+    <br/>
     <body onLoad="initPage()">
         <div t:type="ck/Tooltip" clientId="tooltip0"
                  value="If flash >V.7 is enabled multiple files can be uploaded by holding down mouse button or using Shift+arrow key"
@@ -35,9 +37,9 @@
        <!-- <t:actionlink t:id="processFiles">Go on</t:actionlink> -->
 
         <!--<t:if test="startFileImport">    -->
-            <div t:type="ck/Tooltip" clientId="tooltip1"
-                 value="If an excel file cannot be read, save it as Excel97-2004 Worksheet(xls)."
-                 effect="appear">
+            <!--<div t:type="ck/Tooltip" clientId="tooltip1"-->
+                 <!--value="If an excel file cannot be read, save it as Excel97-2004 Worksheet(xls)."-->
+                 <!--effect="appear">-->
 
             <t:form>
                 <t:checkbox t:id="containsHeadline"
@@ -52,18 +54,18 @@
                                 event="change"/>
                     Data Files contain Multi Channel Data<br/>
 
-                    <t:label for="replicateNumbers">Number of Replicates</t:label>
+                    <!--<t:label for="replicateNumbers">Number of Replicates</t:label>-->
                     <t:textfield t:id="replicateNumbers" size="2"
                      t:mixins="ck/OnEvent"
                      onCompleteCallback="onCompleteFromReplicateNumber"
                      event="blur"
-                            />
+                            /> Number of Replicates<br/>
                    
 
              </t:form>    
 
             <t:ExportCSV t:id="exportCSV" t:filesToProcess="uploadedFiles"/>
-            </div>
+            <!--</div>-->
             <t:if test="convertedAllFiles">
 
 

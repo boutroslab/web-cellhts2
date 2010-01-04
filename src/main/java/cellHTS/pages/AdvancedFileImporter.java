@@ -220,9 +220,9 @@ public class AdvancedFileImporter {
     public void onFailedConvertedToCVSFromExportCSV(Object []dummy) {
        convertedAllFiles=false;
         //reinit everything
-       dataFileImporter.setInit(false);
-       plateConfigImporter.setInit(false);
-       annotationImporter.setInit(false);
+       //dataFileImporter.setInit(false);
+       //plateConfigImporter.setInit(false);
+       //annotationImporter.setInit(false);
        initDatafileHeaders();
     }
 

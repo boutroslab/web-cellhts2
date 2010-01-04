@@ -403,6 +403,7 @@ public class FileCreator {
             //convert to us string
             resultsMap.put("date", dateString);
         }
+
         resultsMap.put("screen", exp.getScreen());
         resultsMap.put("title", exp.getTitle());
         resultsMap.put("experimenter", exp.getExperimenter());
@@ -413,8 +414,10 @@ public class FileCreator {
         resultsMap.put("assaydesc", exp.getAssaydesc());
         resultsMap.put("dualChannel", "" + exp.isDualChannel());
         resultsMap.put("internal", "" + exp.isInternal());
-        resultsMap.put("channel1", exp.getChannel1());
-        resultsMap.put("channel2", exp.getChannel2());
+        if(exp.isDualChannel()) {
+            resultsMap.put("channel1", exp.getChannel1());
+            resultsMap.put("channel2", exp.getChannel2());
+        }
 
         return resultsMap;
     }

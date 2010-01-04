@@ -73,9 +73,9 @@ public class ExportCSV {
             csvDelimter = "\\t";
             SUCCESSEVENTNAME = "successfullyConvertedToCVS";
             FAILEVENTNAME= "failedConvertedToCVS";
-            fileTypeModel = "excel,csv";
+            fileTypeModel = "excel,text";
             uniqueID = renderSupport.allocateClientId(componentResources);
-
+            resetError();
         }
     }
    //TODO: variables dont get updated
@@ -88,32 +88,34 @@ public class ExportCSV {
         if (filesToProcess.size() < 1) {
             return;
         }
+       if(csvDelimter==null) {
+           csvDelimter="";
+       }
         resetError();
         //outputfiles are inputfiles plus csv
 
         //show an grid
         if (fileType.equals("excel")) {
-            System.out.println("Bam outside");
+
             if (excelToTabCVS()) {
-                System.out.println("bam inside");                
+
                 triggerSuccessEvent();
             }
             else {
                 //if an error occured
-                init=false;
+               // init=false;
                 triggerFailEvent();
             }
 
-        } else if (fileType.equals("csv")) {
+        } else if (fileType.equals("text")) {
             if (csvDelimter.equals("")) {
-                setError("error: no valid delimter defined");
+                setError("error: no valid delimiter defined");
                 return;
             }
             if (cvsToTabCVS()) {
                 triggerSuccessEvent();
             }
-            else {
-                init=false;
+            else {                         
                 triggerFailEvent();
             }
         }
@@ -277,7 +279,12 @@ public class ExportCSV {
                 return false;
             }
             catch (Exception e) {
-                setError("generic error occured:" + e.getMessage() + " in file: " + new File(currentFile).getName());
+                String eMsg=e.getMessage();
+                if(eMsg.contains("Index")) {
+                    eMsg="invalid sheet number selected";
+                }
+                
+                setError("error occured:" + eMsg + " in file: " + new File(currentFile).getName());
                 System.err.println(e.toString());
                 return false;
             }

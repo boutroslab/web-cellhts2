@@ -27,7 +27,7 @@
         <div id="allcontent" style="width:800px">
     	<img src="${asset:context:/assets/headsection.jpg}" border="0" usemap="#Map">
     	<map name="Map">
-    	<area shape="rect" coords="14,90,55,106" href="${asset:context:}" target="_parent"/>
+    	<area shape="rect" coords="14,90,55,106" href="${context}" target="_parent"/>
         <area shape="rect" coords="68,90,94,106" href="http://www.dkfz.de/signaling/cellHTS/" target="_parent"/>
     	<area shape="rect" coords="108,90,155,106" href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/web+cellHTS2+Manual" target="_parent"/>
     	<area shape="rect" coords="168,90,214,106" href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/web+cellHTS2+quickstart+guide" target="_parent"/>
@@ -41,32 +41,12 @@
         </img>
             
         </div>
-      
-        <br/><br/>
-        <!--<h1>Analysis of cell-based RNAi screens</h1>-->
-        <!--<h3>Normalisation analysis for single and dual channel experiments using-->
-            <!--<a href="http://www.dkfz.de/signaling/cellHTS/">cellHTS2</a>-->
-        <!--</h3>-->
-        <!--<p>-->
-            <!--<strong>This tool is still in development, so please-->
-                <!--<a href="mailto:b110-it@dkfz.de">contact us</a>-->
-                <!--with any bugs.-->
-            <!--</strong>-->
-        <!--</p>-->
-        <!--<p>This analysis performs normalisation of data files in cellHTS format.         -->
-            <!--<br/>-->
-            <!--Click-->
-            <!--<a href="http://www.dkfz.de/signaling/cellHTS/">here</a>-->
-            <!--for more information on cellHTS2.-->
-            <!--<br/>-->
-        <!--</p>-->
 
 
     <link rel="stylesheet" href="${asset:context:/assets/style.css}" type="text/css"/>
     
         <div class="header">
-            <!--<h1>About</h1>-->
-            <!--<h2>Help</h2>-->
+          
         </div>
 
         <t:body/>

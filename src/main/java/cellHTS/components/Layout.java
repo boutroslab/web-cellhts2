@@ -23,6 +23,7 @@ package cellHTS.components;
 import org.apache.tapestry5.annotations.*;
 import org.apache.tapestry5.MarkupWriter;
 import org.apache.tapestry5.services.ApplicationGlobals;
+import org.apache.tapestry5.services.Request;
 import org.apache.tapestry5.ioc.annotations.Inject;
 
 import java.io.File;
@@ -54,6 +55,13 @@ public class Layout {
     @SessionState
     private RCellHTS2Version rCellHTS2Version;
     private boolean rCellHTS2VersionExists;
+
+    @Inject
+    private Request request;
+
+    public String getContext() {
+        return request.getContextPath();
+    }
 
     /**
      * initalize stuff, do this only once such as retriving cellHTS version (Singleton call)

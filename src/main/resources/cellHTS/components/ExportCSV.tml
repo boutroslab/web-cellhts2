@@ -5,7 +5,8 @@
 
     <body onLoad="initPage()">
      <div id="${uniqueID}">
-        a. Choose filetype  (please note: if you choose excel, only Excel 95, 97, 2000, XP, and 2003 are supported)
+         Choose filetype:
+        <!--(please note: if you choose excel, only Excel 95, 97, 2000, XP, and 2003 are supported)-->
       <t:form t:id="dummyID">
         <t:select t:id="fileType" model="fileTypeModel"
                           t:blankOption="always"
@@ -16,11 +17,11 @@
       </t:form>
       <br/>
        <t:form t:id="bigForm">
-            <t:label for="sheetNumber"/>
-            <t:textfield t:id="sheetNumber" size="2" />
+            <!--<t:label for="sheetNumber"/>-->
+            <t:textfield t:id="sheetNumber" size="2" /> Excel Sheet Number
            <br/>
-            <t:label for="csvDelimter"/>
-            <t:textfield t:id="csvDelimter" size="4" />
+            <!--<t:label for="csvDelimter"/>-->
+            <t:textfield t:id="csvDelimter" size="4" /> Textfile column delimiter
            <br/>
            <input t:type="submit" t:id="submitBigFormData" value="format data"/>
        </t:form>
@@ -59,7 +60,7 @@
 
         function onCompleteFileTypeChangeEvent(response) {
            var yesNo = response.fileType;
-           if(yesNo=="csv") {
+           if(yesNo=="text") {
                document.getElementById('csvDelimter').disabled=false;
                document.getElementById('sheetNumber').disabled=true;
            }

@@ -117,7 +117,7 @@ public class FileImporter{
              }
             //to show nothing on reload 
              multipleChangeSelect=null;
-
+             resetError();
 
         }
        if(headerFields==null) {

@@ -60,7 +60,9 @@
                     <div id="showSelectedCols"/>   
                 </t:if>
                 <t:if test="errorFound">
+                    <p>
                     <font color="red">${errorMsg}</font>
+                    </p>
                 </t:if>
                 <input t:type="submit" value="create files"/>
 

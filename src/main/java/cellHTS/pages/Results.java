@@ -251,7 +251,7 @@ public class Results {
                        String channelLabel1,String channelLabel2,
                        ChannelTypes channelTypes, NormalizationTypes normalMethod, NormalScalingTypes normalScaling, ResultsScalingTypes resultScalingTypes, SummerizeReplicates summaryMethod,LogTransform logTransform,ViabilityChannel viabilityChannel,String viabilityFunction) {
 
-        this.channelTypes = channelTypes.toString();
+        this.channelTypes = channelTypes.toString().split("_")[0];
         paramMap.put("channelTypes",this.channelTypes);
 
         this.jobNameDir=jobNameDir;

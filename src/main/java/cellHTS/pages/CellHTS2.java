@@ -58,7 +58,7 @@ import cellHTS.dao.Semaphore;
  * Time: 11:09:37
  * To change this template use File | Settings | File Templates.
  */
-@IncludeJavaScriptLibrary(value = {"${tapestry.scriptaculous}/prototype.js", "divEnabler.js","../components/browserDetect.js","leightbox.js"})
+@IncludeJavaScriptLibrary(value = {"${tapestry.scriptaculous}/prototype.js", "divEnabler.js","../components/browserDetect.js"})
 public class CellHTS2 {
 
     @Inject
@@ -555,7 +555,7 @@ public class CellHTS2 {
     public boolean getIsDualChannel
             () {
         if (channel != null) {
-            if (channel.equals(ChannelTypes.dual)) {
+            if (channel.equals(ChannelTypes.dual_channel)) {
                 isDualChannel = true;
             } else {
                 isDualChannel = false;
@@ -754,13 +754,13 @@ public class CellHTS2 {
         }
 
         if (type.equals("single")) {
-            channel = ChannelTypes.single;
+            channel = ChannelTypes.single_channel;
             isDualChannel = true;
             //activate the forward link
             activatedPages.put(currentPagePointer, false);
 
         } else if (type.equals("dual")) {
-            channel = ChannelTypes.dual;
+            channel = ChannelTypes.dual_channel;
             isDualChannel = false;
             activatedPages.put(currentPagePointer, false);
 
@@ -1186,13 +1186,13 @@ public class CellHTS2 {
      * @param checked if checked or not
      */
     @OnEvent(component = "inplacecheckbox", value = InPlaceCheckbox.EVENT_NAME)
-    public JSONObject inPlaceCheckbox(String id, boolean checked) {
+    public void inPlaceCheckbox(String id, boolean checked) {
         if(!request.isXHR()) {
             throw new TapestryException("your browser cannot handle AJAX XHR requests. Talk to your ISP to configure the proxy accordingly",null);
         }
-
+       // System.out.println("bam and then full throttle");
         parseFileParams = checked;
-        return new JSONObject().put("dummy", "dummy");
+       // return new JSONObject().put("dummy", "dummy");
     }
 
     //
@@ -3569,6 +3569,9 @@ public class CellHTS2 {
          }else {
                 throw new TapestryException("Cannot read or write directory: "+uploadPath+".\nCheck read/write permissions",null);
         }
+    }
+    public void onActionFromRestartCellHTS2Page() {
+        this.notNewRun=false;
     }
 
     public File getAnnotationFileFromAdvancedFileImporter() {

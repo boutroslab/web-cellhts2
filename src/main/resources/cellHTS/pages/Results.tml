@@ -39,7 +39,7 @@
         <table>
         <tr>
             <td>
-        <t:actionlink t:id="newAnalysisCellHTS2Page">New analysis    </t:actionlink>
+        <t:actionlink t:id="newAnalysisCellHTS2Page">New analysis</t:actionlink>
             </td>
             
             <td>

@@ -52,11 +52,5 @@
 
 
     </body>
-        <script type="text/javascript">
-    function onCompleteFunction(response)
-    {
-           //not needed
-    }
-</script>
      
 </html>

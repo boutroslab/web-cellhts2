@@ -28,5 +28,5 @@ package data;
  * To change this template use File | Settings | File Templates.
  */
 public enum ChannelTypes {
-    single,dual
+    single_channel,dual_channel
 }
