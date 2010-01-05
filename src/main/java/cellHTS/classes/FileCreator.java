@@ -632,55 +632,6 @@ public class FileCreator {
 
     }
 
-    //deprecated, DO NOT USE! works only for files with headline and no multichannel or multireplicates are supported
-    public static boolean createDataFilesFromCVSFiles(ArrayList<File> inputFiles, ArrayList<File> outputFiles,
-                                                      LinkedHashMap<String, Integer> returnMap) {
-
-        ArrayList<Integer> tempColNums = new ArrayList<Integer>();
-        for (String colName : returnMap.keySet()) {
-            tempColNums.add(returnMap.get(colName));
-        }
-        try {
-            int i = 0;
-            for (File file : inputFiles) {
-                File outputFile = outputFiles.get(i);
-
-                FileReader reader = new FileReader(file);
-                BufferedReader buffer = new BufferedReader(reader);
-
-                FileWriter outFileWriter = new FileWriter(outputFile);
-                BufferedWriter outBufferedWriter = new BufferedWriter(outFileWriter);
-
-                String line;
-
-
-                while ((line = buffer.readLine()) != null) {
-                    if(line.length()==0) {
-                        continue;
-                    }
-                    String[] cols = line.split("\t");
-                    String outline = "";
-                    for (Integer colID : tempColNums) {
-                        if (outline.equals("")) {
-                            outline = cols[colID - 1];   //the columns are index based
-                        } else {
-                            outline = "\t" + cols[colID - 1];     //the columns are index based
-                        }
-                    }
-                    outBufferedWriter.write(outline + "\n");
-                }
-                outBufferedWriter.close();
-                outFileWriter.close();
-                buffer.close();
-                reader.close();
-
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-        return true;
-    }
 
     public static boolean createDataFilesFromCVSMultiFiles(ArrayList<File> inputFiles,
                                                            ArrayList<File> outputFiles,
@@ -711,7 +662,7 @@ public class FileCreator {
         }
 
         Pattern wellPat = Pattern.compile("^\\w\\d{2}",Pattern.CASE_INSENSITIVE);
-        Pattern valuePat = Pattern.compile("^-*[.\\d]+",Pattern.CASE_INSENSITIVE);
+        Pattern valuePat = Pattern.compile("(^-*[.\\d]+)||(NA)||(N.A.)",Pattern.CASE_INSENSITIVE);
 
 
         //plate names to generated plate nums

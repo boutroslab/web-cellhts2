@@ -337,7 +337,7 @@ public class AdvancedFileImporter {
 
            }
             else {
-                datafileImporterMsg="Association of well or value columns e.g. value column contains letters failed or general IO problem. Please check your selected columns/files.";
+                datafileImporterMsg="Association of well or value columns e.g. value column contains letters failed or general IO problem. Please check selected columns/files.";
                 dataFileCreated=false;
            }
 

@@ -83,10 +83,11 @@ table {
 	caption-side: bottom;
 	border-collapse: collapse;
 	vertical-align: baseline;
+    max-width: 800px;
 }
 
 table.search {
-	width:800px;
+	width: 800px;
 }
 
 .table_phen {
@@ -226,8 +227,8 @@ TABLE.t-data-grid TR TH A {
    }
 
 DIV.t-beaneditor {
-background:#a0a0a0;
-border:1px outset brown;
+background:white;
+border:1px outset black;
 display:block;
 font-family:"Trebuchet MS",Arial,sans-serif;
 padding:2px;
@@ -266,5 +267,3 @@ padding:2px;
 	opacity:.80;
 	filter: alpha(opacity=80);
 }
-
-.lightbox[id]{ /* IE6 and below Can't See This */    position:fixed;    }#overlay[id]{ /* IE6 and below Can't See This */    position:fixed;    }

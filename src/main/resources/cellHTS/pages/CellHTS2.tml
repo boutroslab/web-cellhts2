@@ -70,7 +70,7 @@
             </t:if>
             <t:if test="errorNextLink">
                 <p>
-                    <FONT COLOR="red">Can't proceed: ${nextLinkErrorMsg}</FONT>
+                    <FONT COLOR="red">${nextLinkErrorMsg}</FONT>
                 </p>
             </t:if>
 
@@ -290,16 +290,17 @@
 
         <div id="step3DIV" style="display:none">
             <t:if test="hasPlateFormat">
-                (Step 3) Please configure your plate layout
-                <br/>
-                (for more information click <a
+                <b>Step 3:</b> Please configure the plate layout                 
+                (<a
                     href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/web+cellHTS2+Manual#webcellHTS2Manual-step3"
-                    target="_blank">here</a>)
+                    target="_blank">help</a>).
                 <br/>
                 <t:PlateDesigner plateFormat="plateFormat" clickedWellsAndPlates="clickedWellsAndPlates"/>
 
                 <p>
-                    and/or Upload Plate Config file
+                    and/or Upload Plate Config file (<a
+                    href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/web+cellHTS2+Manual#webcellHTS2Manual-plateconfigfileformat"
+                    target="_blank">help</a>).
                     <br/>
                     <div t:type="ck/Tooltip" clientId="tooltip4"
                          value="Upload all the positive, negative, other and empty wells information." effect="appear">
@@ -319,7 +320,9 @@
                 </t:if>
 
                 <p>
-                    and/or Upload Screenlog file
+                    and/or Upload Screenlog file (<a
+                    href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/web+cellHTS2+Manual#webcellHTS2Manual-screenlogfileformat"
+                    target="_blank">help</a>).
                     <br/>
                     <div t:type="ck/Tooltip" clientId="tooltip5"
                          value="Upload the contaminated wells information." effect="appear">
@@ -345,11 +348,11 @@
 
         <div id="step4DIV" style="display:none">
             <p>
-                (Step 4) What type of normalisation would you like to carry out?
-                <br/>
-                (for more information click <a
-                    href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/web+cellHTS2+Manual#webcellHTS2Manual-step4till9"
-                    target="_blank">here</a>)
+                <b>Step 4:</b> Please choose the normalization method
+
+                (<a
+                    href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/Data+normalization+options"
+                    target="_blank">help</a>).
                 <br/>
                 <t:form t:id="normalTypesForm">
                     <table id="NORMAL_METHODS">
@@ -360,7 +363,8 @@
                                 </td>
                                 <td>Plate effects are corrected by dividing each measurement by the median value across
                                     wells
-                                    annotated as 'sample' in. <a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/Median+normalization">Help</a>
+                                    annotated as 'sample' in.
+                                    <!--<a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/Median+normalization">Help</a>-->
                                 </td>                                  
                                 <td width="50px" align="right">
                                     <t:radio t:id="normalMedian"
@@ -379,7 +383,8 @@
                                 <td>for each plate and replicate, the midpoint of the 'shorth' of the distribution of
                                     values
                                     in
-                                    the wells annotated as 'sample' is calculated. <a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/Shorth+normalization" >Help</a>
+                                    the wells annotated as 'sample' is calculated.
+                                    <!--<a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/Shorth+normalization" >Help</a>-->
                                 </td>
                                 <td width="50px" align="right">
                                     <t:radio t:id="normalShort"
@@ -392,7 +397,8 @@
                                 <td>
                                     <strong>Mean:</strong>
                                 </td>
-                                <td>the average in the 'sample' wells is considered. <a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/Mean+normalization">Help</a></td>
+                                <td>the average in the 'sample' wells is considered.</td>
+                                    <!--<a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/Mean+normalization">Help</a></td>-->
                                 <td width="50px" align="right">
                                     <t:radio t:id="normalMean"
                                              t:mixins="ck/OnEvent"
@@ -408,7 +414,8 @@
                                 </td>
                                 <td>for each plate and replicate, each measurement is divided by the median of the
                                     measurements
-                                    on the plate negative controls. <a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/Negatives">Help</a>
+                                    on the plate negative controls.
+                                    <!--<a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/Negatives">Help</a>-->
                                 </td>
                                 <td width="50px" align="right">
                                     <t:radio t:id="normalNegatives"
@@ -424,7 +431,8 @@
                                 </td>
 
                                 <td>for each plate and replicate, each measurement is divided by the average of the
-                                    measurements on the plate positive controls, and multiplied by 100. <a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/Percent+of+Control">Help</a>
+                                    measurements on the plate positive controls, and multiplied by 100.
+                                    <!--<a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/Percent+of+Control">Help</a>-->
                                 </td>
                                 <td width="50px" align="right">
                                     <t:radio t:id="normalPOC"
@@ -441,7 +449,8 @@
                                 <td>each measurement is subtracted from the average of the intensities on the plate
                                     positive
                                     controls, and this result is divided by the difference between the means of the
-                                    measurements on the positive and the negative controls. <a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/Normalized+Percent+of+Control" >Help</a>
+                                    measurements on the positive and the negative controls.
+                                    <!--<a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/Normalized+Percent+of+Control" >Help</a>-->
                                 </td>
                                 <td width="50px" align="right">
                                     <t:radio t:id="normalNPI"
@@ -458,7 +467,8 @@
                                 </td>
                                 <td>for each plate and replicate, the 'B score method' (based on a 2-way median polish)
                                     is
-                                    applied to remove plate effects and row and column biases.<a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/B-Score" >Help</a>
+                                    applied to remove plate effects and row and column biases.
+                                    <!--<a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/B-Score" >Help</a>-->
                                 </td>
                                 <td width="50px" align="right">
                                     <t:radio t:id="normalBScore"
@@ -475,7 +485,8 @@
 
                                 <td>for each plate and replicate, spatial effects are removed by fitting a bivariate
                                     local
-                                    regression (see 'spatial normalization function'). <a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/Robust+Local+Fit+Regression">Help</a>
+                                    regression (see 'spatial normalization function').
+                                    <!--<a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/Robust+Local+Fit+Regression">Help</a>-->
                                 </td>
                                 <td width="50px" align="right">
                                     <t:radio t:id="normalLocfit"
@@ -495,7 +506,8 @@
                                 </td>
                                 <td>for each plate and replicate, spatial effects are removed by fitting a loess curve
                                     (see
-                                    'spatial normalization function'). <a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/Loess+Regression">Help</a>
+                                    'spatial normalization function').
+                                    <!--<a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/Loess+Regression">Help</a>-->
                                 </td>
                                 <td width="50px" align="right">
                                     <t:radio t:id="normalLoess"
@@ -517,7 +529,7 @@
 
             <t:form t:id="logTransformForm">
                 <p>
-                    (Step 5) Would you like to log transform your values before normalisation?
+                    <b>Step 5:</b> Should the raw values be log-transformed before normalisation?
                     <table>
                         <t:radiogroup t:value="logTransform">
                             <tr>
@@ -547,11 +559,9 @@
                     </table>
                 </p>
             </t:form>
-
-            <br/>
             <t:form t:id="normalScalingForm">
                 <p>
-                    (Step 6) Normalization Scaling method?
+                    <b>Step 6:</b>  Normalization Scaling method?
                     <table>
                         <t:radiogroup t:value="normalScaling">
                             <tr>
@@ -583,7 +593,7 @@
             </t:form>
             <t:form t:id="resultsScalingForm">
                 <p>
-                    (Step 7) Would you like to apply a z-score to center and scale your results?
+                    <b>Step 7:</b>  Would you like to apply a z-score to center and scale your results?
                     <table>
                         <t:radiogroup t:value="resultsScaling">
                             <tr>
@@ -591,7 +601,7 @@
                                 <td>
                                     <strong>No Scaling:</strong>
                                 </td>
-                                <td>(the score will be the normalised value of each well)</td>
+                                <td>the score will be the normalised value of each well</td>
                                 <td width="50px" align="right">
                                     <t:radio t:id="resultScalingNo"
                                              t:mixins="ck/OnEvent"
@@ -604,8 +614,8 @@
                                 <td>
                                     <strong>By Plate:</strong>
                                 </td>
-                                <td>(the score will be the normalised value of each well divided by the median absolute
-                                    deviation of the plate)
+                                <td>the score will be the normalised value of each well divided by the median absolute
+                                    deviation of the plate
                                 </td>
 
                                 <td width="50px" align="right">
@@ -638,8 +648,8 @@
                                 <td>
                                     <strong>By Experiment:</strong>
                                 </td>
-                                <td>(the score will be the normalised value of each well divided by the median absolute
-                                    deviation of all the samples accross the entire data set)
+                                <td>the score will be the normalised value of each well divided by the median absolute
+                                    deviation of all the samples accross the entire data set
                                 </td>
                                 <td width="50px" align="right">
                                     <t:radio t:id="resultScalingExperiment"
@@ -656,14 +666,14 @@
 
             <t:form t:id="sumRepForm">
                 <p>
-                    (Step 8) How would you like to summarize your replicates?
+                    <b>Step 8:</b>  How would you like to summarize your replicates?
                     <table>
                         <t:radiogroup t:value="sumRep">
                             <tr>
                                 <td>
                                     <strong>Mean:</strong>
                                 </td>
-                                <td>(the mean of replicate values is considered )</td>
+                                <td>the mean of replicate values is considered </td>
                                 <td width="50px" align="right">
                                     <t:radio t:id="sumMean"
                                              t:mixins="ck/OnEvent"
@@ -677,7 +687,7 @@
                                 <td>
                                     <strong>Median:</strong>
                                 </td>
-                                <td>(the median of replicate values is considered)</td>
+                                <td>the median of replicate values is considered</td>
                                 <td width="50px" align="right">
                                     <t:radio t:id="sumMedian"
                                              t:mixins="ck/OnEvent"
@@ -691,7 +701,7 @@
                                     <strong>Maximum:</strong>
                                 </td>
 
-                                <td>(the maximum of replicate intensities is taken)</td>
+                                <td>the maximum of replicate intensities is taken</td>
                                 <td width="50px" align="right">
                                     <t:radio t:id="sumMax"
                                              t:mixins="ck/OnEvent"
@@ -704,7 +714,7 @@
                                 <td>
                                     <strong>Minimum:</strong>
                                 </td>
-                                <td>(the minimum of replicate intensities is taken)</td>
+                                <td>the minimum of replicate intensities is taken</td>
                                 <td width="50px" align="right">
                                     <t:radio t:id="sumMin"
                                              t:mixins="ck/OnEvent"
@@ -767,7 +777,9 @@
 
             <t:form t:id="viabilityChannelForm">
                 <p>
-                    (Step 9) Use Viability Threshold Function?
+                    <b>Step 9:</b>  Use Viability Threshold Function (<a
+                    href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/web+cellHTS2+Manual#webcellHTS2Manual-rfunction"
+                    target="_blank">help</a>)?
                     <table>
                         <t:radiogroup t:id="viabilityChannelRadiogroup" t:value="viabilityChannel">
                             <tr>
@@ -825,7 +837,7 @@
             <!--<t:AjaxTextField textFieldValue="emailAddress" regexpType="email"/>-->
             <!--<br/>-->
             <p>
-                (Step 10) Upload annotation file:
+                <b>Step 10:</b> Upload annotation file:
                 <br/>
                 (for more information click <a
                     href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/web+cellHTS2+Manual#webcellHTS2Manual-step10till11"
@@ -844,7 +856,7 @@
             </p>
 
             <p>
-                (Step 11) Upload description file:
+                <b>Step 11:</b> Upload description file:
                 <t:form t:id="descriptionFileUpload">
 
                     <input t:type="upload" t:id="descriptionFileUploadInput" validate="required"
@@ -891,11 +903,11 @@
             </p>
 
             <br/>
-            (Step 12)
+            <b>Step 12:</b>
             <p>
                 <t:form t:id="emailForm" t:type="Form">
                 <t:if t:test="isEmailMandantory">
-                    Please enter your Email address for receiving the analysis report:
+                    Please enter an Email address to receive the analysis report:
                         <input t:type="TextField"
                                t:id="emailAddressTextfield"
                                value="emailAddress"                                           
@@ -908,27 +920,24 @@
                 <!--we add a onclick callback event handler for the startCellHTS2 actionlink so that we can submit the beaneditform from there-->
             </p>
             <p>
+                <t:form t:id="startCellHTS2">
+                        <t:submit value="Submit" onclick="clickedStartCellHTS2Link();"/>
+                    </t:form>
+            </p>
+            <p>
                 <!--we need the eventhandler here too to update the description file/variables before storing in a file-->
                 <div t:type="ck/Tooltip" clientId="tooltip8"
                      value="Saved session files can be loaded later to restore the complete analysis." effect="appear">
-                    <t:actionlink t:id="saveSession"
-                                  onclick="clickedStartCellHTS2Link();"
-
-                            >Save this Session
-                    </t:actionlink>
+                     <t:form t:id="saveSession">
+                        <t:submit value="Save session" onclick="clickedStartCellHTS2Link();"/>
+                    </t:form>
                 </div>
 
             </p>
-
             <p>
-                <t:actionlink t:id="startCellHTS2"
-                              onclick="clickedStartCellHTS2Link();"
-                        >Start analysis run
-                </t:actionlink>
-
-            </p>
-            <p>
-                <t:actionlink t:id="newAnalysis">Start new Analysis</t:actionlink>
+                <t:form t:id="newAnalysis">
+                        <t:submit value="Restart" onclick="clickedStartCellHTS2Link();"/>
+                </t:form>                 
             </p>
         </div>
         <br/>

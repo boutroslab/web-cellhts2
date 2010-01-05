@@ -1677,6 +1677,8 @@ public class CellHTS2 {
     public void onActionFromNewAnalysis() {
         //reset everything and restart it
         notNewRun = false;
+        System.out.println("BANNNNNNNNNNNNG");
+
     }
 
 

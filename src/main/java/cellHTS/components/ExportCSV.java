@@ -1,11 +1,10 @@
 package cellHTS.components;
 
-import org.apache.tapestry5.annotations.Parameter;
-import org.apache.tapestry5.annotations.Persist;
-import org.apache.tapestry5.annotations.OnEvent;
+import org.apache.tapestry5.annotations.*;
 import org.apache.tapestry5.ComponentEventCallback;
 import org.apache.tapestry5.ComponentResources;
 import org.apache.tapestry5.RenderSupport;
+import org.apache.tapestry5.MarkupWriter;
 import org.apache.tapestry5.json.JSONObject;
 import org.apache.tapestry5.ioc.annotations.Inject;
 
@@ -64,6 +63,12 @@ public class ExportCSV {
     @Persist
     private String uniqueID;
 
+
+
+
+    @Environmental
+    private RenderSupport pageRenderSupport;
+
     public void setupRender() {
         if (!init) {
             System.out.println("we init!");
@@ -75,23 +80,30 @@ public class ExportCSV {
             FAILEVENTNAME= "failedConvertedToCVS";
             fileTypeModel = "excel,text";
             uniqueID = renderSupport.allocateClientId(componentResources);
+
             resetError();
         }
     }
    //TODO: variables dont get updated
-    public void onSuccessFromBigForm() {
+    public void onSubmitFromBigFormID() {
+
+
        //if you selected the item "please select"
         if(fileType==null || fileType.equals("")) {
+            
             return;
         }
        
         if (filesToProcess.size() < 1) {
+
             return;
         }
-       if(csvDelimter==null) {
-           csvDelimter="";
-       }
+
+
         resetError();
+
+
+
         //outputfiles are inputfiles plus csv
 
         //show an grid
@@ -119,18 +131,21 @@ public class ExportCSV {
                 triggerFailEvent();
             }
         }
+
+
         //call an event which will be fired if we successfully converted everything
 
     }
+
+
     //AJAX event handlers
 
     @OnEvent(component = "fileType", value = "change")
-    public JSONObject onFileTypeChangeEvent(String type) {
+    public void onFileTypeChangeEvent(String type) {
         fileType = type;
-        if (fileType.equals("excel")) {
-            // csvDelimter="\\t";
+        if (fileType.equals("excel")) {            
         }
-        return new JSONObject().put("fileType", fileType);
+        //return new JSONObject().put("fileType", fileType);
     }
 
 
@@ -215,6 +230,7 @@ public class ExportCSV {
             int sheet = 0;
             try {
                 sheet = Integer.parseInt(sheetNumber);
+                sheet--;
             }
             catch (NumberFormatException e) {
                 sheet = 0;
@@ -280,7 +296,7 @@ public class ExportCSV {
             }
             catch (Exception e) {
                 String eMsg=e.getMessage();
-                if(eMsg.contains("Index")) {
+                if(eMsg.contains("Index")||eMsg.contains("-1") ) {
                     eMsg="invalid sheet number selected";
                 }
                 
@@ -290,6 +306,12 @@ public class ExportCSV {
             }
         }
         return true;
+    }
+
+    public void afterRender(MarkupWriter writer){
+
+            pageRenderSupport.addScript("initExportCSVPage();");
+        
     }
 
     public void setError(String msg) {
@@ -365,4 +387,5 @@ public class ExportCSV {
     public void setInit(boolean init) {
         this.init = init;
     }
+
 }

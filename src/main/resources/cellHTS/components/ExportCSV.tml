@@ -3,7 +3,7 @@
 
     </head>
 
-    <body onLoad="initPage()">
+    <body onLoad="initExportCSVPage()">
      <div id="${uniqueID}">
          Choose filetype:
         <!--(please note: if you choose excel, only Excel 95, 97, 2000, XP, and 2003 are supported)-->
@@ -16,14 +16,14 @@
                           event="change"/>
       </t:form>
       <br/>
-       <t:form t:id="bigForm">
+       <t:form t:id="bigFormID">
             <!--<t:label for="sheetNumber"/>-->
             <t:textfield t:id="sheetNumber" size="2" /> Excel Sheet Number
            <br/>
             <!--<t:label for="csvDelimter"/>-->
             <t:textfield t:id="csvDelimter" size="4" /> Textfile column delimiter
            <br/>
-           <input t:type="submit" t:id="submitBigFormData" value="format data"/>
+           <input t:type="submit" t:id="bigFormDataSubmitID" value="format data"/>
        </t:form>
         <t:if test="errorFound">
            <font color="red">${errorMsg}</font>
@@ -33,43 +33,9 @@
     <script type="text/javascript">
         <!-- //
 
-        function initPage() {
-           var fileType = document.getElementById('fileType');
-           if(fileType==null) {
-               document.getElementById('csvDelimter').disabled=true;
-               document.getElementById('sheetNumber').disabled=true;
-           }
-           else if(fileType.value==null) {
-                document.getElementById('csvDelimter').disabled=true;
-               document.getElementById('sheetNumber').disabled=true;
-           }
-           else if(fileType.value=="") {
-              document.getElementById('csvDelimter').disabled=true;
-               document.getElementById('sheetNumber').disabled=true;
-           }
-           else if(fileType.value=="csv") {
-                document.getElementById('csvDelimter').disabled=false;
-               document.getElementById('sheetNumber').disabled=true;
-           }
-           else if(fileType.value=="excel") {
-               document.getElementById('csvDelimter').disabled=true;
-               document.getElementById('sheetNumber').disabled=false;
-           }
-
-        }
 
         function onCompleteFileTypeChangeEvent(response) {
-           var yesNo = response.fileType;
-           if(yesNo=="text") {
-               document.getElementById('csvDelimter').disabled=false;
-               document.getElementById('sheetNumber').disabled=true;
-           }
-           else if(yesNo=="excel") {
-              document.getElementById('csvDelimter').disabled=true;
-              document.getElementById('sheetNumber').disabled=false;
-           }
-           
-
+           //dummy
         }
         //-->
     </script>
