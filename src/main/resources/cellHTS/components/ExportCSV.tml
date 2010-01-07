@@ -3,7 +3,7 @@
 
     </head>
 
-    <body onLoad="initExportCSVPage()">
+    <body>
      <div id="${uniqueID}">
          Choose filetype:
         <!--(please note: if you choose excel, only Excel 95, 97, 2000, XP, and 2003 are supported)-->

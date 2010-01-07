@@ -308,11 +308,7 @@ public class ExportCSV {
         return true;
     }
 
-    public void afterRender(MarkupWriter writer){
-
-            pageRenderSupport.addScript("initExportCSVPage();");
-        
-    }
+   
 
     public void setError(String msg) {
         errorFound = true;
