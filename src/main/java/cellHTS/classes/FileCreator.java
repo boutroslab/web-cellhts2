@@ -1013,25 +1013,10 @@ public class FileCreator {
 
                     } else {
                         for (Integer repNum : repNumToColID.keySet()) {
-                            String repValue;
-                            try {
-                                repValue = cols[repNum - 1];
-                            } catch(ArrayIndexOutOfBoundsException e) {
-                                continue;
-                            }
-
-                            Integer replicateNum = 0;
-                            try {
-                                replicateNum = Integer.parseInt(repValue);
-                            }
-                            catch (NumberFormatException e) {
-                                e.printStackTrace();
-                                return false;
-                            }
-                            String plateWellID = plate + "_" + repValue;
+                            String plateWellID = plate + "_" + repNum;
 
                             if (!plates.containsKey(plateWellID)) {
-                                plates.put(plateWellID, new Plate(plate, replicateNum));
+                                plates.put(plateWellID, new Plate(plate, repNum));
                             }
                             if (plates.get(plateWellID).getWellsArray() == null) {
                                 plates.get(plateWellID).setWellsArray(new HashMap<String, String>());
