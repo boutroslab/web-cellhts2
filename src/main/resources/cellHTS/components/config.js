@@ -38,7 +38,6 @@ var textColors={"pos":"black",
                  "other":"white",
                  "empty":"black",
                  "sample":"black",
-
                  "cont1":"black"
 
 

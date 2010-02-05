@@ -173,9 +173,11 @@ public class ShellEnvironment {
 
             while (entries.hasMoreElements()) {
                 ZipEntry entry = (ZipEntry) entries.nextElement();
+
                 String name = entry.getName();
                 Matcher m = pat.matcher(name);
-                if(m.find()) {
+                //dont extract directory names
+                if(m.find()||entry.isDirectory()) {
                     //skip the mac meta data
                     continue;
                 }
