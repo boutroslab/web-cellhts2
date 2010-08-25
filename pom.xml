@@ -109,21 +109,37 @@ of testing facilities designed for use with TestNG (http://testng.org/), so it's
             <artifactId>jetty-util</artifactId>
             <version>6.1.10</version>
         </dependency>
+        <!--you have to recompile this dependandcy for every platform you use-->
         <dependency>
             <groupId>org.rosuda</groupId>
-            <artifactId>REngine</artifactId>
-            <version>0.6-0</version>
+            <artifactId>JRI</artifactId>
+            <version>0.5.1</version>
         </dependency>
         <dependency>
             <groupId>org.rosuda</groupId>
-            <artifactId>JRclient</artifactId>
-            <version>0.6-0</version>
+              <artifactId>REngine</artifactId>
+              <version>0.6.2</version> 
         </dependency>
+
+        <dependency>
+            <groupId>org.rosuda.REngine</groupId>
+            <artifactId>JRI</artifactId>
+            <version>0.6.2</version>
+        </dependency>
+
         <dependency>
             <groupId>javax.mail</groupId>
             <artifactId>mail</artifactId>
             <version>1.4.2</version>
         </dependency>
+
+
+        <dependency>
+            <groupId>com.wapmx.native</groupId>
+                <artifactId>mx-native-loader</artifactId>
+                <version>1.2</version>
+        </dependency>
+
 	<dependency>
 	  <groupId>javax.activation</groupId>
 	  <artifactId>activation</artifactId>
@@ -368,6 +384,9 @@ of testing facilities designed for use with TestNG (http://testng.org/), so it's
 
                 </executions>
             </plugin>
+
+            
+
 
 
         </plugins>

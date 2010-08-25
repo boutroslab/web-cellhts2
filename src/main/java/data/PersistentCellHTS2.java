@@ -63,6 +63,7 @@ public class PersistentCellHTS2 implements Serializable {
     private NormalScalingTypes normalScaling;
     private ResultsScalingTypes resultsScaling;
     private SummerizeReplicates sumRep;
+    private UseHTSAnalyzer useHTSAnalyzer;
     private boolean noErrorUploadFile;
     private boolean noErrorPlateConfFile;
     private boolean noErrorAnnotFile;
@@ -122,6 +123,7 @@ public class PersistentCellHTS2 implements Serializable {
                               NormalScalingTypes normalScaling,
                               ResultsScalingTypes resultsScaling,
                               SummerizeReplicates sumRep,
+                              UseHTSAnalyzer useHTSAnalyzer,
                               boolean noErrorUploadFile,
                               boolean noErrorPlateConfFile,
                               boolean noErrorAnnotFile,
@@ -210,6 +212,7 @@ public class PersistentCellHTS2 implements Serializable {
         this.isEmailMandantory=isEmailMandantory;
         this.fixRegExp=fixRegExp;
         this.viabilityFunction=viabilityFunction;
+        this.useHTSAnalyzer=useHTSAnalyzer;
     }
     public PersistentCellHTS2(){
         
@@ -623,5 +626,13 @@ public class PersistentCellHTS2 implements Serializable {
 
     public void setViabilityFunction(String viabilityFunction) {
         this.viabilityFunction = viabilityFunction;
+    }
+
+    public UseHTSAnalyzer getUseHTSAnalyzer() {
+        return useHTSAnalyzer;
+    }
+
+    public void setUseHTSAnalyzer(UseHTSAnalyzer useHTSAnalyzer) {
+        this.useHTSAnalyzer = useHTSAnalyzer;
     }
 }

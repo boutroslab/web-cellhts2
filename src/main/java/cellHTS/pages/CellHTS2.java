@@ -46,6 +46,7 @@ import cellHTS.classes.*;
 import cellHTS.components.Layout;
 import cellHTS.services.ZIPStreamResponse;
 import cellHTS.dao.Semaphore;
+import com.wapmx.nativeutils.jniloader.NativeLoader;
 
 
 /**
@@ -200,6 +201,10 @@ public class CellHTS2 {
     private LogTransform logTransform;
 
     @Persist
+    @Property
+    private UseHTSAnalyzer useHTSAnalyzer;
+
+    @Persist
     private NormalScalingTypes normalScaling;
 
     @Persist
@@ -324,13 +329,11 @@ public class CellHTS2 {
     
 
 
-    /**
-     *
-     * this will be started everytime the page gets reloaded
-     *
-     */
-
     public void onActivate() {
+
+
+
+
    //    public void setupRender() {
         //coming from different pages result in different destinies
         activatedFromPageDestiny();
@@ -400,6 +403,7 @@ public class CellHTS2 {
             resultsScaling = ResultsScalingTypes.none;
             sumRep = SummerizeReplicates.mean;
             viabilityChannel = ViabilityChannel.NO;
+            useHTSAnalyzer=UseHTSAnalyzer.NO;
             parseFileParams = true;
             descriptionMap = new HashMap<String, String>();
             activatedPages = new HashMap<Integer, Boolean>();
@@ -418,6 +422,7 @@ public class CellHTS2 {
             dataFilePattern = Configuration.DATAFILE_PATTERN;
             plateConfigHeaderPattern = Configuration.PLATECONFIG_HEADER_PATTERN;
             plateConfigBodyPattern = Configuration.PLATECONFIG_BODY_PATTERN;
+
 
 
         }
@@ -997,6 +1002,7 @@ public class CellHTS2 {
             channel = persistentCellHTS2.getChannel();
             plate = persistentCellHTS2.getPlate();
             normalTypes = persistentCellHTS2.getNormalTypes();
+            useHTSAnalyzer=persistentCellHTS2.getUseHTSAnalyzer();
             logTransform = persistentCellHTS2.getLogTransform();
             normalScaling = persistentCellHTS2.getNormalScaling();
             resultsScaling = persistentCellHTS2.getResultsScaling();
@@ -1582,6 +1588,15 @@ public class CellHTS2 {
             errorNextLink = true;
 
         }
+
+        //if we use HTSAnalyzerPackage we have to provide an annotation file
+        if(useHTSAnalyzer.equals(UseHTSAnalyzer.YES)) {
+            //check if annotation file has been successfully uploaded
+            if(!noErrorAnnotFile || annotFile==null) {
+                nextLinkErrorMsg += " Error: Step10: when using HTSAnalyzer, a correct Annotationfile has to be uploaded ";
+                errorNextLink = true;
+            }
+        }
         //if we are external ...
         if(isEmailMandantory) {
             if(emailAddress==null) {
@@ -1663,7 +1678,7 @@ public class CellHTS2 {
             resultPage.putAll(jobNameDir,screenName,emailAddress,
                    annotFile, descriptionFile, plateListFile, plateConfFile, screenLogFile,sessionFile,
                    channelLabel1, channelLabel2,
-                   channel, normalTypes, normalScaling, resultsScaling, sumRep, logTransform,viabilityChannel,viabilityFunction);
+                   channel, normalTypes, normalScaling, resultsScaling, sumRep, logTransform,viabilityChannel,viabilityFunction,useHTSAnalyzer);
             return resultPage;
         
     }
@@ -1745,6 +1760,7 @@ public class CellHTS2 {
                 normalScaling,
                 resultsScaling,
                 sumRep,
+                useHTSAnalyzer,
                 noErrorUploadFile,
                 noErrorPlateConfFile,
                 noErrorAnnotFile,
@@ -2164,7 +2180,32 @@ public class CellHTS2 {
         json.put("viabilityChannel","false");
         return json;
     }
-
+    /**
+     *
+     *  event handler methods for radio buttons...onEvent mixin style :-)
+     *
+     */
+    @OnEvent(component = "HTSAnalyzerYes", value = "click")
+    public JSONObject setHTSAnalyzerYes() {
+        if(!request.isXHR()) {
+            throw new TapestryException("your browser cannot handle AJAX XHR requests. Talk to your ISP to configure the proxy accordingly",null);
+        }
+        useHTSAnalyzer = UseHTSAnalyzer.YES;
+        return new JSONObject().put("dummy", "dummy");
+    }
+    /**
+     *
+     *  event handler methods for radio buttons...onEvent mixin style :-)
+     *
+     */
+    @OnEvent(component = "HTSAnalyzerNo", value = "click")
+    public JSONObject setHTSAnalyzerNo() {
+        if(!request.isXHR()) {
+            throw new TapestryException("your browser cannot handle AJAX XHR requests. Talk to your ISP to configure the proxy accordingly",null);
+        }
+        useHTSAnalyzer = UseHTSAnalyzer.NO;
+        return new JSONObject().put("dummy", "dummy");
+    }
 
 
     /**
@@ -2393,6 +2434,14 @@ public class CellHTS2 {
     public LogTransform getLogNo
             () {
         return LogTransform.NO;
+    }
+
+    public UseHTSAnalyzer getHTSAnalyzerYes() {
+        return UseHTSAnalyzer.YES;
+    }
+    public UseHTSAnalyzer getHTSAnalyzerNo() {
+        return UseHTSAnalyzer.NO;
+
     }
 
     public NormalScalingTypes getNormalScaling
@@ -2846,6 +2895,7 @@ public class CellHTS2 {
             normalScaling = NormalScalingTypes.additive;
             resultsScaling = ResultsScalingTypes.none;
             sumRep = SummerizeReplicates.mean;
+            useHTSAnalyzer = UseHTSAnalyzer.NO;
 
             noErrorPlateConfFile = false;
             noErrorAnnotFile = false;

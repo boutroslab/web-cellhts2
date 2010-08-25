@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.Collection;
 import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.io.File;
 
 /**
  * Created by IntelliJ IDEA.
@@ -24,6 +25,17 @@ public class StringFunctions {
             }
         }
         return buffer.toString();
+    }
+
+    public static String getFileNameWithoutExtension(String fileName) {
+
+        File file = new File(fileName);
+
+        int index = file.getName().lastIndexOf('.');
+        if (index>0&& index <= file.getName().length() - 2 ) {
+            return file.getName().substring(0, index);
+        }
+        return "";
     }
 
     public static String join(Collection s, String delimiter,String flank) {

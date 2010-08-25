@@ -85,6 +85,8 @@ public class Results {
     @Persist
     private String varianceAdjust;
     @Persist
+    private String useHTSAnalyzer;
+    @Persist
     private String score;
     @Persist
     private String summaryMethod;
@@ -249,7 +251,9 @@ public class Results {
     public void putAll(File jobNameDir,String jobNamePrefix,String emailAddress,
                        String annotFile,String descriptionFile,String plateList,String plateConf,String screenLogFile,String sessionFile,
                        String channelLabel1,String channelLabel2,
-                       ChannelTypes channelTypes, NormalizationTypes normalMethod, NormalScalingTypes normalScaling, ResultsScalingTypes resultScalingTypes, SummerizeReplicates summaryMethod,LogTransform logTransform,ViabilityChannel viabilityChannel,String viabilityFunction) {
+                       ChannelTypes channelTypes, NormalizationTypes normalMethod, NormalScalingTypes normalScaling,
+                       ResultsScalingTypes resultScalingTypes, SummerizeReplicates summaryMethod,LogTransform logTransform,
+                       ViabilityChannel viabilityChannel,String viabilityFunction, UseHTSAnalyzer useHTSAnalyzer) {
 
         this.channelTypes = channelTypes.toString().split("_")[0];
         paramMap.put("channelTypes",this.channelTypes);
@@ -288,6 +292,9 @@ public class Results {
          paramMap.put("sessionFile",this.sessionFile);
          this.viabilityFunction=viabilityFunction;
          paramMap.put("viabilityFunction",this.viabilityFunction);
+         this.useHTSAnalyzer=useHTSAnalyzer.toString();
+        paramMap.put("useHTSAnalyzer",this.useHTSAnalyzer);
+
 
          this.jobNamePrefix = jobNamePrefix;
         this.emailAddress=emailAddress;
@@ -418,8 +425,7 @@ public class Results {
      *
      * @return
      */
-    public Object onActionFromBackLinkCellHTS2Page() {
-        progressPercentage[0]="0_starting job";
+    public Object onActionFromBackLinkCellHTS2Page() {               
         rSuccessStatus[0] = false;
         //if we are using progressbar as a resulttype and the thread is not run through
         //and we are pressing the back button the run (thread should be canceled!)

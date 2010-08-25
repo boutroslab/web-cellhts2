@@ -175,7 +175,7 @@ public class DependenciesChecker {
                
                 String requiredCellHTS2Ver = msg.get("required-cellHTS2-version");
 
-                if(compareTwoRVersions(rVer, msg.get("required-R-version"))&&cellHTS2Ver.equals(requiredCellHTS2Ver)) {
+                if(compareTwoRVersions(rVer, msg.get("required-R-version"))&& cellHTS2Ver.equals(requiredCellHTS2Ver)) {
                     cellHTS2AndRVersion="R, cellHTS2 and RServer could be fe fetched and are in the right version.";
                 }
                 else {

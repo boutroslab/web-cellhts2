@@ -828,6 +828,43 @@
                     </p>
                 </t:form>
             </div>
+
+            <!--use the HTSAnalyzer stuff-->
+            <t:form t:id="HTSAnalyzerForm">
+                <p>
+                    <font color="red">Experimental Step:</font> Use the HTSAnalyzer package  (<a
+                    href="http://www.markowetzlab.org/software/HTSanalyzeR.html"
+                    target="_blank">help</a>)?
+                    <table>
+                        <t:radiogroup t:value="useHTSAnalyzer">
+                            <tr>
+                                <td>
+                                    <strong>Yes:</strong>
+                                </td>
+                                <td width="50px" align="right">
+                                    <t:radio t:id="HTSAnalyzerYes"
+                                             t:mixins="ck/OnEvent"
+                                             onCompleteCallback="onCompleteOnEvent"
+                                             event="click"/>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>No:</strong>
+                                </td>
+                                <td width="50px" align="right">
+                                    <t:radio t:id="HTSAnalyzerNo"
+                                             t:mixins="ck/OnEvent"
+                                             onCompleteCallback="onCompleteOnEvent"
+                                             event="click"/>
+                                </td>
+                            </tr>
+                        </t:radiogroup>
+                    </table>
+                </p>
+            </t:form>
+
         </div>
 
         <!--<t:if t:test="${nextStep5}">-->
