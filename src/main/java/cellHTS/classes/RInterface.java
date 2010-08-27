@@ -113,7 +113,7 @@ public class RInterface extends Thread {
         this.semaphore =  semaphore;
         this.emailNotification=eMailNotification;
         this.resultZipFile=resultZipFile;
-        this.htsResultZipFile=stringParams.get("runNameDir")+File.separator+new File(stringParams.get("runNameDir")).getName()+"_HTSAnalyzerResults.zip";
+        this.htsResultZipFile=new File(resultZipFile).getParent()+File.separator+new File(stringParams.get("runNameDir")).getName()+"_HTSAnalyzerResults.zip";
         this.emailAddress=emailAddress;
         this.sendErrorEmail=sendErrorEmail;
         this.uploadPath = uploadPath;
@@ -1031,7 +1031,7 @@ public class RInterface extends Thread {
             //which we will write into a properties file
             File dlPropertiesFile = new File(uploadPath+stringParams.get("jobName")+File.separator+".dlProperties");
 
-            String downloadLink = stringParams.get("emailDownloadLink");
+            String downloadLink = stringParams.get("emailDownloadLink")+"_HTSANALYZER";
 
             //init a properties file
 
@@ -1046,12 +1046,12 @@ public class RInterface extends Thread {
 
 
             //set the relation between runname and result zip file
-            propObj.setProperty(runName+"_RESULT_ZIP",htsResultZipFile);
+            propObj.setProperty(runName+"_HTSANALYZER_RESULT_ZIP",htsResultZipFile);
             //put in the properties file that we downloaded this runid zero times
-            propObj.setProperty(runName,"0");
+            propObj.setProperty(runName+"_HTSANALYZER","0");
             //generate a password for downloading
             String pw = PasswordGenerator.get(20);
-            propObj.setProperty(runName+"_password",pw);
+            propObj.setProperty(runName+"_HTSANALYZER_password",pw);
             try {
                 propObj.store(new FileOutputStream(dlPropertiesFile),"properties file for email Download information");
             }catch(Exception e) {
@@ -1102,12 +1102,14 @@ public class RInterface extends Thread {
 
             }
             String []files = {file,sessionFile};
+        System.out.println("before sending out message");
             postMailTools.postMail( emailAddress,
                                    "Your HTS Analyzer report",//"cellHTS2 report (\""+runName+"\"):",
                                     emailMsg,
                                     this.maintainEmailAddress,
                                      null //file  if we want to send the result as file
                                      );
+        System.out.println("after sending out message");
 
 
              return true;
