@@ -100,6 +100,7 @@ public class PersistentCellHTS2 implements Serializable {
     private boolean isEmailMandantory;
     private String fixRegExp;
     private String viabilityFunction;
+    private HTSAnalyzerParameter htsAnalyzerParameter;
 
    //TODO:somethings messed up with the constructor..plateconfig is plateannot
     public PersistentCellHTS2(
@@ -152,7 +153,8 @@ public class PersistentCellHTS2 implements Serializable {
                               String emailAddress,
                               boolean isEmailMandantory,
                               String fixRegExp,
-                              String viabilityFunction
+                              String viabilityFunction,
+                              HTSAnalyzerParameter htsAnalyzerParameter
                               ) {
 
         this.experiment = experiment;
@@ -213,6 +215,7 @@ public class PersistentCellHTS2 implements Serializable {
         this.fixRegExp=fixRegExp;
         this.viabilityFunction=viabilityFunction;
         this.useHTSAnalyzer=useHTSAnalyzer;
+        this.htsAnalyzerParameter=htsAnalyzerParameter;
     }
     public PersistentCellHTS2(){
         
@@ -634,5 +637,13 @@ public class PersistentCellHTS2 implements Serializable {
 
     public void setUseHTSAnalyzer(UseHTSAnalyzer useHTSAnalyzer) {
         this.useHTSAnalyzer = useHTSAnalyzer;
+    }
+
+    public HTSAnalyzerParameter getHtsAnalyzerParameter() {
+        return htsAnalyzerParameter;
+    }
+
+    public void setHtsAnalyzerParameter(HTSAnalyzerParameter htsAnalyzerParameter) {
+        this.htsAnalyzerParameter = htsAnalyzerParameter;
     }
 }

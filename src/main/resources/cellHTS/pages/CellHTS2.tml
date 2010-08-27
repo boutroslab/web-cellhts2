@@ -733,7 +733,7 @@
                                     <div t:type="ck/Tooltip" clientId="tooltip6"
                                          value="This function is still under construction and will be available soon."
                                          effect="appear">
-                                        X
+
                                     </div>
                                 </td>
 
@@ -833,7 +833,7 @@
             <t:form t:id="HTSAnalyzerForm">
                 <p>
                     <font color="red">Experimental Step:</font> Use the HTSAnalyzer package  (<a
-                    href="http://www.markowetzlab.org/software/HTSanalyzeR.html"
+                    href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/HTSAnalyzer+Addon"
                     target="_blank">help</a>)?
                     <table>
                         <t:radiogroup t:value="useHTSAnalyzer">
@@ -864,7 +864,7 @@
                     </table>
                 </p>
             </t:form>
-
+             <t:actionlink t:id="configureHTSAnalyzer">Configure HTSAnalyzer Run</t:actionlink>
         </div>
 
         <!--<t:if t:test="${nextStep5}">-->

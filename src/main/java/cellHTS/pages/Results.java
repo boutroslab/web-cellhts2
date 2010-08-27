@@ -149,6 +149,9 @@ public class Results {
     @Persist
     private String uploadPath;
 
+    @Persist
+    private HTSAnalyzerParameter htsAnalyzerParameter;
+
     /**
      * this method should be started when starting a new R cellHTS2 run ..
      *
@@ -222,6 +225,8 @@ public class Results {
         progressPercentage[0]="0_starting job";
         rSuccessStatus[0] = false;
         paramMap=new HashMap<String,String> ();
+        useHTSAnalyzer=null;
+        htsAnalyzerParameter=null;
     }
 
     /**
@@ -253,7 +258,7 @@ public class Results {
                        String channelLabel1,String channelLabel2,
                        ChannelTypes channelTypes, NormalizationTypes normalMethod, NormalScalingTypes normalScaling,
                        ResultsScalingTypes resultScalingTypes, SummerizeReplicates summaryMethod,LogTransform logTransform,
-                       ViabilityChannel viabilityChannel,String viabilityFunction, UseHTSAnalyzer useHTSAnalyzer) {
+                       ViabilityChannel viabilityChannel,String viabilityFunction, UseHTSAnalyzer useHTSAnalyzer, HTSAnalyzerParameter htsAnalyzerParameter) {
 
         this.channelTypes = channelTypes.toString().split("_")[0];
         paramMap.put("channelTypes",this.channelTypes);
@@ -293,14 +298,22 @@ public class Results {
          this.viabilityFunction=viabilityFunction;
          paramMap.put("viabilityFunction",this.viabilityFunction);
          this.useHTSAnalyzer=useHTSAnalyzer.toString();
-        paramMap.put("useHTSAnalyzer",this.useHTSAnalyzer);
+         paramMap.put("useHTSAnalyzer",this.useHTSAnalyzer);
+         this.htsAnalyzerParameter=htsAnalyzerParameter;
 
 
-         this.jobNamePrefix = jobNamePrefix;
+        //generateHTSAnalyzerParameters();
+        paramMap.put("geneCollectionSetup",htsAnalyzerParameter.generateGeneCollectionParameters());
+        paramMap.put("hTSAnalyzerParams",htsAnalyzerParameter.toHTSanalyzeRParameterString());
+
+
+        this.jobNamePrefix = jobNamePrefix;
         this.emailAddress=emailAddress;
         emailMSG="Thank you for using web cellHTS2.  The results will be sent to "+emailAddress;
 
     }
+
+    
 
     /**
      *
@@ -498,5 +511,5 @@ public class Results {
     public String getEmailMSG() {
         return emailMSG;
     }
-   
+
 }

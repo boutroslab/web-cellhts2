@@ -174,6 +174,8 @@ public class CellHTS2 {
 
     @InjectPage
     private CellHTS2 cellHTS2Page;
+    @InjectPage
+    private ConfigureHTSAnalyzer configureHTSAnalyzer;
 
     @Persist
     private String channelLabel1;
@@ -221,6 +223,9 @@ public class CellHTS2 {
 
     @Persist
     private String googleAnalyticsTrackerID;
+
+    @Persist
+    private HTSAnalyzerParameter htsAnalyzerParameter;
 
     @InjectPage
     private Results resultPage;
@@ -423,7 +428,7 @@ public class CellHTS2 {
             plateConfigHeaderPattern = Configuration.PLATECONFIG_HEADER_PATTERN;
             plateConfigBodyPattern = Configuration.PLATECONFIG_BODY_PATTERN;
 
-
+            htsAnalyzerParameter=new HTSAnalyzerParameter();
 
         }
         //this will run everytime we make a new job
@@ -1033,6 +1038,7 @@ public class CellHTS2 {
             emailAddress= persistentCellHTS2.getEmailAddress();
             fixRegExp=persistentCellHTS2.getFixRegExp();
             viabilityFunction=persistentCellHTS2.getViabilityFunction();
+            htsAnalyzerParameter=persistentCellHTS2.getHtsAnalyzerParameter();
             
             //email processing is nothing which you want to be saved
             //isEmailMandantory=persistentCellHTS2.isEmailMandantory();
@@ -1678,7 +1684,8 @@ public class CellHTS2 {
             resultPage.putAll(jobNameDir,screenName,emailAddress,
                    annotFile, descriptionFile, plateListFile, plateConfFile, screenLogFile,sessionFile,
                    channelLabel1, channelLabel2,
-                   channel, normalTypes, normalScaling, resultsScaling, sumRep, logTransform,viabilityChannel,viabilityFunction,useHTSAnalyzer);
+                   channel, normalTypes, normalScaling, resultsScaling, sumRep, logTransform,viabilityChannel,viabilityFunction,useHTSAnalyzer,
+                    htsAnalyzerParameter);
             return resultPage;
         
     }
@@ -1692,7 +1699,7 @@ public class CellHTS2 {
     public void onActionFromNewAnalysis() {
         //reset everything and restart it
         notNewRun = false;
-        System.out.println("BANNNNNNNNNNNNG");
+       
 
     }
 
@@ -1789,7 +1796,8 @@ public class CellHTS2 {
                 emailAddress,
                 isEmailMandantory,
                 fixRegExp,
-                viabilityFunction
+                viabilityFunction,
+                htsAnalyzerParameter
         );
         //stream the persistent obj
         FileOutputStream fos = null;
@@ -3622,6 +3630,11 @@ public class CellHTS2 {
                 throw new TapestryException("Cannot read or write directory: "+uploadPath+".\nCheck read/write permissions",null);
         }
     }
+    public Object onActionFromConfigureHTSAnalyzer() {
+        configureHTSAnalyzer.setHtsanalyzeParameters(htsAnalyzerParameter);
+        return configureHTSAnalyzer;
+    }
+
     public void onActionFromRestartCellHTS2Page() {
         this.notNewRun=false;
     }

@@ -223,15 +223,23 @@ public class RInterface extends Thread {
        // if we analysing using HTSAnalyzer...dont show 100 percent but stream everything alltogether in the end
        else if(success && builtCellHTS2ObjToFile) {            
            //dont show 100 percent
-            runHTSAnalyzeR();
+            if(runHTSAnalyzeR()) {
             //quick fix ...we will zip everything again because we can only stream one file and this is static and cannot be changed
            //because its already in javascript
-            addHTSAnalyzerResultsToResultsZipFile();
+                addHTSAnalyzerResultsToResultsZipFile();
            //now show in the end...so stream will started
-            progressPercentage[0]="100_successfully done";
-            successBool[0]=true;                  
-            return;
+                progressPercentage[0]="100_successfully done";
+                successBool[0]=true;
+                return;
+            }
+           else {
+                //do not add the HTSAnalyzer Results but stream back the cellHTS2 results
+                progressPercentage[0]="100_successfully done";
+                successBool[0]=true;
+                return;
+            }
        }
+
 
 
     }
@@ -815,8 +823,9 @@ public class RInterface extends Thread {
                 voidEval(cmdString);
                 //HTSAnalyzer lacks feature of setting up outputdir
                 String htsOutDir = stringParams.get("runNameDir")+File.separator+HTSANALYZER_OUTPUT_DIR;
-                String evalOutput = "dir.create(\""+htsOutDir+"\", recursive = TRUE)";
-                voidEval(evalOutput);
+                cmdString = "dir.create(\""+htsOutDir+"\", recursive = TRUE)";
+                debugString+=cmdString+"\n";
+                voidEval(cmdString);
 
 
 //first we have to change to the Indir in order to make the R cellHTS script working
@@ -826,7 +835,7 @@ public class RInterface extends Thread {
                 
 
                 String openFile = "zz <- file(\""+rOutputHTSAnalyzerFile+"\", open=\"w\")";
-                //cmdString=openFile ;
+                cmdString=openFile ;
                 debugString+=cmdString+"\n";
                 voidEval(openFile);
 
@@ -850,15 +859,25 @@ public class RInterface extends Thread {
                 debugString+=cmdString+"\n";
                 voidEval(cmdString);
 
-                progressPercentage[0]="20_doing some go, kegg and gsc initalization";
-                cmdString="Dm.GO.CC<-GOGeneSets(species=\"Drosophila_melanogaster\",ontologies=c(\"CC\"))\n" +
+                /*cmdString="Dm.GO.CC<-GOGeneSets(species=\"Drosophila_melanogaster\",ontologies=c(\"CC\"))\n" +
                         "     kegg.droso<-KeggGeneSets(species=\"Drosophila_melanogaster\");\n" +
                         "     gsc.list<-list(Dm.GO.CC=Dm.GO.CC,kegg.droso=kegg.droso)";
                 debugString+=cmdString+"\n";
                 voidEval(cmdString);
+                */
+                if(!stringParams.get("geneCollectionSetup").equals("")) {
+                    progressPercentage[0]="20_doing some go, kegg and gsc initalization";
+
+                     cmdString=stringParams.get("geneCollectionSetup");
+                     debugString+=cmdString+"\n";
+                     voidEval(cmdString);
+
+                   
+                }
+
 
                 progressPercentage[0]="25_starting the HTSAnalyzer routine";
-                cmdString="cellHTS2DrosoData<-dumpObj;\n" +
+                /*cmdString="cellHTS2DrosoData<-dumpObj;\n" +
                         "HTSanalyzeR(\n" +
                         " \tx=cellHTS2DrosoData,\n" +
                         " \tannotationColumn=\"GeneID\",\n" +
@@ -869,7 +888,11 @@ public class RInterface extends Thread {
                         " \twhichSetIsGOIds=1,\n" +
                         " \tnetworkObject=NA,\n" +
                         " \tminGeneSetSize=5\n" +
-                        "\t)";
+                        "\t)";    */
+                cmdString="cellHTS2DrosoData<-dumpObj;\n" +"HTSanalyzeR(x=cellHTS2DrosoData,listOfGeneSetCollections=gsc.list,"
+                          +stringParams.get("hTSAnalyzerParams")
+                        +");\n";
+
                 debugString+=cmdString+"\n";
                 voidEval(cmdString);
 
@@ -893,8 +916,10 @@ public class RInterface extends Thread {
 
                     //uncomment try catch block for debugging
                     try {
-
-                        voidEval("sink()");
+                        String cmdString= "sink()";
+                        voidEval(cmdString);
+                        debugString+=cmdString+"\n";
+                    voidEval(cmdString);
                     } catch(Exception re) {
                         tempString+=" <br/>AND Error occured closing the R_OUTPUTSTREAM (this will be 99% caused by a Rserve dynlib crash):maybe your logfile isnt complete!...which will be a bad thing:<br/>One reason is not correctly formatting your annotation files under mac, e.g. saving it as a dos text file will bring Rserve to make segfault<br/>another reason is the use of Rserve <0.6";
                     }
@@ -916,9 +941,11 @@ public class RInterface extends Thread {
         try {
             //at the end of our run
             //restore old values for the next one accessing the server :
+            String cmdString= "setwd(orgDir)";
+            voidEval(cmdString);
+            debugString+=cmdString+"\n";
 
 
-            voidEval("setwd(orgDir)");                      
          }catch(Exception e) {
             progressPercentage[0]="101_Error occured setting original dir";
             sendNotificationToMaintainer(progressPercentage[0],jobID);
