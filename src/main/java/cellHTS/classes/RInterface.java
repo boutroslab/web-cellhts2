@@ -200,8 +200,9 @@ public class RInterface extends Thread {
         //run a complete cellHTS2 analysis and send results by mail
         successBool[0]=false;
         progressPercentage[0]="0_starting cellHTS2 analysis job";
-       boolean success = runCellHTS2Analysis();
-
+        boolean success = runCellHTS2Analysis();
+        System.out.println("success_var: "+success);
+        System.out.println("emailNotification: "+emailNotification);
         //if we have email notification run everything after another and send mails as soon as things have been finisheing
         if(success && emailNotification ) {
             sendcellHTS2SuccesMail();
@@ -590,7 +591,7 @@ public class RInterface extends Thread {
                     } catch(REngineException m) {
                         tempString+=" <br/>AND Error occured closing the R_OUTPUTSTREAM (this will be 99% caused by a Rserve dynlib crash):maybe your logfile isnt complete!...which will be a bad thing:<br/>One reason is not correctly formatting your annotation files under mac, e.g. saving it as a dos text file will bring Rserve to make segfault<br/>another reason is the use of Rserve <0.6";
                     }
-                    progressPercentage[0]=tempString+"<br/><br/> <FONT COLOR=\"red\">received error Messages:"+getErrorMsgFromRLogfile()+"</FONT>"+"<br/>";
+                    progressPercentage[0]=tempString+"<br/><br/> <FONT COLOR=\"red\">received error Messages:"+getErrorMsgFromRLogfile(new File(rOutputFile))+"</FONT>"+"<br/>";
                     progressPercentage[0]+="msg:"+msg+"<br/>errorDesc:"+requestErrorDesc;//+"<br/>returnCode:"+returnCode+"<br/>";
                     FileCreator.stringToFile(new File(rOutputScriptFile),debugString);
                     //add script to the results zip file                          
@@ -611,7 +612,7 @@ public class RInterface extends Thread {
             } catch (Exception e) {
                 progressPercentage[0]="101_General error occured: "+e.getMessage();
                 sendNotificationToMaintainer(progressPercentage[0],jobID);
-                sendNotificationToUser("General exception occured. Please get in contact with a program maintainer soon",jobID);
+                sendNotificationToUser("General exception occured. Please get in contact with a program maintainer soon, possible R errormsg: "+getErrorMsgFromRLogfile(new File(rOutputFile)),jobID);
                 getRengine().close();
                 semaphore.v(threadID);
                 return false;
@@ -759,7 +760,6 @@ public class RInterface extends Thread {
 
                 }
                 String []files = {file,sessionFile};
-
                 postMailTools.postMail( emailAddress,
                                        "Your web cellHTS2 report",//"cellHTS2 report (\""+runName+"\"):",
                                         emailMsg,
@@ -923,7 +923,7 @@ public class RInterface extends Thread {
                     } catch(Exception re) {
                         tempString+=" <br/>AND Error occured closing the R_OUTPUTSTREAM (this will be 99% caused by a Rserve dynlib crash):maybe your logfile isnt complete!...which will be a bad thing:<br/>One reason is not correctly formatting your annotation files under mac, e.g. saving it as a dos text file will bring Rserve to make segfault<br/>another reason is the use of Rserve <0.6";
                     }
-                    progressPercentage[0]=tempString+"<br/><br/> <FONT COLOR=\"red\">received error Messages:"+getErrorMsgFromRLogfile()+"</FONT>"+"<br/>";
+                    progressPercentage[0]=tempString+"<br/><br/> <FONT COLOR=\"red\">received error Messages:"+getErrorMsgFromRLogfile(new File(rOutputHTSAnalyzerFile))+"</FONT>"+"<br/>";
                     progressPercentage[0]+="msg:"+msg+"<br/>errorDesc:"+requestErrorDesc+"<br/>";//returnCode:"+returnCode+"<br/>";
 
                     FileCreator.stringToFile(new File(rOutputHTSAnalyzerScriptFile),debugString);
@@ -962,7 +962,7 @@ public class RInterface extends Thread {
         }catch(Exception e) {
             progressPercentage[0]="101_Error occured closing the R_OUTPUTSTREAM:maybe your logfile isnt complete!...which will be a bad thing:\nOne reason is running Rserve binary on Mac Os X server.Check /var/log/system.log and search for a Rserve crash report";
             sendNotificationToMaintainer(progressPercentage[0]+"\n"+e.getMessage(),jobID);
-            sendNotificationToUser("General exception occured. Please get in contact with a program maintainer soon",jobID);
+            sendNotificationToUser("General exception occured. Please get in contact with a program maintainer soon, possible R error message: "+getErrorMsgFromRLogfile(new File(rOutputHTSAnalyzerFile)),jobID);
             e.printStackTrace();
             getRengine().close();
             semaphore.v(threadID);
@@ -1074,7 +1074,6 @@ public class RInterface extends Thread {
 
             }
             String []files = {file,sessionFile};
-
             postMailTools.postMail( emailAddress,
                                    "Your HTS Analyzer report",//"cellHTS2 report (\""+runName+"\"):",
                                     emailMsg,
@@ -1156,8 +1155,8 @@ public class RInterface extends Thread {
      */
     //TODO: this sub works only as long as were running this webapp from the same server as R and RServe is installed on
     //TODO: otherwise this has to be changed to copy the log file from the server first
-    public String getErrorMsgFromRLogfile() {
-        String fileContent = FileParser.readFileAsStringWithNewline(new File(rOutputFile));
+    public String getErrorMsgFromRLogfile(File outputFile) {
+        String fileContent = FileParser.readFileAsStringWithNewline(outputFile);
         //begin returning error message at first error occurence
         String returnErrorMsg="";
         String[]lines = fileContent.split("\n");
