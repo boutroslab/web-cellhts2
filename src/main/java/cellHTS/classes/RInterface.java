@@ -200,9 +200,7 @@ public class RInterface extends Thread {
         //run a complete cellHTS2 analysis and send results by mail
         successBool[0]=false;
         progressPercentage[0]="0_starting cellHTS2 analysis job";
-        boolean success = runCellHTS2Analysis();
-        System.out.println("success_var: "+success);
-        System.out.println("emailNotification: "+emailNotification);
+        boolean success = runCellHTS2Analysis();    
         //if we have email notification run everything after another and send mails as soon as things have been finisheing
         if(success && emailNotification ) {
             sendcellHTS2SuccesMail();
@@ -235,7 +233,7 @@ public class RInterface extends Thread {
             }
            else {
                 //do not add the HTSAnalyzer Results but stream back the cellHTS2 results
-                progressPercentage[0]="100_successfully done";
+                progressPercentage[0]="100_cellHTS2 was successful but HTSAnalyzer was unsuccessful (see HTSAnalyzer output): "+progressPercentage[0];
                 successBool[0]=true;
                 return;
             }
@@ -568,13 +566,10 @@ public class RInterface extends Thread {
                     voidEval(cmdString);
 
 
-
-                    //after we are done...create a zipfile out of the results
-                    //progressPercentage[0]="100_successfully done";
-                    //successBool[0]=true;
-                    
                 }
-                    
+                                 //close the outputsteram
+                   
+
                 }catch(REngineException e) {
                     String step = progressPercentage[0].split("_")[1];
                     String tempString="101_Error occured at step:"+step+"<br/>Please consult R logfile under:<br/>"+rOutputFile+"<br/> if debugging is on also run the script "+rOutputScriptFile ;
@@ -590,7 +585,7 @@ public class RInterface extends Thread {
                         voidEval("sink()");
                     } catch(REngineException m) {
                         tempString+=" <br/>AND Error occured closing the R_OUTPUTSTREAM (this will be 99% caused by a Rserve dynlib crash):maybe your logfile isnt complete!...which will be a bad thing:<br/>One reason is not correctly formatting your annotation files under mac, e.g. saving it as a dos text file will bring Rserve to make segfault<br/>another reason is the use of Rserve <0.6";
-                    }
+                    } 
                     progressPercentage[0]=tempString+"<br/><br/> <FONT COLOR=\"red\">received error Messages:"+getErrorMsgFromRLogfile(new File(rOutputFile))+"</FONT>"+"<br/>";
                     progressPercentage[0]+="msg:"+msg+"<br/>errorDesc:"+requestErrorDesc;//+"<br/>returnCode:"+returnCode+"<br/>";
                     FileCreator.stringToFile(new File(rOutputScriptFile),debugString);
@@ -617,13 +612,16 @@ public class RInterface extends Thread {
                 semaphore.v(threadID);
                 return false;
             }
-        //try to close the outputstream
+       
         try {
             //at the end of our run
             //restore old values for the next one accessing the server :
 
             //back to old dir
-            voidEval("setwd(orgDir)");
+
+            String orgDir = "setwd(orgDir)";
+            debugString+=orgDir+"\n";
+            voidEval(orgDir);
 
          }catch(Exception n) {
             progressPercentage[0]="101_Error occured setting original dir";
@@ -633,11 +631,15 @@ public class RInterface extends Thread {
             semaphore.v(threadID);
             return false;
         }
+
+
+
          //uncomment try catch block for debugging
         try {
             //close the logging and the logfile
-
-            voidEval("sink()");
+            String sink = "sink()";
+            debugString+=sink+"\n";
+            voidEval(sink);
         }catch(Exception e) {
             progressPercentage[0]="101_Error occured closing the R_OUTPUTSTREAM:maybe your logfile isnt complete!...which will be a bad thing:\nOne reason is running Rserve binary on Mac Os X server.Check /var/log/system.log and search for a Rserve crash report";
             sendNotificationToMaintainer(progressPercentage[0]+"\n"+e.getMessage(),jobID);
@@ -647,6 +649,21 @@ public class RInterface extends Thread {
             semaphore.v(threadID);
             return false;
         }
+
+        //do a final check if any errors have occured
+                                       if(this.rOutputHasErrors(new File(rOutputFile))) {
+                                           progressPercentage[0]="101_Error occured ";
+                                            sendNotificationToMaintainer(progressPercentage[0],jobID);
+                                            sendNotificationToUser("General exception occured. Please get in contact with a program maintainer soon, possible R error "+this.getErrorMsgFromRLogfile(new File(rOutputFile)),jobID);
+                                            getRengine().close();
+                                            semaphore.v(threadID);
+                                            return false;
+                                       }
+
+                                       //after we are done...create a zipfile out of the results
+                                       //progressPercentage[0]="100_successfully done";
+                                       //successBool[0]=true;
+
 
         //if were here we have won!
         FileCreator.stringToFile(new File(rOutputScriptFile),debugString);
@@ -896,13 +913,24 @@ public class RInterface extends Thread {
                 debugString+=cmdString+"\n";
                 voidEval(cmdString);
 
+                    try {
+                                           String sinkMe = "sink()";
+                                           debugString+=sinkMe+"\n";
+                                           voidEval(sinkMe);
 
-                //after we are done...create a zipfile out of the results
-            //System.out.println("after HTSAnalyzer is ready");
-            //    progressPercentage[0]="100_successfully done";
-            //    successBool[0]=true;
+                                       } catch(REngineException m) {
+                                           String tempString =" <br/>AND Error occured closing the R_OUTPUTSTREAM (this will be 99% caused by a Rserve dynlib crash):maybe your logfile isnt complete!...which will be a bad thing:<br/>One reason is not correctly formatting your annotation files under mac, e.g. saving it as a dos text file will bring Rserve to make segfault<br/>another reason is the use of Rserve <0.6";
+                                           throw new REngineException(getRengine(),tempString);
+                                       }
 
+                                       //do a final check if any errors have occured
+                                       if(this.rOutputHasErrors(new File(rOutputHTSAnalyzerFile))) {
+                                           throw new REngineException(getRengine(),"R output has errors");
+                                       }
 
+                                       //after we are done...create a zipfile out of the results
+                                       //progressPercentage[0]="100_successfully done";
+                                       //successBool[0]=true;
 
         }catch(Exception e) {
                     String step = progressPercentage[0].split("_")[1];
@@ -919,7 +947,7 @@ public class RInterface extends Thread {
                         String cmdString= "sink()";
                         voidEval(cmdString);
                         debugString+=cmdString+"\n";
-                    voidEval(cmdString);
+                        voidEval(cmdString);
                     } catch(Exception re) {
                         tempString+=" <br/>AND Error occured closing the R_OUTPUTSTREAM (this will be 99% caused by a Rserve dynlib crash):maybe your logfile isnt complete!...which will be a bad thing:<br/>One reason is not correctly formatting your annotation files under mac, e.g. saving it as a dos text file will bring Rserve to make segfault<br/>another reason is the use of Rserve <0.6";
                     }
@@ -1172,6 +1200,20 @@ public class RInterface extends Thread {
             }
         }
         return returnErrorMsg;
+    }
+    public boolean rOutputHasErrors(File outputFile) {
+        String fileContent = FileParser.readFileAsStringWithNewline(outputFile);
+        String[]lines = fileContent.split("\n");
+        Pattern p = Pattern.compile("Fehler|Error");
+
+        for(String line : lines) {
+            Matcher m = p.matcher(line);
+            if(m.find()) {
+                return true;
+            }
+
+        }
+        return false;
     }
 
     /**
