@@ -771,12 +771,12 @@ public class RInterface extends Thread {
                 //
                 //}
                 //create array of attachements
-                String sessionFile =  stringParams.get("sessionFile");
-                if(sessionFile==null) {
-                    return false;
+                //String sessionFile =  stringParams.get("sessionFile");
+                //if(sessionFile==null) {
+                //    return false;
 
-                }
-                String []files = {file,sessionFile};
+                //}
+                //String []files = {file,sessionFile};
                 postMailTools.postMail( emailAddress,
                                        "Your web cellHTS2 report",//"cellHTS2 report (\""+runName+"\"):",
                                         emailMsg,
@@ -1062,9 +1062,9 @@ public class RInterface extends Thread {
 
             String emailMsg="";//"Your job ID was: "+runName+'\n';
             String file=null;
-            int percentage = Integer.parseInt(progressPercentage[0].split("_")[0]);
-            String msg = progressPercentage[0].split("_")[1];
-            if(percentage==100) {
+            //int percentage = Integer.parseInt(progressPercentage[0].split("_")[0]);
+            //String msg = progressPercentage[0].split("_")[1];
+            //if(percentage==100) {
                 emailMsg+="Dear HTS Analyzer user,\n" +
                         "\n" +
                         "the calculations have been completed. Please download the report\n" +
@@ -1088,20 +1088,20 @@ public class RInterface extends Thread {
 
                 file=htsResultZipFile;
 
-            }
-            else {
+            //}
+            /*else {
                 emailMsg+="Sorry, but your run was not successful! Error percentage: "+percentage+"\nSystem output:\n"+msg+"\nPlease consult the manual or ask the developers of this tool for help!";
                 file =null;
                 return false;
 
-            }
+            }*/
             //create array of attachements
-            String sessionFile =  stringParams.get("sessionFile");
-            if(sessionFile==null) {
-                return false;
+            //String sessionFile =  stringParams.get("sessionFile");
+            //if(sessionFile==null) {
+            //    return false;
 
-            }
-            String []files = {file,sessionFile};
+            //}
+            //String []files = {file,sessionFile};
         System.out.println("before sending out message");
             postMailTools.postMail( emailAddress,
                                    "Your HTS Analyzer report",//"cellHTS2 report (\""+runName+"\"):",
