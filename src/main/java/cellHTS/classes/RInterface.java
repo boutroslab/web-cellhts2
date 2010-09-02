@@ -1277,10 +1277,10 @@ public class RInterface extends Thread {
     public boolean createHTSAnalyzerResultsZipFile() {
         boolean returnValue = true;
         //the dir where results are stored
-        String htsOutDir = stringParams.get("runNameDir")+File.separator+HTSANALYZER_OUTPUT_DIR+File.separator+HTSANALYZER_RESULTS_DIR;
+        String htsOutDir = stringParams.get("runNameDir")+File.separator+HTSANALYZER_OUTPUT_DIR;//+File.separator+HTSANALYZER_RESULTS_DIR;
         //zip the results if there are any at all!
 
-
+         String excludeFiles[]=new String[]{"BiogridData"};
             //create an temporary directory for this session
             String zipDir=htsOutDir;
 
@@ -1296,7 +1296,7 @@ public class RInterface extends Thread {
 
              String rootDir = tmpDirs[tmpDirs.length-1];
 
-             if (ShellEnvironment.zipDir(zipDir, zos, rootDir)) {
+             if (ShellEnvironment.zipDirWithExcludeFiles(zipDir, zos, rootDir,excludeFiles)) {
 
                 zos.close();
 

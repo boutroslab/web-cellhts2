@@ -269,6 +269,75 @@ public class ShellEnvironment {
         return true;
 
     }
+
+    public static boolean zipDirWithExcludeFiles(String dir2zip, ZipOutputStream zos, String rootDir,String[]excludeFiles) {
+        try {
+            //create a new File object based on the directory we provide
+
+            File zipDir = new File(dir2zip);
+            //get a listing of the directory content
+            String[] dirList = zipDir.list();
+            byte[] readBuffer = new byte[2156];
+            int bytesIn = 0;
+            //loop through dirList, and zip the files
+            for (int i = 0; i < dirList.length; i++) {
+
+
+                File f = new File(zipDir, dirList[i]);
+
+                //System.out.println(f.getAbsolutePath());
+                boolean foundExcludeItem=false;
+                for(String excludeFile: excludeFiles) {
+
+                    if(f.getAbsolutePath().contains(excludeFile)) {
+
+                        foundExcludeItem=true;
+                    }
+                }
+                if(foundExcludeItem) {
+                    continue;
+                }
+                if (f.isDirectory()) {
+                    //if the File object is a directory, call this
+                    //function again to add its content recursively                      
+                    String filePath = f.getPath();
+                    zipDirWithExcludeFiles(filePath, zos, rootDir,excludeFiles);
+                    //loop again
+                    continue;
+                }
+                //if we reached here, the File object f was not a directory
+                //create a FileInputStream on top of f
+
+                FileInputStream fis = new FileInputStream(f);
+                // create a new zip entry
+
+                //we work with absolute pathes but we want to disregard them here..cut abs path
+                //this is a big limitation
+                String[] tmpArr = f.getAbsolutePath().split(rootDir);
+                String path = tmpArr[1];
+
+                path = path.replaceFirst(File.separator, "");
+                String newPath = rootDir + File.separator + path;
+
+                ZipEntry anEntry = new ZipEntry(newPath);
+                //place the zip entry in the ZipOutputStream object
+                zos.putNextEntry(anEntry);
+                //now write the content of the file to the ZipOutputStream
+                while ((bytesIn = fis.read(readBuffer)) != -1) {
+                    zos.write(readBuffer, 0, bytesIn);
+                }
+                //close the Stream
+                fis.close();
+            }
+        }
+
+        catch (Exception e) {
+            //handle exception
+            return false;
+        }
+        return true;
+    }
+
     //zip files without directory structure
     //zipDirs param is the internal directory a certain files[i] will be stored at in the zipfile
     //this param can be null
