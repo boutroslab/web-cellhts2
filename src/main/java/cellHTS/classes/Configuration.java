@@ -75,7 +75,7 @@ public class Configuration {
          DATAFILE_PATTERNS.put(Pattern.compile("DHGM_(\\d+)_(\\d+)\\."),
                                               new DataFileParameter[]{DataFileParameter.REPLIC,DataFileParameter.PLATE});
      }
-    public static final Pattern ANNOTFILE_HEADER_PATTERN = Pattern.compile("^Plate\\tWell\\t\\w+");
+    public static final Pattern ANNOTFILE_HEADER_PATTERN = Pattern.compile("^Plate\\tWell\\tGeneID");
     public static final Pattern ANNOTFILE_BODY_PATTERN = Pattern.compile("^\\w+\\t\\w+\t\\w+");
     public static final Pattern DESCRIPTIONFILE_HEADER_PATTERN = Pattern.compile("^\\[[\\w\\s]+\\]");
     public static final Pattern DESCRIPTIONFILE_BODY_PATTERN = Pattern.compile("[\\w\\n ]*");

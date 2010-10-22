@@ -124,7 +124,67 @@ public class FileParser {
         returnArr[1] = "" + lineCnt;
         return returnArr;
     }
+    public static String[] checkFileRegExpIgnoreCase(Pattern pattern, File file, Pattern headerPattern) {
+        //if the file contains only valid content, it returns true and
+        //empty error code
+        String[] returnArr = {"true", ""};
 
+        headerPattern = Pattern.compile(headerPattern.pattern(),Pattern.CASE_INSENSITIVE);
+        pattern = Pattern.compile(pattern.pattern(),Pattern.CASE_INSENSITIVE);
+
+        Matcher m;
+        int lineCnt;
+        if (pattern == null) {
+            String exceptionText = "method checkFileRegExp needs a Pattern as a parameter";
+            TapestryException exception = new TapestryException(exceptionText, null);
+            throw exception;
+        }
+
+        try {
+            FileReader reader = new FileReader(file);
+            BufferedReader buffer = new BufferedReader(reader);
+
+            String line;
+            lineCnt = 0;
+            boolean headerFound = false;
+            while ((line = buffer.readLine()) != null) {
+                lineCnt++;
+                //check the header line...aka first line
+                if (headerPattern != null && lineCnt == 1) {
+                    //header pattern is optional...but if we have one it has to match!
+                    m = headerPattern.matcher(line);
+                    if (!m.find()) {
+                        returnArr[0] = "false";
+                        returnArr[1] = "cannot parse header line: " + line;
+                        return returnArr;
+                    }
+
+                } else {
+                    m = pattern.matcher(line);
+                    if (!m.find()) {
+                        returnArr[0] = "false";
+                        returnArr[1] = "cannot parse line  " + lineCnt + " " + line;
+                        return returnArr;
+
+                    }
+                }
+
+            }
+            if (lineCnt == 0) {
+                returnArr[0] = "false";
+                returnArr[1] = "cannot use empty file";
+                return returnArr;
+            }
+
+        } catch (IOException e) {
+            returnArr[0] = "false";
+            returnArr[1] = "IO Error";
+            return returnArr;
+        }
+        //only if true
+        returnArr[1] = "" + lineCnt;
+        return returnArr;
+    }
 
     /**
      *

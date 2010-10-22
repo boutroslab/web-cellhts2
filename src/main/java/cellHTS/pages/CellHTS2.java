@@ -1457,7 +1457,7 @@ public class CellHTS2 {
     }
 
     public void loadAnnotationFile(File copied) {
-        String result[] = FileParser.checkFileRegExp(annotBodyPattern, copied, annotHeaderPattern);
+        String result[] = FileParser.checkFileRegExpIgnoreCase(annotBodyPattern, copied, annotHeaderPattern);
 
         if (result[0].equals("true")) {
             annotFile = copied.getName();
