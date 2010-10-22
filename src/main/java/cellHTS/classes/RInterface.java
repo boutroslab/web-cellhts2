@@ -592,7 +592,7 @@ public class RInterface extends Thread {
                     //add script to the results zip file                          
 
                    sendNotificationToMaintainer(progressPercentage[0],jobID);
-                   sendNotificationToUser("General Rserve problem:\n"+" at step: "+step+"\n"+msg+"  "+requestErrorDesc+" \nPlease get in contact with program maintainers",jobID);
+                   sendNotificationToUser("General Rserve problem:\n"+" at step: "+step+"\n"+getErrorMsgFromRLogfile(new File(rOutputFile))+"\n"+msg+"  "+requestErrorDesc+" \nPlease get in contact with program maintainers",jobID);
 
                     getRengine().close();
                     semaphore.v(threadID);
@@ -626,7 +626,7 @@ public class RInterface extends Thread {
          }catch(Exception n) {
             progressPercentage[0]="101_Error occured setting original dir";
             sendNotificationToMaintainer(progressPercentage[0],jobID);
-            sendNotificationToUser("General exception occured. Please get in contact with a program maintainer soon",jobID);
+            sendNotificationToUser("General exception occured. Please get in contact with a program maintainer soon, possible R errormsg: "+getErrorMsgFromRLogfile(new File(rOutputFile)),jobID);
             getRengine().close();
             semaphore.v(threadID);
             return false;
@@ -643,7 +643,7 @@ public class RInterface extends Thread {
         }catch(Exception e) {
             progressPercentage[0]="101_Error occured closing the R_OUTPUTSTREAM:maybe your logfile isnt complete!...which will be a bad thing:\nOne reason is running Rserve binary on Mac Os X server.Check /var/log/system.log and search for a Rserve crash report";
             sendNotificationToMaintainer(progressPercentage[0]+"\n"+e.getMessage(),jobID);
-            sendNotificationToUser("General exception occured. Please get in contact with a program maintainer soon",jobID);
+            sendNotificationToUser("General exception occured. Please get in contact with a program maintainer soon, possible R errormsg: "+getErrorMsgFromRLogfile(new File(rOutputFile)),jobID);
             e.printStackTrace();
             getRengine().close();
             semaphore.v(threadID);
@@ -814,7 +814,7 @@ public class RInterface extends Thread {
             e.printStackTrace();
 
             sendNotificationToMaintainer(e.getMessage(),jobID);
-            sendNotificationToUser("General server problems. Please get in contact with program maintainers",jobID);
+            sendNotificationToUser("General server problems. Please get in contact with program maintainers: Rserver not available",jobID);
             return false;
             //throw new TapestryException(exceptionText, null);
 
@@ -958,7 +958,7 @@ public class RInterface extends Thread {
                     //add script to the results zip file
 
                    sendNotificationToMaintainer(progressPercentage[0],jobID);
-                   sendNotificationToUser("General Rserve problem:\n"+" at step: "+step+"\n"+msg+"  "+requestErrorDesc+" \nPlease get in contact with program maintainers",jobID);
+                   sendNotificationToUser("General Rserve problem:\n"+" at step: "+step+"\n"+msg+"  "+requestErrorDesc+" \nPlease get in contact with program maintainers, received error Messages:"+getErrorMsgFromRLogfile(new File(rOutputHTSAnalyzerFile)),jobID);
 
                     getRengine().close();
                     semaphore.v(threadID);
@@ -977,7 +977,7 @@ public class RInterface extends Thread {
          }catch(Exception e) {
             progressPercentage[0]="101_Error occured setting original dir";
             sendNotificationToMaintainer(progressPercentage[0],jobID);
-            sendNotificationToUser("General exception occured. Please get in contact with a program maintainer soon",jobID);
+            sendNotificationToUser("General exception occured. Please get in contact with a program maintainer soon: cannot set dir on server",jobID);
             getRengine().close();
             semaphore.v(threadID);
             return false;
@@ -1003,7 +1003,7 @@ public class RInterface extends Thread {
             progressPercentage[0] = "101_Error occured trying to zip the resultfiles!";
 
             sendNotificationToMaintainer(progressPercentage[0], jobID);
-            sendNotificationToUser("General server problems. Please get in contact with program maintainers", jobID);
+            sendNotificationToUser("General server problems. Please get in contact with program maintainers, cannot zip files", jobID);
 
             getRengine().close();
             semaphore.v(threadID);
