@@ -6,7 +6,7 @@
 
             <t:parameter name="speciesSet">
                   <t:label for="speciesSet"/>:
-                  <t:select t:id="speciesSet" model="speciesSet" t:value="htsanalyzeParameters.species" t:blankOption="never"/>
+                  <t:select t:id="speciesSet" model="speciesSet" t:value="speciesUpdater" t:blankOption="never"/>
               </t:parameter>
             <t:parameter name="initalIDsSet">
                   <t:label for="initalIDsSet"/>:

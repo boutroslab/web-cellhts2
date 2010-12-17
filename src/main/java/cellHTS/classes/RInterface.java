@@ -906,7 +906,7 @@ public class RInterface extends Thread {
                         " \tnetworkObject=NA,\n" +
                         " \tminGeneSetSize=5\n" +
                         "\t)";    */
-                cmdString="cellHTS2DrosoData<-dumpObj;\n" +"HTSanalyzeR(x=cellHTS2DrosoData,listOfGeneSetCollections=gsc.list,"
+                cmdString="cellHTS2DrosoData<-dumpObj;\n" +"HTSanalyzeR4cellHTS2(normCellHTSobject=cellHTS2DrosoData,listOfGeneSetCollections=gsc.list,"
                           +stringParams.get("hTSAnalyzerParams")
                         +");\n";
 

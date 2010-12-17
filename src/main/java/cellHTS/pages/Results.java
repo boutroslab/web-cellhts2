@@ -303,6 +303,10 @@ public class Results {
 
 
         //generateHTSAnalyzerParameters();
+        String geneCollectionParameters = htsAnalyzerParameter.generateGeneCollectionParameters();
+        if(geneCollectionParameters.equals("")) {
+            throw new TapestryException("geneCollectionParameters is empty maybe organism names have changed/extended in HTSAnalyzer???",null);
+        }
         paramMap.put("geneCollectionSetup",htsAnalyzerParameter.generateGeneCollectionParameters());
         paramMap.put("hTSAnalyzerParams",htsAnalyzerParameter.toHTSanalyzeRParameterString());
 

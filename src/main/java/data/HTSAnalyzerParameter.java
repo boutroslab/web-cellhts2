@@ -1,5 +1,6 @@
 package data;
 
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -18,7 +19,7 @@ public class HTSAnalyzerParameter implements Serializable {
    
     private String duplicateRemoverMethod;
     private Boolean orderAbsValue;
-    private Boolean useGEneListCollectionDM; //gsc.list<-list(Dm.GO.CC=Dm.GO.CC,kegg.droso=kegg.droso)"
+    //private Boolean useGEneListCollectionDM; //gsc.list<-list(Dm.GO.CC=Dm.GO.CC,kegg.droso=kegg.droso)"
     private Boolean useGEneListCollectionKegg;
     private Boolean useGEneListCollectionGO;
     private Integer cutoffHitsEnrichment;
@@ -29,15 +30,19 @@ public class HTSAnalyzerParameter implements Serializable {
     private Integer nGseaPlots;
     
 
-    public HTSAnalyzerParameter() {
-        species="Drosophila_melanogaster";
+    public HTSAnalyzerParameter(String species,String annotationColumn, String initalIDs,String duplicateRemoverMethod) {
+        this.species=species;
+        this.annotationColumn=annotationColumn;
+        this.initalIDs=initalIDs;
+        this.duplicateRemoverMethod=duplicateRemoverMethod;
+        /*species="Dm";
         annotationColumn="GeneID";
         initalIDs="FlybaseCG";
-        duplicateRemoverMethod="max";
+        duplicateRemoverMethod="max"; */
         orderAbsValue=false;
-        useGEneListCollectionDM=true;
-        useGEneListCollectionKegg=true;
-        useGEneListCollectionGO=false;
+        //useGEneListCollectionDM=false;
+        useGEneListCollectionKegg=false;
+        useGEneListCollectionGO=true;
         cutoffHitsEnrichment=2;
         nPermutations=1000;
         exponent=1;
@@ -77,7 +82,7 @@ public class HTSAnalyzerParameter implements Serializable {
     public void setOrderAbsValue(Boolean orderAbsValue) {
         this.orderAbsValue = orderAbsValue;
     }
-
+    /*
     public Boolean getUseGEneListCollectionDM() {
         return useGEneListCollectionDM;
     }
@@ -85,7 +90,7 @@ public class HTSAnalyzerParameter implements Serializable {
     public void setUseGEneListCollectionDM(Boolean useGEneListCollectionDM) {
         this.useGEneListCollectionDM = useGEneListCollectionDM;
     }
-
+    */
     public Boolean getUseGEneListCollectionKegg() {
         return useGEneListCollectionKegg;
     }
@@ -161,54 +166,57 @@ public class HTSAnalyzerParameter implements Serializable {
                 ", cutoffHitsEnrichment=" + cutoffHitsEnrichment +
                 ", nPermutations=" + nPermutations +
                 ", exponent=" + exponent +
-                ", minGeneSetSize=" + minGeneSetSize +
-                ", nGseaPlots=" + nGseaPlots;
-
+                ", minGeneSetSize=" + minGeneSetSize +//+
+                ", goGSCs=c(\"GO.MF\",\"GO.BP\",\"GO.CC\")"
+                //", nGseaPlots=" + nGseaPlots;
+                ;
 
     }
 
     public String generateGeneCollectionParameters() {
 //setup gene collection prework
-        String geneCollectionSetup="";
+
 
 
         //build up gene collection list
         ArrayList<String> geneCollTempList=new ArrayList<String>();
-        if(getUseGEneListCollectionDM()) {
-            if(getSpecies().contains("Drosophila"))  {
-               geneCollectionSetup+="Dm.GO.CC<-GOGeneSets(species=\"Drosophila_melanogaster\",ontologies=c(\"CC\"));";
+        /*if(getUseGEneListCollectionDM()) {
+            if(getSpecies().contains("Dm"))  {
+               geneCollectionSetup+="Dm.GO.CC<-GOGeneSets(species=\"Dm\",ontologies=c(\"CC\"));";
                geneCollTempList.add("Dm.GO.CC=Dm.GO.CC");
             }
-
-
-        }
+        }*/
+        String geneCollectionSetup="";
+        String listString= "";
         if(getUseGEneListCollectionGO()) {
-           // setupGeneCollection+="
-           //geneCollTempList.add();
-        }
-        if(getUseGEneListCollectionKegg()) {
-           if(getSpecies().contains("Drosophila"))  {
-               geneCollectionSetup+="kegg.droso<-KeggGeneSets(species=\"Drosophila_melanogaster\");";
-               geneCollTempList.add("kegg.droso=kegg.droso");
-           }
-        }
-        if(geneCollectionSetup.equals("")) {
-            return "";
-        }
-        //join
-        String geneCollTempListString="";
-        for(String tmp : geneCollTempList) {
-            if(geneCollTempListString.equals("")) {
-               geneCollTempListString=tmp;
+        
+           geneCollectionSetup+="GO.MF <- GOGeneSets(species = \""+species+"\",ontologies = c(\"MF\"));";
+           geneCollectionSetup+="GO.BP <- GOGeneSets(species = \""+species+"\",ontologies = c(\"BP\"));";
+           geneCollectionSetup+="GO.CC <- GOGeneSets(species = \""+species+"\",ontologies = c(\"CC\"));";
+            if(listString.equals("")) {
+                listString="GO.MF = GO.MF, GO.BP = GO.BP, GO.CC = GO.CC";
             }
             else {
-                geneCollTempListString+=","+tmp;
+                listString+=",GO.MF = GO.MF, GO.BP = GO.BP, GO.CC = GO.CC";
+            }
+        }
+        if(getUseGEneListCollectionKegg()) {
+            geneCollectionSetup+="PW.KEGG <- KeggGeneSets(species = \""+species+"\");";
+           /*if(getSpecies().contains("Dm"))  {
+               geneCollectionSetup+="kegg.droso<-KeggGeneSets(species=\"Dm\");";
+               geneCollTempList.add("kegg.droso=kegg.droso");
+           } */
+            if(listString.equals("")) {
+                listString="PW.KEGG = PW.KEGG";
+            }
+            else {
+                listString+=",PW.KEGG = PW.KEGG";
             }
         }
 
-        String collList = "";
-        collList = String.format("gsc.list<-list(%s)",geneCollTempListString);
 
+        String collList = "";
+        collList = String.format("gsc.list<-list(%s);",listString);
 
         return geneCollectionSetup+collList;
 

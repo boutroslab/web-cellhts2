@@ -428,7 +428,12 @@ public class CellHTS2 {
             plateConfigHeaderPattern = Configuration.PLATECONFIG_HEADER_PATTERN;
             plateConfigBodyPattern = Configuration.PLATECONFIG_BODY_PATTERN;
 
-            htsAnalyzerParameter=new HTSAnalyzerParameter();
+            //just use the first params in the cslist
+            htsAnalyzerParameter=new HTSAnalyzerParameter(
+                    msg.get("htsanalyzer-organism").split(",")[0].split("\\|")[0],
+                    "GeneID",
+                    msg.get("htsanalyzer-initalIDs").split(",")[0],
+                    msg.get("htsanalyzer-duplicateRemoverMethod").split(",")[0]);
 
         }
         //this will run everytime we make a new job
