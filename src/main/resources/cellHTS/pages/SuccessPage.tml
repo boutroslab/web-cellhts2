@@ -8,6 +8,16 @@
     <t:form t:id="downloadResults">
          <t:submit value="Download Results"/>
     </t:form>
+    <t:if test="IsFromGalaxy">
+        <!--this is the form which will be sent to galaxy-->
+        <form name="toGalaxyForm" action="${galaxyURLState}" method="POST">
+            <input type="hidden" name="STATUS" value="${isOK}"/>
+            <input type="hidden" name="URL" value="${retrieveURL}"/>
+            <input type="submit" value="send to galaxy"/>
+        </form>
+
+    </t:if>
+
     <t:form t:id="goBackWebCellHTS2">
          <t:submit value="Back"/>
     </t:form>

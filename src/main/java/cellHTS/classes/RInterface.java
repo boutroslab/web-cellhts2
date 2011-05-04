@@ -56,6 +56,7 @@ import javax.mail.MessagingException;
  *
  */
 public class RInterface extends Thread {
+    //TODO: all methods of this class which need to access DLProperties should be changed to use the new DLPropertiesDAO class
 
     private HashMap<String, String> stringParams;
     //we need this for a call by reference..we will read (only) this variable from outside this thread
@@ -713,6 +714,7 @@ public class RInterface extends Thread {
                         e.printStackTrace();
                     }
                 }
+       //TODO: this stuff here has to be outsourced into DLPropertiesDAO class
 
                 //set the relation between runname and result zip file
                 propObj.setProperty(runName+"_RESULT_ZIP",resultZipFile);
@@ -777,6 +779,8 @@ public class RInterface extends Thread {
 
                 //}
                 //String []files = {file,sessionFile};
+       // System.out.println(emailMsg);
+        
                 postMailTools.postMail( emailAddress,
                                        "Your web cellHTS2 report",//"cellHTS2 report (\""+runName+"\"):",
                                         emailMsg,
@@ -797,7 +801,7 @@ public class RInterface extends Thread {
 
         //check if we still have place before running
         semaphore.p(progressPercentage,queueFullMsg,threadID);
-
+        //TODO: this stuff here has to be outsourced into DLPropertiesDAO class   
         String outputDir = stringParams.get("runNameDir");
         String cellHTS2ObjFile = outputDir+File.separator+CELLHTS2_OBJ_DUMP_FILENAME;
         String jobID = stringParams.get("jobName");
@@ -865,7 +869,7 @@ public class RInterface extends Thread {
                 
 
                 progressPercentage[0]="15_loading HTSanalyzeR and dependent libs";
-                cmdString=String.format("library(cellHTS2);library(HTSanalyzeR);library(org.Dm.eg.db);library(GO.db);library(KEGG.db)");
+                cmdString=String.format("library(cellHTS2);library(HTSanalyzeR);library(org.Dm.eg.db);library(org.Hs.eg.db);library(GO.db);library(KEGG.db)");
                 debugString+=cmdString+"\n";
                 voidEval(cmdString);
 
@@ -1102,14 +1106,14 @@ public class RInterface extends Thread {
 
             //}
             //String []files = {file,sessionFile};
-        System.out.println("before sending out message");
+        //System.out.println("before sending out message");
             postMailTools.postMail( emailAddress,
                                    "Your HTS Analyzer report",//"cellHTS2 report (\""+runName+"\"):",
                                     emailMsg,
                                     this.maintainEmailAddress,
                                      null //file  if we want to send the result as file
                                      );
-        System.out.println("after sending out message");
+        //System.out.println("after sending out message");
 
 
              return true;

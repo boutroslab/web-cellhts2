@@ -19,33 +19,36 @@
   -->
 <html t:id="layout" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_0_0.xsd">
     <head>
-           <title>cellHTS2 WebTool Download Page</title>
-      </head>
-<body>
+        <title>cellHTS2 WebTool Download Page</title>
+    </head>
+    <body>
         <t:if test="IsAmountDLExceeded">
-              Your maximum amount of downloads of this result file has exceeded. You are not allowed to download this file
-              any longer. If you have any further questions, please get into contact with ${emailAddress}
+            Your maximum amount of downloads of this result file has exceeded. You are not allowed to download this file
+            any longer. If you have any further questions, please get into contact with ${emailAddress}
         </t:if>
 
         <t:if test="IsNotFoundIDPath">
-              The specified job ID does not exist. Either you made a mistake copying the link from the email you received or
-              propably you are trying to steal sensitive data which you are not supposed to do! Your IP has been logged!!!
+            The specified job ID does not exist. Either you made a mistake copying the link from the email you received
+            or
+            propably you are trying to steal sensitive data which you are not supposed to do! Your IP has been logged!!!
         </t:if>
 
         <t:if test="readyToDownload">
-            Please enter your password: <t:form t:id="emailDownloadPasswordForm">
-                         <!--this is just dummy to reload the page-->
-                        <t:textfield t:id="emailDownloadPasswordTextfield" value="emailDownloadPassword" size="20"/>
-                        <input type="submit" value="Submit"/>
-                    </t:form>
+            Please enter your password:
+            <t:form t:id="emailDownloadPasswordForm">
+                <!--this is just dummy to reload the page-->
+                <t:textfield t:id="emailDownloadPasswordTextfield" value="emailDownloadPassword" size="20"/>
+                <input type="submit" value="Submit"/>
+            </t:form>
             <br/>
-        <t:if test="passwordWrong">
-            The password you entered was wrong.
-            <t:parameter t:name="else">
-                 ${passwordSuccessfully}   
-            </t:parameter>
-        </t:if>
+            <t:if test="passwordWrong">
+                The password you entered was wrong.
+                <t:parameter t:name="else">
+                    ${passwordSuccessfully}
+                </t:parameter>
+            </t:if>
 
         </t:if>
-</body>
-    </html>
+
+    </body>
+</html>

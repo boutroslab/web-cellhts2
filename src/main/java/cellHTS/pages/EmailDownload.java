@@ -36,6 +36,7 @@ import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.annotations.Persist;
 import org.apache.tapestry5.annotations.InjectPage;
 import org.apache.tapestry5.annotations.Component;
+import org.apache.tapestry5.annotations.SessionState;
 import org.apache.tapestry5.services.Request;
 import org.apache.tapestry5.ComponentResources;
 
@@ -86,6 +87,9 @@ public class EmailDownload {
     private File dlPropFile;
     @Persist
     private String uploadPath;
+
+   
+
 
     /**
      *
@@ -291,4 +295,5 @@ public class EmailDownload {
     public void setPasswordSuccessfully(String passwordSuccessfully) {
         this.passwordSuccessfully = passwordSuccessfully;
     }
+    
 }

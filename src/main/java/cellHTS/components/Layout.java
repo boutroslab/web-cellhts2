@@ -62,6 +62,10 @@ public class Layout {
     public String getContext() {
         return request.getContextPath();
     }
+    @SessionState
+     private String galaxyURLState;
+
+    private boolean galaxyURLStateExists;
 
     /**
      * initalize stuff, do this only once such as retriving cellHTS version (Singleton call)
@@ -134,6 +138,15 @@ public class Layout {
 
     public String getCellHTS2Version() {
         return rCellHTS2Version.getCellHTS2Version();
+    }
+
+    public String getGalaxyEnabled() {
+        if(galaxyURLStateExists) {
+            return "Galaxy enabled";
+        }
+        else {
+            return "";
+        }
     }
 
 

@@ -21,6 +21,10 @@
 package cellHTS.pages;
 
 import org.apache.tapestry5.StreamResponse;
+import org.apache.tapestry5.ComponentResources;
+import org.apache.tapestry5.Link;
+import org.apache.tapestry5.services.Request;
+import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.annotations.Persist;
 
 import java.util.zip.ZipOutputStream;
@@ -30,6 +34,8 @@ import java.io.File;
 
 import cellHTS.classes.ShellEnvironment;
 import cellHTS.services.ZIPStreamResponse;
+import cellHTS.services.GalaxyStreamResponse;
+
 /**
  * Created by IntelliJ IDEA.
  * User: oliverpelz
@@ -40,6 +46,18 @@ import cellHTS.services.ZIPStreamResponse;
 public class SuccessCellHTS2 {
     @Persist
     private String zipFile;
+       @Inject
+     private ComponentResources resources;
+
+     @Inject
+     private Request request;
+
+     private final String PARAM_NAME="DOWNLOAD_ID";
+
+     public Link getRequestURL() {
+         return resources.createEventLink("DirectDownload");
+     }
+
 
     //this page will be called if we have reached 100% and cellHTS2 ran successfully  (it will be called from javascript)
     
@@ -81,5 +99,10 @@ public class SuccessCellHTS2 {
 
     public void setZipFile(String zipFile) {
         this.zipFile = zipFile;
+    }
+
+
+    public String getParam_NAME() {
+        return PARAM_NAME;
     }
 }

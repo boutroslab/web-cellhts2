@@ -46,7 +46,7 @@ public class HTSAnalyzerParameter implements Serializable {
         cutoffHitsEnrichment=2;
         nPermutations=1000;
         exponent=1;
-        minGeneSetSize=5;
+        minGeneSetSize=20;
         nGseaPlots=10;
     }
 
@@ -157,19 +157,26 @@ public class HTSAnalyzerParameter implements Serializable {
 
 
     public String toHTSanalyzeRParameterString() {
-        return                      
+        String returnString =
                 "  species=c(\"" + species + "\")" +
                 ", annotationColumn=\"" + annotationColumn + "\"" +
                 ", initialIDs=\"" + initalIDs + "\"" +
-                ", duplicateRemoverMethod=\"" + duplicateRemoverMethod + "\"" +
-                ", orderAbsValue=" + orderAbsValue.toString().toUpperCase() +
+                //", duplicateRemoverMethod=\"" + duplicateRemoverMethod + "\"" +
+                //", orderAbsValue=" + orderAbsValue.toString().toUpperCase() +
                 ", cutoffHitsEnrichment=" + cutoffHitsEnrichment +
-                ", nPermutations=" + nPermutations +
-                ", exponent=" + exponent +
-                ", minGeneSetSize=" + minGeneSetSize +//+
-                ", goGSCs=c(\"GO.MF\",\"GO.BP\",\"GO.CC\")"
+                //", nPermutations=" + nPermutations +
+                //", exponent=" + exponent +
+                ", minGeneSetSize=" + minGeneSetSize;
+
+                if(getUseGEneListCollectionKegg()) {
+                    returnString += ", goGSCs = c(\"GO.CC\")";
+                }
+                if(getUseGEneListCollectionKegg()) {
+                    returnString += ", keggGSCs = \"PW.KEGG\"";
+                }
                 //", nGseaPlots=" + nGseaPlots;
                 ;
+        return returnString;
 
     }
 
@@ -190,15 +197,21 @@ public class HTSAnalyzerParameter implements Serializable {
         String listString= "";
         if(getUseGEneListCollectionGO()) {
         
-           geneCollectionSetup+="GO.MF <- GOGeneSets(species = \""+species+"\",ontologies = c(\"MF\"));";
-           geneCollectionSetup+="GO.BP <- GOGeneSets(species = \""+species+"\",ontologies = c(\"BP\"));";
+          // geneCollectionSetup+="GO.MF <- GOGeneSets(species = \""+species+"\",ontologies = c(\"MF\"));";
+          // geneCollectionSetup+="GO.BP <- GOGeneSets(species = \""+species+"\",ontologies = c(\"BP\"));";
            geneCollectionSetup+="GO.CC <- GOGeneSets(species = \""+species+"\",ontologies = c(\"CC\"));";
             if(listString.equals("")) {
+               listString="GO.CC = GO.CC";
+            }
+            else {
+                listString=", GO.CC = GO.CC";
+            }
+           /* if(listString.equals("")) {
                 listString="GO.MF = GO.MF, GO.BP = GO.BP, GO.CC = GO.CC";
             }
             else {
                 listString+=",GO.MF = GO.MF, GO.BP = GO.BP, GO.CC = GO.CC";
-            }
+            } */
         }
         if(getUseGEneListCollectionKegg()) {
             geneCollectionSetup+="PW.KEGG <- KeggGeneSets(species = \""+species+"\");";

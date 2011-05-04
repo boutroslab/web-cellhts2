@@ -593,7 +593,7 @@
             </t:form>
             <t:form t:id="resultsScalingForm">
                 <p>
-                    <b>Step 7:</b>  Would you like to apply a z-score to center and scale your results?
+                    <b>Step 7:</b>  How would you like to adjust your variance?
                     <table>
                         <t:radiogroup t:value="resultsScaling">
                             <tr>
@@ -828,11 +828,13 @@
                     </p>
                 </t:form>
             </div>
+            <br/>
+            <p><b>Add-On Steps</b></p>
 
             <!--use the HTSAnalyzer stuff-->
             <t:form t:id="HTSAnalyzerForm">
                 <p>
-                    <font color="red">Experimental Step:</font> Use the HTSAnalyzer package  (<a
+                    <b>Step a:</b>   Use the HTSAnalyzer package  (<a
                     href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/HTSAnalyzer+Addon"
                     target="_blank">help</a>)?
                     <table>
