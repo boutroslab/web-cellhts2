@@ -76,6 +76,15 @@ function checkAll(checkAllCallbackLink, successCallbackLink, C_PARAMNAME,F_PARAM
                         $('rVersionMessage').innerHTML="<font color=\""+color+"\">"+cellHTS2Version+"</font color>";
                        // $('cellHTS2Message').innerHTML="<font color=\""+color+"\">"+cellHTS2Version+"</font color>";
 
+
+                        var gotZip=jsonObj.ZIPENABLED;
+                        color = "green";
+                        if(regExp.test(gotZip))  {
+                           color = "red";
+                           allCorrect=false;
+                        }
+                        $('gotZipMessage').innerHTML="<font color=\""+color+"\">"+gotZip+"</font color>";
+
                         //produce an result-summary message
                         if(allCorrect) {
                              $('resultMessage').innerHTML="every dependency have been met, redirecting to web cellHTS2";

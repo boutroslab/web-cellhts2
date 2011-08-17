@@ -43,9 +43,9 @@ public class DirectDownloadCellHTS2Experiment {
 
    //TODO: invent an mechanism to make this more secure e.g. through session IDs comparison...generate unique session id at startup or such.
     public StreamResponse onActivate(String jobID,String runID,String passwordSubmitted) {
-        if(!galaxyURLStateExists)   {
+        /*if(!galaxyURLStateExists)   {
             return null;
-        }
+        }*/
         String passwordPlain = getPassword(jobID,runID);
 
        //plain and simple password check
@@ -54,7 +54,7 @@ public class DirectDownloadCellHTS2Experiment {
         }
 
        //TODO: limit the download times by writing to the .dlPropertiesfile here.
-         File file = new File(msg.get("upload-path")+"JOB"+jobID+"_"+"RUN"+runID+File.separator+"in"+File.separator+"topTable.txt");
+         File file = new File(msg.get("upload-path-webserver")+"JOB"+jobID+"_"+"RUN"+runID+File.separator+"in"+File.separator+"topTable.txt");
        System.out.println("Full path: "+file.getAbsolutePath());
         try {
             FileInputStream iStream = new FileInputStream(file);
@@ -77,7 +77,7 @@ public class DirectDownloadCellHTS2Experiment {
     public String getPassword(String jobID,String runID) {
         jobID="JOB"+jobID;
         runID=jobID+"_RUN"+runID;
-        String uploadPath=msg.get("upload-path");
+        String uploadPath=msg.get("upload-path-webserver");
         File fullPath = new File(uploadPath+jobID);
         File dlPropFile =  new File(fullPath.getAbsolutePath()+File.separator+".dlProperties");
         //System.out.println(dlPropFile);

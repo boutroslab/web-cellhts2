@@ -17,15 +17,11 @@ import java.io.IOException;
 public class GalaxyStreamResponse  implements StreamResponse {
        private InputStream is = null;
 
-        protected String contentType = "text/plain";// this is the default
-
-        protected String extension = "txt";
-
-        protected String filename = "default";
+        protected String contentType = "text/tab-separated-values";//"text/plain";// this is the default
 
             public GalaxyStreamResponse(InputStream is, String filename) {
                     this.is = is;
-                    this.filename = filename;
+                   
 
             }
         public String getContentType() {
@@ -37,7 +33,7 @@ public class GalaxyStreamResponse  implements StreamResponse {
         }
 
         public void prepareResponse(Response arg0) {
-                arg0.setHeader("Content-Disposition", "attachment; filename=topTable.txt" );
+                arg0.setHeader("Content-Disposition", "attachment; filename=\"result.tsv\"" );
         }
 
 }

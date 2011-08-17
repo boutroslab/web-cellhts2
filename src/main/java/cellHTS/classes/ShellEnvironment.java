@@ -21,6 +21,8 @@
 package cellHTS.classes;
 
 import org.apache.tapestry5.ioc.internal.util.TapestryException;
+import org.rosuda.REngine.Rserve.RFileInputStream;
+import org.rosuda.REngine.Rserve.RFileOutputStream;
 
 import java.io.*;
 import java.util.zip.*;
@@ -96,6 +98,29 @@ public class ShellEnvironment {
         in.close();
         out.close();
     }
+    public static final void copyRFileInputStreamToLocal(RFileInputStream in, OutputStream out)
+            throws IOException {
+        byte[] buffer = new byte[1024];
+        int len;
+
+        while ((len = in.read(buffer)) >= 0)
+            out.write(buffer, 0, len);
+
+        in.close();
+        out.close();
+    }
+    public static final void copyRFileInputStreamToRemote(FileInputStream in,RFileOutputStream out)
+            throws IOException {
+        byte[] buffer = new byte[1024];
+        int len;
+
+        while ((len = in.read(buffer)) >= 0)
+            out.write(buffer, 0, len);
+
+        in.close();
+        out.close();
+    }
+
     //this extracts zip files with internal directory structure     p
     public static ArrayList<File> unzip(String[]errorMsg,String filename, String pathToExtract) {
         ArrayList<File> returnFiles = new ArrayList<File>();

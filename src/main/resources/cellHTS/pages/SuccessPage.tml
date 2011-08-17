@@ -10,10 +10,15 @@
     </t:form>
     <t:if test="IsFromGalaxy">
         <!--this is the form which will be sent to galaxy-->
-        <form name="toGalaxyForm" action="${galaxyURLState}" method="POST">
+        <form target="_blank" enctype="application/x-www-form-urlencoded" method="POST" name="galaxyform" action="${galaxyURLState}" id="galaxyform  ">
+        <!--<form name="toGalaxyForm" action="${galaxyURLState}" method="GET"> -->
             <input type="hidden" name="STATUS" value="${isOK}"/>
-            <input type="hidden" name="URL" value="${retrieveURL}"/>
-            <input type="submit" value="send to galaxy"/>
+            <input type="hidden" name="URL" id="URL" value="${retrieveURL}"/>
+            <input type="hidden" name="data_type" id="data_type" value="txt"/>
+            <input type="hidden" name="dbkey" id="dbkey" value=""/>
+            <input type="hidden" name="info" id="info" value=""/>
+           
+            <input type="submit" value="Send to Galaxy" name="submit"/>
         </form>
 
     </t:if>

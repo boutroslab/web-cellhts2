@@ -160,16 +160,16 @@ public class Results {
         if(!notFirstRun) {
 
 
-            if(System.getProperty("upload-path")!=null) {
+            if(System.getProperty("upload-path-webserver")!=null) {
 
             //get from command line
-            uploadPath=System.getProperty("upload-path");
+            uploadPath=System.getProperty("upload-path-webserver");
 
 
         }
         else {
             //else get from properties file
-            uploadPath=prop.get("upload-path");
+            uploadPath=prop.get("upload-path-webserver");
         }
         if(!uploadPath.endsWith(File.separator)) {
                 uploadPath=uploadPath+File.separator;
@@ -315,6 +315,7 @@ public class Results {
         this.emailAddress=emailAddress;
         emailMSG="Thank you for using web cellHTS2.  The results will be sent to "+emailAddress;
 
+
     }
 
     
@@ -329,6 +330,12 @@ public class Results {
     void afterRenderingProcess(MarkupWriter writer) {
         //make a new runid which is unique
 
+            //add stuff from app.properties
+        paramMap.put("rserve-host",prop.get("rserve-host"));
+        paramMap.put("rserve-port",prop.get("rserve-port"));
+        paramMap.put("rserve-username",prop.get("rserve-username"));
+        paramMap.put("rserve-password",prop.get("rserve-password"));
+        
             try {
                 String jobName = jobNameDir.getName();
                 //use jobname as the heading in the html result file

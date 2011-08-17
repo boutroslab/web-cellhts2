@@ -1,0 +1,20 @@
+<html xmlns:t="http://tapestry.apache.org/schema/tapestry_5_0_0.xsd">
+    <head>
+        <title>exception page</title>
+    </head>
+    <body>
+
+            <p>An exception has occurred:
+                <strong>${exception.message}</strong>
+            </p>
+
+            <p>
+                Click
+                <t:pagelink page="cellhts2">here</t:pagelink>
+                to restart.
+            </p>
+
+    </body>
+
+
+</html>

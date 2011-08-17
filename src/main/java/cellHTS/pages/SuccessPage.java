@@ -52,7 +52,8 @@ public class SuccessPage {
 
     //check existence
     private boolean galaxyURLStateExists;
-    
+
+
     public void setZipFile(String file)  {
         successPage.setZipFile(file);
     }
@@ -117,7 +118,7 @@ public class SuccessPage {
     public String getPassword(String jobID,String runID) {
         jobID="JOB"+jobID;
         runID=jobID+"_RUN"+runID;
-        String uploadPath=msg.get("upload-path");
+        String uploadPath=msg.get("upload-path-webserver");
         File fullPath = new File(uploadPath+jobID);
         File dlPropFile =  new File(fullPath.getAbsolutePath()+File.separator+".dlProperties");
         //System.out.println(dlPropFile);

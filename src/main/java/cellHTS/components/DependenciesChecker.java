@@ -15,7 +15,7 @@ import java.util.regex.Matcher;
 
 import cellHTS.classes.RInterface;
 import cellHTS.pages.CellHTS2;
-import data.RCellHTS2Version;
+import data.RInformation;
 
 /**
  * Created by IntelliJ IDEA.
@@ -55,8 +55,8 @@ public class DependenciesChecker {
     @Persist
     private boolean allDependenciesAreMet;
     @SessionState
-    private RCellHTS2Version rCellHTS2Version;
-    private boolean rCellHTS2VersionExists;
+    private RInformation rInformation;
+    private boolean rInformationExists;
     
     @Parameter(required=true, defaultPrefix="literal")
     private String enableDIVOnSuccess;
@@ -158,43 +158,48 @@ public class DependenciesChecker {
         returnJSON.put("UPLOADPATH","4. "+checkAndCreateUploadDirectory());
 
         //get R and cellHTS Version
-        String cellHTS2AndRVersion="";
-        String rVersionFetched = getRVersion();
-        System.out.println("cellHTS2Version:"+rVersionFetched);
-        if(rVersionFetched.equals("not found")||rVersionFetched.equals("<not available>")) {
-           cellHTS2AndRVersion="R or cellHTS2 version can't be fetched. Maybe can't connect to RServer. Can't proceed"; 
+        RInformation info = getREssentials();
+        String rVer = info.getRVersion();
+        String cellHTS2Version = info.getCellHTS2Version();
+        boolean zipEnabled = info.isRWithZipFunction();
+        String gotZip="Zip functionality in R can be found";
+        if(rVer.equals("not found")||rVer.equals("<not available>")) {
+           cellHTS2Version="R or cellHTS2 version can't be fetched. Maybe can't connect to RServer. Can't proceed";
         }
         else {
             // get R and cellHTS2 version and check if we are above the minimum version needs
-            Pattern p = Pattern.compile("([\\d\\.]+)\\s*\\(R:([\\d\\.]+)\\)");
-            Matcher m = p.matcher(rVersionFetched);
+            Pattern p = Pattern.compile("([\\d\\.]+)");
+            Matcher m = p.matcher(rVer);
             if(m.find()) {
-                String rVer = m.group(2);
-                String cellHTS2Ver = m.group(1);
-
-               
                 String requiredCellHTS2Ver = msg.get("required-cellHTS2-version");
-
-                if(compareTwoRVersions(rVer, msg.get("required-R-version"))&& cellHTS2Ver.equals(requiredCellHTS2Ver)) {
-                    cellHTS2AndRVersion="R, cellHTS2 and RServer could be fe fetched and are in the right version.";
+                if(compareTwoRVersions(rVer, msg.get("required-R-version"))&& cellHTS2Version.equals(requiredCellHTS2Ver)) {
+                    cellHTS2Version="R, cellHTS2 and RServer could be fe fetched and are in the right version.";
                 }
                 else {
-                    cellHTS2AndRVersion="Fetched R and cellHTS2 version "+rVersionFetched+" do not match the required <br/>   " +
+                    cellHTS2Version="Fetched R and cellHTS2 version "+rVer+" do not match the required <br/>   " +
                             "R version:"+msg.get("required-R-version")+" and cellHTS2 version:"+requiredCellHTS2Ver+". Maybe can't connect to RServer. Can't proceed";
-
                 }
                 
             }
             else {
-                cellHTS2AndRVersion="R or cellHTS2 version exists but can't be fetched. Maybe can't connect to RServer. Can't proceed";
+                cellHTS2Version="R or cellHTS2 version exists but can't be fetched. Maybe can't connect to RServer. Can't proceed";
             }
 
 
         }
-        if(cellHTS2AndRVersion.equals("")) {
-            cellHTS2AndRVersion="R or cellHTS2 version can't be fetched. Maybe can't connect to RServer. Can't proceed"; 
+        if(cellHTS2Version.equals("")) {
+            cellHTS2Version="R or cellHTS2 version can't be fetched. Maybe can't connect to RServer. Can't proceed";
         }
-        returnJSON.put("CELLHTS2VERSION","5. "+cellHTS2AndRVersion);
+        if(!zipEnabled) {
+           gotZip="Can't find zip functionality in R. Please recompile it with it"; 
+        }
+
+
+        returnJSON.put("CELLHTS2VERSION","5. "+cellHTS2Version);
+
+
+        returnJSON.put("ZIPENABLED","6. "+gotZip);
+
         return returnJSON;
 
     }
@@ -248,8 +253,7 @@ public class DependenciesChecker {
                     int i=0;
                     for(String versionPoint : versionPoints) {
                         int ver = Integer.parseInt(versionPoint);
-                        int verDep = Integer.parseInt(versionPointsDep[i++]);
-                        System.out.println(ver+"|"+verDep);
+                        int verDep = Integer.parseInt(versionPointsDep[i++]);                            
                         if(ver<verDep) {
                             return false;
                         }
@@ -264,14 +268,14 @@ public class DependenciesChecker {
 
     public String checkAndCreateUploadDirectory() {
             String uploadPath;
-            if(System.getProperty("upload-path")!=null) {
+            if(System.getProperty("upload-path-webserver")!=null) {
 
                 //get from command line
-                uploadPath=System.getProperty("upload-path");
+                uploadPath=System.getProperty("upload-path-webserver");
             }
             else {
                 //else get from properties file
-                uploadPath=msg.get("upload-path");
+                uploadPath=msg.get("upload-path-webserver");
             }        
 
             if(!uploadPath.endsWith(File.separator)) {
@@ -310,15 +314,12 @@ public class DependenciesChecker {
             }
              return "Cannot read or write directory: "+uploadPath+".\nCheck read/write permissions. Can't proceed";
         }
-    public String getRVersion() {
-        if(!rCellHTS2VersionExists)  {
+    public RInformation getREssentials() {
+        if(!rInformationExists)  {
                 RInterface rInterface = new RInterface();
-                return rInterface.getCellHTS2Version();
+                rInformation =  rInterface.getEssentialCellHTS2Information(msg.get("rserve-host"),Integer.getInteger(msg.get("rserve-port")),msg.get("rserve-username"),msg.get("rserve-password"));
         }
-        else {
-            return rCellHTS2Version.getCellHTS2Version();
-        }
-
+         return rInformation;
     }
 
     public String getB_PARAMNAME() {

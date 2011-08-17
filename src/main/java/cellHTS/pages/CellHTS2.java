@@ -349,16 +349,16 @@ public class CellHTS2 {
             //never come in here again!!!
 
             //this is for providing a temp path for the tool...either via command line or via app.properties file
-            if(System.getProperty("upload-path")!=null) {
+            if(System.getProperty("upload-path-webserver")!=null) {
 
                 //get from command line
-                uploadPath=System.getProperty("upload-path");
+                uploadPath=System.getProperty("upload-path-webserver");
 
 
             }
             else {
                 //else get from properties file
-                uploadPath=msg.get("upload-path");
+                uploadPath=msg.get("upload-path-webserver");
             }
 
             if(!uploadPath.endsWith(File.separator)) {
@@ -3590,16 +3590,16 @@ public class CellHTS2 {
     
     public void checkAndCreateUploadDirectory() {
         String uploadPath;
-        if(System.getProperty("upload-path")!=null) {
+        if(System.getProperty("upload-path-webserver")!=null) {
 
                 //get from command line
-                uploadPath=System.getProperty("upload-path");
+                uploadPath=System.getProperty("upload-path-webserver");
 
 
             }
             else {
                 //else get from properties file
-                uploadPath=msg.get("upload-path");
+                uploadPath=msg.get("upload-path-webserver");
             }
 
         if(!uploadPath.endsWith(File.separator)) {

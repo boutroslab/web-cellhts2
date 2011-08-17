@@ -168,11 +168,17 @@ public class HTSAnalyzerParameter implements Serializable {
                 //", exponent=" + exponent +
                 ", minGeneSetSize=" + minGeneSetSize;
 
-                if(getUseGEneListCollectionKegg()) {
-                    returnString += ", goGSCs = c(\"GO.CC\")";
+                if(getUseGEneListCollectionGO()) {
+                    returnString += ", goGSCs = c(\"GO_CC\")";
+                }
+                else {
+                    returnString += ", goGSCs = c()";
                 }
                 if(getUseGEneListCollectionKegg()) {
-                    returnString += ", keggGSCs = \"PW.KEGG\"";
+                    returnString += ", keggGSCs = c(\"PW_KEGG\")";
+                }
+                else {
+                    returnString += ", keggGSCs = c()";                
                 }
                 //", nGseaPlots=" + nGseaPlots;
                 ;
@@ -195,17 +201,20 @@ public class HTSAnalyzerParameter implements Serializable {
         }*/
         String geneCollectionSetup="";
         String listString= "";
+
         if(getUseGEneListCollectionGO()) {
         
           // geneCollectionSetup+="GO.MF <- GOGeneSets(species = \""+species+"\",ontologies = c(\"MF\"));";
           // geneCollectionSetup+="GO.BP <- GOGeneSets(species = \""+species+"\",ontologies = c(\"BP\"));";
-           geneCollectionSetup+="GO.CC <- GOGeneSets(species = \""+species+"\",ontologies = c(\"CC\"));";
+           geneCollectionSetup+="GO_CC <- GOGeneSets(species = \""+species+"\",ontologies = c(\"CC\"));";
             if(listString.equals("")) {
-               listString="GO.CC = GO.CC";
+               listString="GO_CC = GO_CC";
             }
             else {
-                listString=", GO.CC = GO.CC";
+                listString+=", GO_CC = GO_CC";
             }
+
+
            /* if(listString.equals("")) {
                 listString="GO.MF = GO.MF, GO.BP = GO.BP, GO.CC = GO.CC";
             }
@@ -214,22 +223,24 @@ public class HTSAnalyzerParameter implements Serializable {
             } */
         }
         if(getUseGEneListCollectionKegg()) {
-            geneCollectionSetup+="PW.KEGG <- KeggGeneSets(species = \""+species+"\");";
+            geneCollectionSetup+="PW_KEGG <- KeggGeneSets(species = \""+species+"\");";
            /*if(getSpecies().contains("Dm"))  {
                geneCollectionSetup+="kegg.droso<-KeggGeneSets(species=\"Dm\");";
                geneCollTempList.add("kegg.droso=kegg.droso");
            } */
             if(listString.equals("")) {
-                listString="PW.KEGG = PW.KEGG";
+                listString="PW_KEGG = PW_KEGG";
             }
             else {
-                listString+=",PW.KEGG = PW.KEGG";
+                listString+=",PW_KEGG = PW_KEGG";
             }
+
+
         }
 
 
         String collList = "";
-        collList = String.format("gsc.list<-list(%s);",listString);
+        collList = String.format("ListGSC<-list(%s);",listString);
 
         return geneCollectionSetup+collList;
 

@@ -21,10 +21,10 @@
 package cellHTS.components;
 
 import org.apache.tapestry5.annotations.*;
-import org.apache.tapestry5.MarkupWriter;
 import org.apache.tapestry5.services.ApplicationGlobals;
 import org.apache.tapestry5.services.Request;
 import org.apache.tapestry5.ioc.annotations.Inject;
+import org.apache.tapestry5.ioc.Messages;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -32,7 +32,7 @@ import java.util.jar.Manifest;
 import java.util.jar.Attributes;
 
 import cellHTS.classes.RInterface;
-import data.RCellHTS2Version;
+import data.RInformation;
 
 /**
  * This class generates the general layout of the webtool so its like a frame where the different sites
@@ -53,8 +53,8 @@ public class Layout {
     private boolean initOnce;
 
     @SessionState
-    private RCellHTS2Version rCellHTS2Version;
-    private boolean rCellHTS2VersionExists;
+    private RInformation rInformation;
+    private boolean rInformationExists;
 
     @Inject
     private Request request;
@@ -65,7 +65,15 @@ public class Layout {
     @SessionState
      private String galaxyURLState;
 
+    @Inject
+    private Messages msg;
+
     private boolean galaxyURLStateExists;
+
+    @Persist
+    private String buildCellHTS2Version;
+    @Persist
+    private String versionCellHTS2; 
 
     /**
      * initalize stuff, do this only once such as retriving cellHTS version (Singleton call)
@@ -82,8 +90,8 @@ public class Layout {
 
 
 
-                    String buildCellHTS2Version="";
-                    String versionCellHTS2Version = "";
+                    buildCellHTS2Version="";
+                    versionCellHTS2 = "";
 
                 try {
                     File manifestFile = new File(path, "META-INF/MANIFEST.MF");
@@ -94,17 +102,21 @@ public class Layout {
                     Attributes atts = mf.getMainAttributes();
 
                     buildCellHTS2Version = atts.getValue("Implementation-Build");
-                    versionCellHTS2Version = atts.getValue("Implementation-Version");
+                    versionCellHTS2 = atts.getValue("Implementation-Version");
 
                 } catch (Exception e) {
                     e.printStackTrace();
 
                 }
                 finally {
-                   if(!rCellHTS2VersionExists)  {
+                   if(!rInformationExists)  {
                         RInterface rInterface = new RInterface();
-                        String cellHTS2Version = rInterface.getCellHTS2Version();
-                        rCellHTS2Version = new RCellHTS2Version(buildCellHTS2Version,versionCellHTS2Version,cellHTS2Version);
+                        String rserveHost =  msg.get("rserve-host");
+                        Integer rservePort = Integer.parseInt(msg.get("rserve-port"));
+                        String username = msg.get("rserve-username");
+                        String password = msg.get("rserve-password");
+
+                        rInformation = rInterface.getEssentialCellHTS2Information(rserveHost,rservePort,username,password);
                     } 
                 }
             }
@@ -113,7 +125,6 @@ public class Layout {
 
 
     public String getBuild() {
-        String buildCellHTS2Version= rCellHTS2Version.getBuildCellHTS2Version();
         if (buildCellHTS2Version==null) {
             buildCellHTS2Version = "<not available>";
         }
@@ -126,20 +137,15 @@ public class Layout {
     }
 
     public String getVersion() {
-        String versionCellHTS2Version = rCellHTS2Version.getVersionCellHTS2Version();
-        if (versionCellHTS2Version==null) {
-            versionCellHTS2Version = "<not available>";
-        }
-        if (versionCellHTS2Version.equals("")) {
-            versionCellHTS2Version = "<not available>";
-        }
-        return versionCellHTS2Version;
-    }
 
-    public String getCellHTS2Version() {
-        return rCellHTS2Version.getCellHTS2Version();
+        if (versionCellHTS2==null) {
+            versionCellHTS2 = "<not available>";
+        }
+        if (versionCellHTS2.equals("")) {
+            versionCellHTS2 = "<not available>";
+        }
+        return versionCellHTS2;
     }
-
     public String getGalaxyEnabled() {
         if(galaxyURLStateExists) {
             return "Galaxy enabled";
@@ -149,5 +155,11 @@ public class Layout {
         }
     }
 
+    public RInformation getRInformation() {
+        return rInformation;
+    }
 
+    public void setRInformation(RInformation rInformation) {
+        this.rInformation = rInformation;
+    }
 }
