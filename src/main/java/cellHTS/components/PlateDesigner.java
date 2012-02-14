@@ -63,7 +63,7 @@ import data.Plate;
  * Time: 16:01:19
  *
  */
-@IncludeJavaScriptLibrary(value = {"config.js","plate.js"})
+@Import(library={"config.js","plate.js"})
 public class PlateDesigner {
 
      @Environmental

@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.util.HashMap;
 
 import cellHTS.classes.RInterface;
 import cellHTS.pages.CellHTS2;
@@ -24,11 +25,11 @@ import data.RInformation;
  * Time: 17:37:42
  * To change this template use File | Settings | File Templates.
  */
-@IncludeJavaScriptLibrary(value = {"${tapestry.scriptaculous}/prototype.js","browserDetect.js","flashdetect.js","dependenciesChecker.js"})
+@Import(library={"${tapestry.scriptaculous}/prototype.js", "browserDetect.js", "flashdetect.js", "dependenciesChecker.js"})
 public class DependenciesChecker {
     @Persist
     private boolean init;
-     @Inject
+    @Inject
     private ComponentResources componentResources;
     @Persist
     private String checkAllLink;
@@ -57,178 +58,185 @@ public class DependenciesChecker {
     @SessionState
     private RInformation rInformation;
     private boolean rInformationExists;
-    
-    @Parameter(required=true, defaultPrefix="literal")
+
+    @Parameter(required = true, defaultPrefix = "literal")
     private String enableDIVOnSuccess;
 
     public void setupRender() {
-            if(!init) {
-                init=true;
-                Link checkAllL = componentResources.createEventLink("checkAllSent", new Object[]{});
-                Link successAllL = componentResources.createEventLink("successSent", new Object[]{});
-                checkAllLink = checkAllL.toAbsoluteURI();
-                successSentLink = successAllL.toAbsoluteURI();
-                B_PARAMNAME="B_PARAMNAME";
-           
-                F_PARAMNAME="F_PARAMNAME";
+        if (!init) {
+            init = true;
+            Link checkAllL = componentResources.createEventLink("checkAllSent", new Object[]{});
+            Link successAllL = componentResources.createEventLink("successSent", new Object[]{});
+            checkAllLink = checkAllL.toAbsoluteURI();
+            successSentLink = successAllL.toAbsoluteURI();
+            B_PARAMNAME = "B_PARAMNAME";
 
-                SUCCESSEVENTNAME="allDependenciesMet";
-                allDependenciesAreMet=false;
-            }
+            F_PARAMNAME = "F_PARAMNAME";
+
+            SUCCESSEVENTNAME = "allDependenciesMet";
+            allDependenciesAreMet = false;
+        }
 
     }
 
     @OnEvent(value = "checkAllSent")
-    public JSONObject  checkAllSentReceiver() {
-        
+    public JSONObject checkAllSentReceiver() {
+
         String ajaxMessage;
-        String browserVersionMessage;
+        String browserVersionMessage = "";
 
         //if we got here in this method we must be have enabled javascript
-        boolean jsProceed=true;
+        boolean jsProceed = true;
 
         //check if this is a AJAX request
-        if(!request.isXHR()) {
+        if (!request.isXHR()) {
             //if this is not an ajax request we have to throw an exception
             //this can be if proxys such as ezproxy remove the XML Header from the request
             //so check before sending back a json obj which would result in an
             //Return type org.apache.tapestry5.json.JSONObject can not be handled.
             // Configured return types are java.lang.Class, java.lang.String, java.net.URL, org.apache.tapestry5.Link, org.apache.tapestry5.StreamResponse,
             //  org.apache.tapestry5.runtime.Component. 
-            ajaxMessage="1. Testing if your ISP proxy supports AJAX failed, Can't proceed. Please check your Proxy settings. Can't proceed";
+            ajaxMessage = "1. Testing if your ISP proxy supports AJAX failed, Can't proceed. Please check your Proxy settings. Can't proceed";
             //what happens?
-            throw new TapestryException(ajaxMessage,null);
+            throw new TapestryException(ajaxMessage, null);
 
+
+        } else {
+            ajaxMessage = "1. Ajax Request/Response can be made.";
 
         }
-        else {
-            ajaxMessage="1. Ajax Request/Response can be made.";
-
-        }
-        String []browserNVersion = request.getParameter(B_PARAMNAME).split(",");
+        String[] browserNVersion = request.getParameter(B_PARAMNAME).split(",");
         String browser = browserNVersion[0];
         float version = Float.parseFloat(browserNVersion[1]);
 
-       
-        //these are all three browser plus tested versions cellHTS2 was successfully run on
-            if(!(browser.equals("Firefox")||browser.equals("Explorer")||browser.equals("Safari"))) {
-                browserVersionMessage="2. Your browser: "+browser+" is not supported by web CellHTS2. Can't proceed";
+        boolean validBrowser = false;
+        boolean validVersion = true;
+        HashMap<String, String> browserVer = new HashMap<String, String>();
+        for (String browserTmp : msg.get("allowed-browsers").split("\\|")) {
+            String[] tmpAr = browserTmp.split("-");
+            String brow = tmpAr[0];
+
+            if (browser.equalsIgnoreCase(brow)) {
+                validBrowser = true;
+                //if we got version information
+                if (tmpAr.length == 2) {
+                    String ver = tmpAr[1];
+                    Float minimumFloat = Float.parseFloat(ver);
+                    browserVer.put(brow.toLowerCase(), ver);                       
+                    if (version >= minimumFloat) {
+                        break;
+                    } else {
+                        validVersion = false;
+                    }
+                }
+                else { //version info not defined
+                    break;
+                }
 
             }
 
-            else if(browser.equals("Firefox") && version<3) {
-                browserVersionMessage="2. Your firefox version is too old (<3). Can't proceed.";
-            }             
-            else if(browser.equals("Explorer") && version<8) {
-             browserVersionMessage="2. Your Internet Explorer version is too old (<8). Can't proceed.";
-            }
-            else if(browser.equals("Safari") && version <3) {
-                browserVersionMessage="2. Your Safari version is too old (<3). Can't proceed.";
-            }
-            else {
-                browserVersionMessage="2. browser and version are supported";
-            }
+        }
+
+        if (!validBrowser) {
+            browserVersionMessage = "2. Your browser: " + browser + " is not supported by web CellHTS2. Can't proceed";
+        }
+        if (!validVersion) {
+            browserVersionMessage = "2. Your browser: " + browser + " version is too old " + browserVer.get(browser.toLowerCase()) + ". Can't proceed.";
+        }
 
         //now check out flash
-         String []flashEnabledNVersion = request.getParameter(F_PARAMNAME).split(",");
-       String isTrue = flashEnabledNVersion[0];
-       String fVersion = flashEnabledNVersion[1];
-        String flashMessage="";
-       if(isTrue.equalsIgnoreCase("true")) {
-           flashMessage="3. Optional (no requirement):your installed flash is valid to use with web cellHTS2";
-       }
-        else {
-           flashMessage="3. Optional (no requirement):you have not installed flash or your version is smaller than:  v."+version;
-       }
-
-
+        String[] flashEnabledNVersion = request.getParameter(F_PARAMNAME).split(",");
+        String isTrue = flashEnabledNVersion[0];
+        String fVersion = flashEnabledNVersion[1];
+        String flashMessage = "";
+        if (isTrue.equalsIgnoreCase("true")) {
+            flashMessage = "3. Optional (no requirement):your installed flash is valid to use with web cellHTS2";
+        } else {
+            flashMessage = "3. Optional (no requirement):you have not installed flash or your version is smaller than:  v." + version;
+        }
 
 
         JSONObject returnJSON = new JSONObject();
-        returnJSON.put("AJAX",ajaxMessage);
+        returnJSON.put("AJAX", ajaxMessage);
         //can we make an ajax request
         //if we are here javascript must work (otherwise there would be no XHR request possible)
-        returnJSON.put("JAVASCRIPT","0. javascript is enabled");
+        returnJSON.put("JAVASCRIPT", "0. javascript is enabled");
 
         //this is only to complete the ajax request with a response
         returnJSON.put("BROWSER", browserVersionMessage);
 
         returnJSON.put("FLASH", flashMessage);
 
-        returnJSON.put("UPLOADPATH","4. "+checkAndCreateUploadDirectory());
+        returnJSON.put("UPLOADPATH", "4. " + checkAndCreateUploadDirectory());
 
         //get R and cellHTS Version
         RInformation info = getREssentials();
         String rVer = info.getRVersion();
         String cellHTS2Version = info.getCellHTS2Version();
         boolean zipEnabled = info.isRWithZipFunction();
-        String gotZip="Zip functionality in R can be found";
-        if(rVer.equals("not found")||rVer.equals("<not available>")) {
-           cellHTS2Version="R or cellHTS2 version can't be fetched. Maybe can't connect to RServer. Can't proceed";
-        }
-        else {
+        String gotZip = "Zip functionality in R can be found";
+        if (rVer.equals("not found") || rVer.equals("<not available>")) {
+            cellHTS2Version = "R or cellHTS2 version can't be fetched. Maybe can't connect to RServer. Can't proceed";
+        } else {
             // get R and cellHTS2 version and check if we are above the minimum version needs
             Pattern p = Pattern.compile("([\\d\\.]+)");
             Matcher m = p.matcher(rVer);
-            if(m.find()) {
+            if (m.find()) {
                 String requiredCellHTS2Ver = msg.get("required-cellHTS2-version");
-                if(compareTwoRVersions(rVer, msg.get("required-R-version"))&& cellHTS2Version.equals(requiredCellHTS2Ver)) {
-                    cellHTS2Version="R, cellHTS2 and RServer could be fe fetched and are in the right version.";
+                if (compareTwoRVersions(rVer, msg.get("required-R-version")) && cellHTS2Version.equals(requiredCellHTS2Ver)) {
+                    cellHTS2Version = "R, cellHTS2 and RServer could be fe fetched and are in the right version.";
+                } else {
+                    cellHTS2Version = "Fetched R and cellHTS2 version " + rVer + " do not match the required <br/>   " +
+                            "R version:" + msg.get("required-R-version") + " and cellHTS2 version:" + requiredCellHTS2Ver + ". Maybe can't connect to RServer. Can't proceed";
                 }
-                else {
-                    cellHTS2Version="Fetched R and cellHTS2 version "+rVer+" do not match the required <br/>   " +
-                            "R version:"+msg.get("required-R-version")+" and cellHTS2 version:"+requiredCellHTS2Ver+". Maybe can't connect to RServer. Can't proceed";
-                }
-                
-            }
-            else {
-                cellHTS2Version="R or cellHTS2 version exists but can't be fetched. Maybe can't connect to RServer. Can't proceed";
+
+            } else {
+                cellHTS2Version = "R or cellHTS2 version exists but can't be fetched. Maybe can't connect to RServer. Can't proceed";
             }
 
 
         }
-        if(cellHTS2Version.equals("")) {
-            cellHTS2Version="R or cellHTS2 version can't be fetched. Maybe can't connect to RServer. Can't proceed";
+        if (cellHTS2Version.equals("")) {
+            cellHTS2Version = "R or cellHTS2 version can't be fetched. Maybe can't connect to RServer. Can't proceed";
         }
-        if(!zipEnabled) {
-           gotZip="Can't find zip functionality in R. Please recompile it with it"; 
+        if (!zipEnabled) {
+            gotZip = "Can't find zip functionality in R. Please recompile it with it";
         }
 
 
-        returnJSON.put("CELLHTS2VERSION","5. "+cellHTS2Version);
+        returnJSON.put("CELLHTS2VERSION", "5. " + cellHTS2Version);
 
 
-        returnJSON.put("ZIPENABLED","6. "+gotZip);
+        returnJSON.put("ZIPENABLED", "6. " + gotZip);
 
         return returnJSON;
 
     }
 
 
-
-     public void afterRender(MarkupWriter writer){
-        if(!allDependenciesAreMet) {
-            pageRenderSupport.addScript("checkAll('%s','%s','%s','%s','%s','dependencyChecker')",checkAllLink, successSentLink, B_PARAMNAME,F_PARAMNAME,enableDIVOnSuccess);
+    public void afterRender(MarkupWriter writer) {
+        if (!allDependenciesAreMet) {
+            pageRenderSupport.addScript("checkAll('%s','%s','%s','%s','%s','dependencyChecker')", checkAllLink, successSentLink, B_PARAMNAME, F_PARAMNAME, enableDIVOnSuccess);
         }
     }
 
     @OnEvent(value = "successSent")
-    public JSONObject  successReceiver() {
-        if(!request.isXHR()) {
-            String ajaxMessage="1. Testing if your ISP proxy supports AJAX failed, Can't proceed. Please check your Proxy settings. Can't proceed";
+    public JSONObject successReceiver() {
+        if (!request.isXHR()) {
+            String ajaxMessage = "1. Testing if your ISP proxy supports AJAX failed, Can't proceed. Please check your Proxy settings. Can't proceed";
             //what happens?
-            throw new TapestryException(ajaxMessage,null);
+            throw new TapestryException(ajaxMessage, null);
         }
-    //send out an tapestry event that we are done and successfully checked everything    
-       //triggerSuccessEvent();
-     
-        allDependenciesAreMet=true;
+        //send out an tapestry event that we are done and successfully checked everything
+        //triggerSuccessEvent();
+
+        allDependenciesAreMet = true;
         JSONObject returnJSON = new JSONObject();
-        returnJSON.put("dummy","dummy");
-       return returnJSON;
+        returnJSON.put("dummy", "dummy");
+        return returnJSON;
     }
 
-     public void triggerSuccessEvent() {
+    public void triggerSuccessEvent() {
         //trigger an event that everything has been converted successfully and
         //parameters are the converted files
         ComponentEventCallback callback = new ComponentEventCallback() {
@@ -240,86 +248,86 @@ public class DependenciesChecker {
     }
 
 
-    public boolean compareTwoRVersions(String version, String minimumVersion) {               
+    public boolean compareTwoRVersions(String version, String minimumVersion) {
         String cellHTS2AndRVersion;
-                try {
-                    String[] versionPoints = version.split("\\.");
-                    String[] versionPointsDep = minimumVersion.split("\\.");
+        try {
+            String[] versionPoints = version.split("\\.");
+            String[] versionPointsDep = minimumVersion.split("\\.");
 
-                    if(versionPoints.length!=versionPointsDep.length) {
-                        return false;
-                    }
+            if (versionPoints.length != versionPointsDep.length) {
+                return false;
+            }
 
-                    int i=0;
-                    for(String versionPoint : versionPoints) {
-                        int ver = Integer.parseInt(versionPoint);
-                        int verDep = Integer.parseInt(versionPointsDep[i++]);                            
-                        if(ver<verDep) {
-                            return false;
-                        }
-                    }
-
-                }
-                catch(NumberFormatException e) {
+            int i = 0;
+            for (String versionPoint : versionPoints) {
+                int ver = Integer.parseInt(versionPoint);
+                int verDep = Integer.parseInt(versionPointsDep[i++]);
+                if (ver < verDep) {
                     return false;
                 }
+            }
+
+        }
+        catch (NumberFormatException e) {
+            return false;
+        }
         return true;
     }
 
     public String checkAndCreateUploadDirectory() {
-            String uploadPath;
-            if(System.getProperty("upload-path-webserver")!=null) {
+        String uploadPath;
+        if (System.getProperty("upload-path-webserver") != null) {
 
-                //get from command line
-                uploadPath=System.getProperty("upload-path-webserver");
-            }
-            else {
-                //else get from properties file
-                uploadPath=msg.get("upload-path-webserver");
-            }        
-
-            if(!uploadPath.endsWith(File.separator)) {
-                uploadPath=uploadPath+File.separator;
-            }
-
-            File uploadPathObj = new File(uploadPath);
-            if(!uploadPathObj.exists()) {
-                if(!uploadPathObj.mkdirs()) {
-                    return "Cannot create directory on the server to upload files: "+uploadPath+". <br/>   " +
-                            "Check read/write permissions or change file upload property in apps.properties file. Can't proceed";
-                }
-            }
-            if(uploadPathObj.canRead()&&uploadPathObj.canWrite()) {
-                //check if we can create a temp file in the new dir
-                File tmpFile =new File(uploadPath+"tmp.txt");
-                try{
-
-                    tmpFile.createNewFile();
-                    if(tmpFile.canWrite()) {
-                        //tmpFile.delete();
-                        return "Reading/Writing in temp folder: "+uploadPath+" succeeded!";
-                    }
-
-                }catch(IOException e) {
-                    e.printStackTrace();
-                    if(tmpFile.exists()){
-                        tmpFile.delete();
-                    }
-                    return "Cannot write a test file in the upload path: "+uploadPath+"tmp.txt"+"<br/>   " +
-                            "Check read/write permissions or change file upload property in apps.properties file. Can't proceed";
-                }
-
-             }else {
-                    return "Cannot read or write directory: "+uploadPath+".\nCheck read/write permissions. Can't proceed";
-            }
-             return "Cannot read or write directory: "+uploadPath+".\nCheck read/write permissions. Can't proceed";
+            //get from command line
+            uploadPath = System.getProperty("upload-path-webserver");
+        } else {
+            //else get from properties file
+            uploadPath = msg.get("upload-path-webserver");
         }
+
+        if (!uploadPath.endsWith(File.separator)) {
+            uploadPath = uploadPath + File.separator;
+        }
+
+        File uploadPathObj = new File(uploadPath);
+        if (!uploadPathObj.exists()) {
+            if (!uploadPathObj.mkdirs()) {
+                return "Cannot create directory on the server to upload files: " + uploadPath + ". <br/>   " +
+                        "Check read/write permissions or change file upload property in apps.properties file. Can't proceed";
+            }
+        }
+        if (uploadPathObj.canRead() && uploadPathObj.canWrite()) {
+            //check if we can create a temp file in the new dir
+            File tmpFile = new File(uploadPath + "tmp.txt");
+            try {
+
+                tmpFile.createNewFile();
+                if (tmpFile.canWrite()) {
+                    //tmpFile.delete();
+                    return "Reading/Writing in temp folder: " + uploadPath + " succeeded!";
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                if (tmpFile.exists()) {
+                    tmpFile.delete();
+                }
+                return "Cannot write a test file in the upload path: " + uploadPath + "tmp.txt" + "<br/>   " +
+                        "Check read/write permissions or change file upload property in apps.properties file. Can't proceed";
+            }
+
+        } else {
+            return "Cannot read or write directory: " + uploadPath + ".\nCheck read/write permissions. Can't proceed";
+        }
+        return "Cannot read or write directory: " + uploadPath + ".\nCheck read/write permissions. Can't proceed";
+    }
+
     public RInformation getREssentials() {
-        if(!rInformationExists)  {
-                RInterface rInterface = new RInterface();
-                rInformation =  rInterface.getEssentialCellHTS2Information(msg.get("rserve-host"),Integer.getInteger(msg.get("rserve-port")),msg.get("rserve-username"),msg.get("rserve-password"));
+        if (!rInformationExists) {
+            RInterface rInterface = new RInterface();
+            rInformation = rInterface.getEssentialCellHTS2Information(msg.get("rserve-host"), Integer.getInteger(msg.get("rserve-port")), msg.get("rserve-username"), msg.get("rserve-password"));
         }
-         return rInformation;
+        return rInformation;
     }
 
     public String getB_PARAMNAME() {

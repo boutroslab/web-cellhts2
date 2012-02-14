@@ -52,7 +52,7 @@ import data.*;
 
 //we need livepipe and progressbar for rendering progress bars!
 //this class communicates with the progressbar thread to keep it alive and updating :-) AJAX style
-@IncludeJavaScriptLibrary(value = {"livepipe.js","progressbar.js"})
+@Import(library={"livepipe.js","progressbar.js"})
 public class Results {
 
     @Inject

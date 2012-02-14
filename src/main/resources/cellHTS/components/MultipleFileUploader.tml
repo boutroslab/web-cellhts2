@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_0_0.xsd"
+      xmlns:p="tapestry:parameter">
+
+     <body>
+
+         <div id="${uniqueID}">
+
+               <div id="multipleFileUploaderDIV">
+                <div>
+                    <span id="spanButtonPlaceHolder"></span>
+                    <input id="btnCancel" type="button" value="Cancel All Uploads" onclick="swfu.cancelQueue();"
+                           disabled="disabled" style="margin-left: 2px; font-size: 8pt; height: 29px;"/>
+                </div>
+                <div class="fieldset flash" id="fsUploadProgress">
+                    <span class="legend">Upload Queue</span>
+                </div>
+                <div id="divStatus">${uploadedFilesAmount} Files Uploaded</div>
+
+            </div>
+         <div id="singleFileUploaderDIV">
+              <t:form t:id="singleFileUploadForm">
+                  <input t:type="upload" t:id="singleUploadFileID" validate="required" t:value="singleFile"/>
+              </t:form>
+         </div>
+      </div>
+         <t:actionlink t:id="deleteAllUploadedFiles">Delete all uploaded Files</t:actionlink>
+    </body>
+     <script language="VBScript" type="text/vbscript">
+<!-- // Visual Basic-Hilfsprogramm ist zur Ermittlung der Versionsinformationen des Flash Player ActiveX-Steuerelements erforderlich
+Function VBGetSwfVer(i)
+  on error resume next
+  Dim swControl, swVersion
+  swVersion = 0
+
+  set swControl = CreateObject("ShockwaveFlash.ShockwaveFlash." + CStr(i))
+  if (IsObject(swControl)) then
+    swVersion = swControl.GetVariable("$version")
+  end if
+  VBGetSwfVer = swVersion
+End Function
+// -->
+</script>
+
+    <noscript>
+      <h1><FONT COLOR="red">Your browser does not support Javascript, cannot proceed!</FONT></h1>
+    </noscript>
+
+</html>

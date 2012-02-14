@@ -20,9 +20,9 @@
 
 package cellHTS.mixins;
 
-import org.apache.tapestry5.annotations.IncludeJavaScriptLibrary;
 import org.apache.tapestry5.annotations.Environmental;
 import org.apache.tapestry5.annotations.Parameter;
+import org.apache.tapestry5.annotations.Import;
 import org.apache.tapestry5.MarkupWriter;
 import org.apache.tapestry5.RenderSupport;
 import org.apache.tapestry5.Link;
@@ -45,7 +45,8 @@ import org.apache.tapestry5.ioc.internal.util.TapestryException;
  *
  *
  */
-@IncludeJavaScriptLibrary(value = {"${tapestry.scriptaculous}/prototype.js","gridEditor.js"})
+
+@Import(library={"${tapestry.scriptaculous}/prototype.js","gridEditor.js"})
 public class GridEditor {
 
     @Inject

@@ -3,7 +3,6 @@ package cellHTS.pages;
 import org.apache.tapestry5.StreamResponse;
 import org.apache.tapestry5.ComponentResources;
 import org.apache.tapestry5.Link;
-import org.apache.tapestry5.annotations.ApplicationState;
 import org.apache.tapestry5.annotations.SessionState;
 import org.apache.tapestry5.annotations.InjectPage;
 import org.apache.tapestry5.services.Request;

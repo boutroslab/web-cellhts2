@@ -1,29 +1,9 @@
-<!--
-  ~ //
-  ~ // Copyright (C) 2009 Boutros-Labs(German cancer research center) b110-it@dkfz.de
-  ~ //
-  ~ //
-  ~ //    This program is free software: you can redistribute it and/or modify
-  ~ //    it under the terms of the GNU General Public License as published by
-  ~ //    the Free Software Foundation, either version 3 of the License, or
-  ~ //    (at your option) any later version.
-  ~ //
-  ~ //    This program is distributed in the hope that it will be useful,
-  ~ //    but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~ //    MERCHANTAimplemantBILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ~ //
-  ~ //    You should have received a copy of the GNU General Public License
-  ~ //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  ~
-  ~
-  -->
-
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>cellHTS</groupId>
+    <groupId>webCellHTS2</groupId>
     <artifactId>cellHTS-java</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.1</version>
     <packaging>war</packaging>
     <name>web cellHTS2 application</name>
     <url>http://web-cellhts2.dkfz.de/</url>
@@ -65,17 +45,29 @@
     </developers>
 
 
-    <dependencies>
+        <dependencies>
+        <!-- Too set up an application with a database, change the artifactId below to
+             tapestry-hibernate, and add a dependency on your JDBC driver. You'll also
+             need to add Hibernate configuration files, such as hibernate.cfg.xml. -->
         <dependency>
             <groupId>org.apache.tapestry</groupId>
             <artifactId>tapestry-core</artifactId>
             <version>${tapestry-release-version}</version>
         </dependency>
+
+        <!-- This adds automatic compression of JavaScript and CSS when in production mode. -->
         <dependency>
-            <groupId>ognl</groupId>
-            <artifactId>ognl</artifactId>
-            <version>2.7.3</version>
+            <groupId>org.apache.tapestry</groupId>
+            <artifactId>tapestry-yuicompressor</artifactId>
+            <version>${tapestry-release-version}</version>
         </dependency>
+         <dependency>
+            <groupId>org.apache.tapestry</groupId>
+            <artifactId>tapestry-upload</artifactId>
+            <version>${tapestry-release-version}</version>
+        </dependency>
+
+
 
         <!-- A dependency on either JUnit or TestNG is required, or the surefire plugin (which runs the tests)
 will fail, preventing Maven from packaging the WAR. Tapestry includes a large number
@@ -83,22 +75,41 @@ of testing facilities designed for use with TestNG (http://testng.org/), so it's
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <version>5.1</version>
-            <classifier>jdk15</classifier>
+            <version>${testng-release-version}</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <version>5.1</version>
-            <classifier>jdk15</classifier>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <version>${easymock-release-version}</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.apache.tapestry</groupId>
-            <artifactId>tapestry-upload</artifactId>
+            <artifactId>tapestry-test</artifactId>
             <version>${tapestry-release-version}</version>
+            <scope>test</scope>
         </dependency>
+
+        <!-- Provided by the servlet container, but sometimes referenced in the application
+       code. -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>${servlet-api-release-version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Provide dependency to the Tapestry javadoc taglet which replaces the Maven component report -->
+        <dependency>
+            <groupId>org.apache.tapestry</groupId>
+            <artifactId>tapestry-javadoc</artifactId>
+            <version>${tapestry-release-version}</version>
+            <scope>provided</scope>
+        </dependency>
+
         <dependency>
             <groupId>org.mortbay.jetty</groupId>
             <artifactId>jetty</artifactId>
@@ -113,68 +124,33 @@ of testing facilities designed for use with TestNG (http://testng.org/), so it's
         <dependency>
             <groupId>org.rosuda</groupId>
             <artifactId>REngine</artifactId>
-            <version>0.6.6</version>
+            <version>0.6.8</version>
         </dependency>
         <dependency>
             <groupId>org.rosuda</groupId>
-              <artifactId>Rserve</artifactId>
-              <version>0.6.6</version> 
+            <artifactId>REngine</artifactId>
+            <version>0.6.8</version>
+        </dependency>
+        <dependency>
+            <groupId>org.rosuda</groupId>
+            <artifactId>Rserve</artifactId>
+            <version>0.6.8</version>
         </dependency>
         <dependency>
             <groupId>javax.mail</groupId>
             <artifactId>mail</artifactId>
             <version>1.4.2</version>
         </dependency>
-
-
-        <dependency>
-            <groupId>com.wapmx.native</groupId>
-                <artifactId>mx-native-loader</artifactId>
-                <version>1.2</version>
-        </dependency>
-
-	<dependency>
-	  <groupId>javax.activation</groupId>
-	  <artifactId>activation</artifactId>
-	  <version>1.1</version>
-	</dependency>
-
-<!--         <dependency> -->
-<!--            <groupId>javax</groupId> -->
-<!--            <artifactId>activation</artifactId> -->
-<!--            <version>1.0.2</version> -->
-<!--        </dependency> -->
-      
-       <!--we need these for unpackign the war file-->
-
-        <dependency>
-            <groupId>tomcat</groupId>
-            <artifactId>catalina</artifactId>
-            <version>5.5.9</version>
-        </dependency>
-        <dependency>
-            <!--this is needed for the all-in-one-jar as well-->
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>1.1.1</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.chenillekit</groupId>
-            <artifactId>chenillekit-tapestry</artifactId>
-            <version>${chenillekit-release-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>de.dkfz.signaling</groupId>
-            <artifactId>signalingComponents</artifactId>
-            <version>0.1.8.5-SNAPSHOT</version>
-        </dependency>
         <dependency>
             <groupId>net.sourceforge.jexcelapi</groupId>
             <artifactId>jxl</artifactId>
             <version>2.6.10</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.chenillekit</groupId>
+            <artifactId>chenillekit-tapestry</artifactId>
+            <version>${chenillekit-release-version}</version>
+        </dependency>
 
     </dependencies>
     <build>
@@ -183,6 +159,7 @@ of testing facilities designed for use with TestNG (http://testng.org/), so it's
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
                 <configuration>
                     <source>1.5</source>
                     <target>1.5</target>
@@ -190,19 +167,14 @@ of testing facilities designed for use with TestNG (http://testng.org/), so it's
                 </configuration>
             </plugin>
 
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.7.2</version>
                 <configuration>
-                    <systemProperties>
-                        <property>
-                            <name>java.library.path</name>
-                            <value>/Users/clr/launchpad/ndb-bindings/working/
-                                java/.libs
-                            </value>
-                        </property>
-                    </systemProperties>
+                    <systemPropertyVariables>
+                        <tapestry.execution-mode>Qa</tapestry.execution-mode>
+                    </systemPropertyVariables>
                 </configuration>
             </plugin>
 
@@ -210,273 +182,44 @@ of testing facilities designed for use with TestNG (http://testng.org/), so it's
             <plugin>
                 <groupId>org.mortbay.jetty</groupId>
                 <artifactId>maven-jetty-plugin</artifactId>
-                <version>6.1.9</version>
+                <version>6.1.16</version>
                 <configuration>
                     <!-- Log to the console. -->
                     <requestLog implementation="org.mortbay.jetty.NCSARequestLog">
-                        <!-- This doesn't do anything for cellHTS.Jetty, but is a workaround for a Maven bug
+                        <!-- This doesn't do anything for Jetty, but is a workaround for a Maven bug
                              that prevents the requestLog from being set. -->
                         <append>true</append>
                     </requestLog>
-                </configuration>
-
-
-            </plugin>
-
-
-            <!-- This changes the WAR file packaging so that what would normally go into WEB-INF/classes
-             is instead packaged as WEB-INF/lib/cellHTS-java.jar.  This is necessary for Tapestry
-             to be able to search for page and component classes at startup. Only
-             certain application servers require this configuration, please see the documentation
-             at the Tapestry 5 project page (http://tapestry.apache.org/tapestry5/). -->
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <configuration>
-                    <!--for deploying on tomcat this has to be set to false-->
-                    <archiveClasses>false</archiveClasses>
-                    <archive>
-                        <manifestEntries>
-                            <Implementation-Build>${buildNumber}</Implementation-Build>
-                            <Implementation-Version>${version}</Implementation-Version>
-                        </manifestEntries>
-                    </archive>
-                </configuration>
-
-
-            </plugin>
-
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>buildnumber-maven-plugin</artifactId>
-                <version>1.0-beta-2</version>
-                <executions>
-                    <execution>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>create</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <doCheck>false</doCheck>
-                    <doUpdate>false</doUpdate>
+                    <systemProperties>
+                        <systemProperty>
+                            <name>tapestry.execution-mode</name>
+                            <value>development</value>
+                        </systemProperty>
+                    </systemProperties>
                 </configuration>
             </plugin>
-
-
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.5</source>
-                    <target>1.5</target>
-                </configuration>
-            </plugin>
-            <!--this is for doing an all-in-one jetty integrated executable jar file-->
-            <!--build with mvn assembly:assembly-->
-
-            <!--<plugin>-->
-            <!--<groupId>net.sf.alchim</groupId>-->
-            <!--<artifactId>winstone-maven-plugin</artifactId>-->
-            <!--<version>1.2</version>-->
-            <!--<configuration>-->
-            <!--<cmdLineOptions>-->
-            <!--<property>-->
-            <!--<name>httpPort</name>-->
-            <!--<value>8181</value>-->
-            <!--</property>-->
-            <!---->
-            <!---->
-            <!--<property>-->
-            <!--<name>debug</name>-->
-            <!--<value>9</value>-->
-            <!--</property>-->
-            <!---->
-
-            <!---->
-            <!---->
-            <!--</cmdLineOptions>-->
-            <!--</configuration>-->
-            <!--<executions>-->
-            <!--<execution>-->
-            <!--<goals>-->
-            <!--<goal>embed</goal>-->
-            <!--</goals>-->
-            <!--<phase>package</phase>-->
-            <!--</execution>-->
-            <!--</executions>-->
-            <!--</plugin>-->
-
-            <plugin>
-                <groupId>org.simplericity.jettyconsole</groupId>
-                <artifactId>jetty-console-maven-plugin</artifactId>
-                <version>1.18</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>createconsole</goal>
-                        </goals>
-                        <configuration>
-                            <backgroundImage>${basedir}/src/main/webapp/assets/jettyconsole.jpg</backgroundImage>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-
-            <!--copy the generated all-in-one jetty integrated executable jar into the site structure that it gets integraated into the site-->
-            <!--we build a html site for download there-->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>2.3</version>
-                <executions>
-                    <execution>
-                        <id>copy-jar-resources</id>
-                        <!--do the copying in the install phase (so that the jar file is actually there)-->
-                        <phase>install</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>src/site/resources/binary</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>target</directory>
-                                    <includes>
-                                        <include>cellHTS-java-standalone.jar</include>
-                                    </includes>
-                                    <filtering>true</filtering>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-
-                    <!--copy the sample JOB session for the project site into a site folder too-->
-                    <execution>
-                        <id>copy-job-session-resources</id>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>src/site/resources/binary</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>src/site</directory>
-                                    <includes>
-                                        <include>JOB33761_PERSISTENT</include>
-                                    </includes>
-                                    <filtering>true</filtering>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-
-
-                </executions>
-            </plugin>
-
-            
-
-
-
         </plugins>
-
-
     </build>
 
-    <reporting>
-
-        <!-- Adds a report detailing the components, mixins and base classes defined by this module. -->
-        <plugins>
-            <plugin>
-                <groupId>org.apache.tapestry</groupId>
-                <artifactId>tapestry-component-report</artifactId>
-                <version>${tapestry-release-version}</version>
-                <configuration>
-                    <rootPackage>cellHTS</rootPackage>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <artifactId>maven-javadoc-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>jxr-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <artifactId>maven-clover-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>changelog-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>taglist-maven-plugin</artifactId>
-            </plugin>
-
-
-        </plugins>
-
-
-    </reporting>
+    <reporting/>
 
     <repositories>
-        <!-- This can be commented out when the tapestry-release-version is a not a snapshot.
- The non-snapshot Tapestry artifacts are distributed through the central
- repository at ibiblio.     -->
-        <repository>
-            <id>chenillekit</id>
-            <url>http://www.chenillekit.org/mvnrepo/release</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>tapestry-snapshots</id>
-            <url>http://tapestry.formos.com/maven-snapshot-repository/</url>
-        </repository>
 
+        <!-- This repository is only needed when the Tapestry version is a preview release, rather
+             than a final release. -->
         <repository>
-            <id>codehaus.snapshots</id>
-            <url>http://snapshots.repository.codehaus.org</url>
+            <id>apache-staging</id>
+            <url>https://repository.apache.org/content/groups/staging/</url>
         </repository>
-        <repository>
-            <id>OpenQA_Release</id>
-            <name>OpenQA Release Repository</name>
-            <url>http://archiva.openqa.org/repository/releases/</url>
-        </repository>
-
-        <repository>
-            <id>kos</id>
-            <url>http://opensource.kantega.no/nexus/content/groups/public/</url>
-        </repository>
-
     </repositories>
 
-    <pluginRepositories>
-        <!-- As above, this can be commented out when access to the snapshot version
-of a Tapestry Maven plugin is not required.   -->
-        <pluginRepository>
-            <id>tapestry-snapshots</id>
-            <url>http://tapestry.formos.com/maven-snapshot-repository/</url>
-        </pluginRepository>
-
-        <pluginRepository>
-            <id>kos</id>
-            <url>http://opensource.kantega.no/nexus/content/groups/public/</url>
-        </pluginRepository>
-
-    </pluginRepositories>
-
     <properties>
-        <tapestry-release-version>5.1.0.5</tapestry-release-version>
-        <!--<tapestry-release-version>5.0.18</tapestry-release-version>-->
-        <chenillekit-release-version>1.2.0</chenillekit-release-version>
+        <tapestry-release-version>5.3.1</tapestry-release-version>
+        <servlet-api-release-version>2.5</servlet-api-release-version>
+        <testng-release-version>5.14.9</testng-release-version>
+        <easymock-release-version>3.0</easymock-release-version>
+        <chenillekit-release-version>1.3.3</chenillekit-release-version>
+
     </properties>
     <!---->
     <!--where to deploy/upload the project onto which server-->
@@ -488,7 +231,6 @@ of a Tapestry Maven plugin is not required.   -->
             <url>scp://opelz@b110-websrv:/home/opelz/site</url>
             <!--/var/www/boutroslab/cellHTS/web-project/</url>-->
         </site>
-
     </distributionManagement>
 
 

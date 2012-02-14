@@ -22,6 +22,7 @@ package cellHTS.pages;
 
 import cellHTS.components.ExportCSV;
 import cellHTS.components.FileImporter;
+import cellHTS.components.MultipleFileUploader;
 import cellHTS.classes.FileCreator;
 import cellHTS.classes.FileParser;
 
@@ -43,7 +44,6 @@ import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.internal.util.TapestryException;
 import data.DataFile;
 import data.Plate;
-import de.dkfz.signaling.signalingComponents.components.MultipleFileUploader;
 
 public class AdvancedFileImporter {
     @Persist

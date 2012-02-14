@@ -46,7 +46,6 @@ import cellHTS.classes.*;
 import cellHTS.components.Layout;
 import cellHTS.services.ZIPStreamResponse;
 import cellHTS.dao.Semaphore;
-import com.wapmx.nativeutils.jniloader.NativeLoader;
 
 
 /**
@@ -59,7 +58,8 @@ import com.wapmx.nativeutils.jniloader.NativeLoader;
  * Time: 11:09:37
  * To change this template use File | Settings | File Templates.
  */
-@IncludeJavaScriptLibrary(value = {"${tapestry.scriptaculous}/prototype.js", "divEnabler.js","../components/browserDetect.js"})
+
+@Import(library={"${tapestry.scriptaculous}/prototype.js", "divEnabler.js","../components/browserDetect.js"})
 public class CellHTS2 {
 
     @Inject
