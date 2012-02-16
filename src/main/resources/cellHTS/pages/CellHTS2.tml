@@ -216,9 +216,9 @@
             <br/>
 
             <p>Data Files can be uploaded as raw plate reader, text files in cellHTS2 format or ZIP archives (recommended). Alternatively, the
-               Advanced FileImporter module can be used for more complex file types (<a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/AdvancedFileImporterManual">help</a>).                 
+               Advanced FileImporter module can be used for more complex file types (<a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/AdvancedFileImporterManual">help</a>).
             </p>
-              
+
                 <t:actionlink t:id="showAdvancedFileImporter">Advanced File Importer</t:actionlink>
               <br/>
             <!--<div t:type="ck/Tooltip" clientId="tooltip2"-->
@@ -271,7 +271,7 @@
                         <FONT COLOR="blue">Platelist File successfully uploaded</FONT>
                     </t:if>
                     </t:if>
-                   
+
 
                 </p>
 
@@ -290,7 +290,7 @@
 
         <div id="step3DIV" style="display:none">
             <t:if test="hasPlateFormat">
-                <b>Step 3:</b> Please configure the plate layout                 
+                <b>Step 3:</b> Please configure the plate layout
                 (<a
                     href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/web+cellHTS2+Manual#webcellHTS2Manual-step3"
                     target="_blank">help</a>).
@@ -365,7 +365,7 @@
                                     wells
                                     annotated as 'sample' in.
                                     <!--<a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/Median+normalization">Help</a>-->
-                                </td>                                  
+                                </td>
                                 <td width="50px" align="right">
                                     <t:radio t:id="normalMedian"
                                              t:mixins="ck/OnEvent"
@@ -949,7 +949,7 @@
                     Please enter an Email address to receive the analysis report:
                         <input t:type="TextField"
                                t:id="emailAddressTextfield"
-                               value="emailAddress"                                           
+                               value="emailAddress"
                                t:mixins="ck/OnEvent"
                                onCompleteCallback="onLoseFocusOnEmailTextfield"
                                event="blur"/>

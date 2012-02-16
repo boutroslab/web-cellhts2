@@ -2850,7 +2850,9 @@ public class CellHTS2 {
             jsonObj.put("" + i++, "step" + i + "DIV");
         }
         //the div you want to enable and the divs you want to disable
-        pageRenderSupport.addScript("new DIVEnabler('step%sDIV','%s');", currentPagePointer, jsonObj.toString());
+        String jsonObjStr = jsonObj.toString();
+        jsonObjStr = jsonObjStr.replaceAll("\n","");
+        pageRenderSupport.addScript("new DIVEnabler('step%sDIV','%s');", currentPagePointer, jsonObjStr );
 
 
     }

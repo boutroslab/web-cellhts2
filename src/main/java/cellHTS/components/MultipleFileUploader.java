@@ -27,7 +27,7 @@ import java.util.HashSet;
 
 
 //context is the path to the webapp folder
-@Import(stylesheet={"context:/assets/swfupload.css"},library={"${tapestry.scriptaculous}/prototype.js","js/swfupload.js", "js/fileprogress.js", "js/handlers.js", "js/swfupload.queue.js","js/singleupload.js", "js/multipleupload.js","js/flashdetect.js"})
+@Import(stylesheet={"context:/assets/swfupload.css"},library={"${tapestry.scriptaculous}/prototype.js","context:/assets/js/swfupload.js", "context:/assets/js/fileprogress.js", "context:/assets/js/handlers.js", "context:/assets/js/swfupload.queue.js","context:/assets/js/singleupload.js", "context:/assets/js/multipleupload.js","context:/assets/js/flashdetect.js"})
 public class MultipleFileUploader {
     @Inject
     private RequestGlobals requestGlobals;
@@ -65,13 +65,13 @@ public class MultipleFileUploader {
 
 
     @Inject
-    @Path("swf/swfupload.swf")
+    @Path("context:/assets/swf/swfupload.swf")
     @Property
     private Asset swfFile;
 
 
     @Inject
-    @Path("images/TestImageNoText_65x29.png")
+    @Path("context:/assets/images/TestImageNoText_65x29.png")
     @Property
     private Asset testImage;
 
