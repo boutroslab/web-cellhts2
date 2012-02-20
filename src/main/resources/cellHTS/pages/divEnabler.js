@@ -18,50 +18,68 @@
  *
  */
 
-//a simple javascript class which will enable and disable DIVs
-var DIVEnabler = Class.create();
-DIVEnabler.prototype = {
+document.observe("dom:loaded", function() {
 
-    initialize: function(divEnable,divDisableJSON) {
-        var divEnable=divEnable;
-        var divDisableList= divDisableJSON.evalJSON();
-        if(divDisableList==null) {
-            alert("something messed up regarding your DIV list you want to disable");
-        }
-        if(divEnable==null)  {
-            alert("failed to provide proper DIV element you want to enable");
-        }
+    var divEnable = "";
+    var divDisableJSON = "";
+    var ajaxURI = $("ajax_uri").textContent;
 
-        //first make all divs invisible
-        var i;
-        for(i in divDisableList) {
-            var elementName = divDisableList[i];
-            if (elementName==divEnable) {
-                continue;
-            }
-            var element = $(elementName);
-            if(element!=null) {
-            element.style.display="none";
-            //     alert("debug setting element to none display"+elementName);
-            }
-            else {
-                alert("element "+elementName+" is nonexistand in html");
-            }
-        }
-        //now make the one visible you want to show
-        var enableElement = $(divEnable);
-        if(enableElement!=null) {
-           enableElement.style.display="";
-          // alert("debug setting element to enable display"+divEnable);
-        }
-        else {
-            alert("element "+divEnable+" is nonexistand in html");
-        }                  
+    receiveAjaxDataFromServer(ajaxURI);
 
-    },
-    isDefined:function( variable) {
-        return (typeof(window[variable]) == "undefined")?  false: true;
+
+});
+
+function setNewPageDetails(divEnable,divDisableList) {
+    
+    if (divDisableList == null) {
+        alert("something messed up regarding your DIV list you want to disable");
+    }
+    if (divEnable == null) {
+        alert("failed to provide proper DIV element you want to enable");
     }
 
-
+    //first make all divs invisible
+    var i;
+    for (var i=0; i<divDisableList.length; i++) {
+        var elementName = divDisableList[i];
+        if (elementName == divEnable) {
+            continue;
+        }
+        var element = $(elementName);
+        if (element != null) {
+            element.style.display = "none";
+            //     alert("debug setting element to none display"+elementName);
+        }
+        else {
+            alert("element " + elementName + " is nonexistand in html");
+        }
+    }
+    //now make the one visible you want to show
+    var enableElement = $(divEnable);
+    if (enableElement != null) {
+        enableElement.style.display = "";
+        // alert("debug setting element to enable display"+divEnable);
+    }
+    else {
+        alert("element " + divEnable + " is nonexistand in html");
+    }
 }
+
+function receiveAjaxDataFromServer(ajaxURI) {
+    new Ajax.Request(
+            ajaxURI,
+    {
+        method: 'post',
+        //return the complete JSON string of all enabled wells..the logic lies in java
+        onSuccess: function(response) {
+            var jSONText = response.responseText;
+            var jSONStuff = jSONText.evalJSON();
+            var divEnable = jSONStuff['divEnable'];
+            var divDisable = jSONStuff['divDisable'];
+            setNewPageDetails(divEnable,divDisable);
+        }
+    }
+            );
+}
+
+

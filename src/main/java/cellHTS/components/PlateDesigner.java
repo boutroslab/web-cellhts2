@@ -298,6 +298,7 @@ public class PlateDesigner {
         //javascript will send the name of the clicked well names later to this java class back (see onreceiveWellID method)
         //this is communicating with the server using AJAX technique
         Link link = resources.createEventLink("receiveWellID");
+        JSONStringToSend.replaceAll("\n","");
         pageRenderSupport.addScript("new PlateDesigner('well_A','wellType','plateNum','%s','%s','%s');",JSONStringToSend,link.toAbsoluteURI(),PARAM_NAME);
 
     }

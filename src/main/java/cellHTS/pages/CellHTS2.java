@@ -25,11 +25,9 @@ import org.apache.tapestry5.upload.services.UploadedFile;
 import org.apache.tapestry5.ioc.internal.util.TapestryException;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.ioc.Messages;
-import org.apache.tapestry5.MarkupWriter;
-import org.apache.tapestry5.ComponentResources;
-import org.apache.tapestry5.RenderSupport;
-import org.apache.tapestry5.StreamResponse;
+import org.apache.tapestry5.*;
 import org.apache.tapestry5.json.JSONObject;
+import org.apache.tapestry5.json.JSONArray;
 import org.apache.tapestry5.beaneditor.BeanModel;
 import org.apache.tapestry5.services.BeanModelSource;
 import org.apache.tapestry5.services.Request;
@@ -59,7 +57,7 @@ import cellHTS.dao.Semaphore;
  * To change this template use File | Settings | File Templates.
  */
 
-@Import(library={"${tapestry.scriptaculous}/prototype.js", "divEnabler.js","../components/browserDetect.js"})
+@Import(library={"${tapestry.scriptaculous}/prototype.js", "CellHTS2.js","divEnabler.js","../components/browserDetect.js"})
 public class CellHTS2 {
 
     @Inject
@@ -77,7 +75,8 @@ public class CellHTS2 {
     //this bool stores if we are making a new run
     @Persist
     private boolean notNewRun;
-
+    @Inject
+    private ComponentResources resources;
 
     @Persist
     private HashMap<String, DataFile> dataFileList;
@@ -334,7 +333,7 @@ public class CellHTS2 {
     
 
 
-    public void onActivate() {
+    public void setupRender() {
 
 
 
@@ -467,7 +466,7 @@ public class CellHTS2 {
         if(tmp.length>0) {
             activatedFromPage= tmp[tmp.length-1];
         }
-        System.out.println("active: "+activatedFromPage);
+        //System.out.println("active: "+activatedFromPage);
         //if we are coming from the email results page, we want to start
         //a complete new analysis
         if (activatedFromPage.equals("SuccessPage")) {
@@ -2831,31 +2830,26 @@ public class CellHTS2 {
         this.parseFileParams = parseFileParams;
     }
 
-    /**
-     *
-     * this places a javascript into our page to control enabling and disbling of "back" and "forward" buttons
-     * ...This is deprecated
-     *
-     * @param writer
-     */
-    void afterRender(MarkupWriter writer) {
-
-        //after rendering we will start a javascript method which will
-        //enable and disable all divs which are not the current one
-        JSONObject jsonObj = new JSONObject();
-        //first get all available divs which we have and will send to javascript as well as the one
-        //which we want to enable
-        for (int i = 0; i < activatedPages.size(); i++) {
-            //for (String entry : availableDIVs) {
-            jsonObj.put("" + i++, "step" + i + "DIV");
-        }
-        //the div you want to enable and the divs you want to disable
-        String jsonObjStr = jsonObj.toString();
-        jsonObjStr = jsonObjStr.replaceAll("\n","");
-        pageRenderSupport.addScript("new DIVEnabler('step%sDIV','%s');", currentPagePointer, jsonObjStr );
-
-
+    
+    //for the ajax requests
+    public String getAJAXRequestURI() {
+        return resources.createEventLink("enableNewPageLinks").toAbsoluteURI();
     }
+    public JSONObject onEnableNewPageLinks() {
+            JSONObject tempObj = new JSONObject();
+            JSONArray  jsonArr = new JSONArray();
+
+            for (int i = 1; i <= activatedPages.size(); i++) {
+                //for (String entry : availableDIVs) {
+                jsonArr.put("step" + i + "DIV");
+            }
+
+            tempObj.put("divEnable","step"+currentPagePointer+"DIV");
+            tempObj.put("divDisable", jsonArr);
+        return tempObj;
+    }
+
+
 
     /**
      *
