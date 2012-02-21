@@ -27,7 +27,15 @@ import java.util.HashSet;
 
 
 //context is the path to the webapp folder
-@Import(stylesheet={"context:/assets/swfupload.css"},library={"${tapestry.scriptaculous}/prototype.js","context:/assets/js/swfupload.js", "context:/assets/js/fileprogress.js", "context:/assets/js/handlers.js", "context:/assets/js/swfupload.queue.js","context:/assets/js/singleupload.js", "context:/assets/js/multipleupload.js","context:/assets/js/flashdetect.js"})
+@Import(stylesheet={"context:/assets/swfupload.css"},
+        library={"${tapestry.scriptaculous}/prototype.js"
+                ,"context:/assets/js/swfupload.js"
+                ,"context:/assets/js/swfupload.queue.js"
+                ,"context:/assets/js/fileprogress.js"
+                ,"context:/assets/js/handlers.js"
+                ,"context:/assets/js/singleupload.js"
+                ,"context:/assets/js/multipleupload.js"
+                ,"context:/assets/js/flashdetect.js"})
 public class MultipleFileUploader {
     @Inject
     private RequestGlobals requestGlobals;
@@ -143,6 +151,7 @@ public class MultipleFileUploader {
         Link flashCallbackLink = componentResources.createEventLink("getFlashResponse", new Object[]{});
 
          String flashCallbackLinkString = flashCallbackLink.toAbsoluteURI();
+        //due to a bug in flash player we have to add the session id!
          flashCallbackLinkString+=";jsessionid="+sessionID;
 
 
@@ -169,7 +178,7 @@ public class MultipleFileUploader {
     //this method is the callback method which communicates with the flash part of the program (client side)
     @OnEvent(value = "getFlashResponse")
     public synchronized StreamResponse getFlashCallback(Object[] obj) {
-        System.out.println("in callback function");
+        //System.out.println("in callback function");
 
 
         if(decoder.getFileUpload("Filedata")!=null) {

@@ -84,7 +84,7 @@ function uploadStart(file) {
 		progress.toggleCancel(true, this);
 	}
 	catch (ex) {}
-	
+
 	return true;
 }
 
@@ -102,11 +102,10 @@ function uploadProgress(file, bytesLoaded, bytesTotal) {
 
 function uploadSuccess(file, serverData) {
 	try {
-	    var progress = new FileProgress(file, this.customSettings.progressTarget);
-	    progress.setComplete();
-	    progress.setStatus("Complete.");
-	    progress.toggleCancel(false);
-        
+		var progress = new FileProgress(file, this.customSettings.progressTarget);
+		progress.setComplete();
+		progress.setStatus("Complete.");
+		progress.toggleCancel(false);
 
 	} catch (ex) {
 		this.debug(ex);
@@ -171,3 +170,19 @@ function uploadComplete(file) {
 	}
 }
 
+//modified by olip
+// This event comes from the Queue Plugin
+function myQueueComplete(numFilesUploaded) {
+	var status = document.getElementById("divStatus");
+	status.innerHTML = numFilesUploaded + " file" + (numFilesUploaded === 1 ? "" : "s") + " uploaded.";
+
+    new Ajax.Request(
+                lastFlashFileFinished,
+        {
+          method: 'post',
+            //send the ajax request parameters not anonymously but with a name for the parameters so we can better
+            // access the parameters server side (using tapestry request.getParam e.g.)
+          parameters: paramName+"=TRUE"
+        }
+        );
+ } 

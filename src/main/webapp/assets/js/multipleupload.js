@@ -1,12 +1,16 @@
+//created by olip
 
 //first gives the URL to the swf on the webserver
 //second gives the URL to communicate with the webserver from flash
 var lastFlashFileFinished;
 var paramName;
+var swfu;
+
+
+
 function multipleupload(swfURL,callbackLink,lastFlashFileFinishedURL,parameterName,testImage) {
     lastFlashFileFinished=lastFlashFileFinishedURL;
     paramName=parameterName;
-    var swfu;
 
 
            //var loc="http://"+location.host;
@@ -52,28 +56,14 @@ function multipleupload(swfURL,callbackLink,lastFlashFileFinishedURL,parameterNa
 				upload_error_handler : uploadError,
 				upload_success_handler : uploadSuccess,
 				upload_complete_handler : uploadComplete,
-				queue_complete_handler : queueComplete,	// Queue plugin event
-                http_success : [201, 202],
+				queue_complete_handler : myQueueComplete,	// Queue plugin event
+                http_success : [201, 202]
                 //debug: true
-                
-			};       
+
+			};
 
 swfu = new SWFUpload(settings);
 
 
 }
-// This event comes from the Queue Plugin
-function queueComplete(numFilesUploaded) {
-	var status = document.getElementById("divStatus");
-	status.innerHTML = numFilesUploaded + " file" + (numFilesUploaded === 1 ? "" : "s") + " uploaded.";
 
-    new Ajax.Request(
-                lastFlashFileFinished,
-        {
-          method: 'post',
-            //send the ajax request parameters not anonymously but with a name for the parameters so we can better
-            // access the parameters server side (using tapestry request.getParam e.g.)
-          parameters: paramName+"=TRUE"
-        }
-        );
- }

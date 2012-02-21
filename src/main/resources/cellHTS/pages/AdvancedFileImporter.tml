@@ -27,7 +27,7 @@
     A set of example files to upload <a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/download/attachments/5570583/advancedFileImporterDemo.zip">here</a> (Please use extracted files only).
     <br/>
     <br/>
-    <body onLoad="initPage()">
+    <body>
         <div t:type="ck/Tooltip" clientId="tooltip0"
                  value="If flash >V.7 is enabled multiple files can be uploaded by holding down mouse button or using Shift+arrow key"
                  effect="appear">
@@ -44,20 +44,20 @@
             <t:form>
                 <t:checkbox t:id="containsHeadline"
                             t:mixins="ck/OnEvent"
-                            onCompleteCallback="onCompleteChangeEventDummy"
+                            
                             event="change"/>
                     Data Files contain Headlines such as Plate, Well, Replicate...<br/>
 
                 <t:checkbox t:id="containsMultiChannelData"
                                 t:mixins="ck/OnEvent"
-                                onCompleteCallback="onCompleteChangeEventMulti"
+
                                 event="change"/>
                     Data Files contain Multi Channel Data<br/>
 
                     <!--<t:label for="replicateNumbers">Number of Replicates</t:label>-->
                     <t:textfield t:id="replicateNumbers" size="2"
                      t:mixins="ck/OnEvent"
-                     onCompleteCallback="onCompleteFromReplicateNumber"
+
                      event="blur"
                             /> Number of Replicates<br/>
                    
@@ -114,47 +114,5 @@
         <br/>
         <t:actionlink t:id="goBackwebCellHTS2">import generated files to web cellHTS2/ go back</t:actionlink>
     </body>
-    <script type="text/javascript">
-        <!-- //
-
-        function initPage() {
-           /*
-           var multi = document.getElementById('containsMultiChannelData');
-
-           if(multi==null) {
-               document.getElementById('replicateNumbers').disabled=true;
-           }
-           else if(multi.value==null) {
-               document.getElementById('replicateNumbers').disabled=true;     
-           }
-           else if(multi.value=="") {
-              document.getElementById('replicateNumbers').disabled=true;
-           }
-           else if(multi.checked==false) {
-                document.getElementById('replicateNumbers').disabled=true;
-           }
-           else if(multi.checked==true) {
-               document.getElementById('replicateNumbers').disabled=false;     
-           }
-           */
-
-        }
-
-
-        function onCompleteChangeEventMulti(response) {
-           /*if(response.multi==true)  {
-                document.getElementById('replicateNumbers').disabled=false;
-           }else {
-               document.getElementById('replicateNumbers').disabled=true;     
-           }*/
-        }
-        //no response needed
-        function onCompleteChangeEventDummy(response) {
-
-        }
-        function onCompleteFromReplicateNumber(response) {
-           
-        }
-        //-->
-    </script>
+    
 </t:layout>

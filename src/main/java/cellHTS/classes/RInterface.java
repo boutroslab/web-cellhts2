@@ -154,8 +154,10 @@ public class RInterface extends Thread {
             RConnection eng = getRengine(host, port, username, passwordEncrypt);
 
             if(!eng.isConnected()) {
-             rConnection=null;
-             eng=getRengine();
+             eng.close();
+             eng = null;
+             closeRConnection();
+             eng = getRengine(host, port, username, passwordEncrypt);
             }
             if (eng != null) {
             eng.parseAndEval("library(cellHTS2)", null, false); // don't return the result - it has a similar effect to voidEval in Rserve    
@@ -205,7 +207,12 @@ public class RInterface extends Thread {
     public RConnection getRConnection() {
         return rConnection;
     }
-
+    public void closeRConnection() {
+        if(rConnection != null) {
+            rConnection.close();
+        }
+        rConnection = null;
+    }
 
     /**
      * threads run method
@@ -1300,7 +1307,7 @@ public class RInterface extends Thread {
 
     //this is a singleton
     public synchronized RConnection getRengine() {
-        if (rConnection == null) {                  
+        if (rConnection == null||!rConnection.isConnected()) {
             try {
                 rConnection = new RConnection(stringParams.get("rserve-host"), Integer.parseInt(stringParams.get("rserve-port")));//REngine.engineForClass("org.rosuda.REngine.JRI.JRIEngine");
                 if (rConnection.needLogin()) {
@@ -1338,7 +1345,7 @@ public class RInterface extends Thread {
                 throw new TapestryException("cannot make a connection to the Rserve server at host: " + host + " port: " + port, null);
             }
         }
-        System.out.println("Connection established to Rserve at : " + host + " port: " + port);
+       // System.out.println("Connection established to Rserve at : " + host + " port: " + port);
         return rConnection;
     }
 
