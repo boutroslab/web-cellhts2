@@ -172,39 +172,44 @@ public class DependenciesChecker {
         //get R and cellHTS Version
         RInformation info = getREssentials();
         String rVer = info.getRVersion();
-        String cellHTS2Version = info.getCellHTS2Version();
+        String cellHTS2Ver = info.getCellHTS2Version();
+        String rServerVer = info.getrServeVersion();
         boolean zipEnabled = info.isRWithZipFunction();
         String gotZip = "Zip functionality in R can be found";
         if (rVer.equals("not found") || rVer.equals("<not available>")) {
-            cellHTS2Version = "R or cellHTS2 version can't be fetched. Maybe can't connect to RServer. Can't proceed";
+            cellHTS2Ver = "R or cellHTS2 version can't be fetched. Maybe can't connect to RServer. Can't proceed";
         } else {
             // get R and cellHTS2 version and check if we are above the minimum version needs
             Pattern p = Pattern.compile("([\\d\\.]+)");
             Matcher m = p.matcher(rVer);
             if (m.find()) {
                 String requiredCellHTS2Ver = msg.get("required-cellHTS2-version");
-                if (compareTwoRVersions(rVer, msg.get("required-R-version")) && cellHTS2Version.equals(requiredCellHTS2Ver)) {
-                    cellHTS2Version = "R, cellHTS2 and RServer could be fe fetched and are in the right version.";
+                String requiredRServerVer = msg.get("required-rServeVersion");
+                if (compareTwoRVersions(rVer, msg.get("required-R-version")) && cellHTS2Ver.equals(requiredCellHTS2Ver) && rServerVer.equals(requiredRServerVer)) {
+                    cellHTS2Ver = "R, cellHTS2 and RServer could be fe fetched and are in the right version.";
                 } else {
-                    cellHTS2Version = "Fetched R and cellHTS2 version " + rVer + " do not match the required <br/>   " +
-                            "R version:" + msg.get("required-R-version") + " and cellHTS2 version:" + requiredCellHTS2Ver + ". Maybe can't connect to RServer. Can't proceed";
+                    cellHTS2Ver = "Fetched R deps " + rVer + " do not match required: <br/>   " +
+                            "  R version: " + msg.get("required-R-version") + " ("+rVer+") <br/> " +
+                            "  cellHTS2 version: " + requiredCellHTS2Ver +  " ("+cellHTS2Ver+") <br/> " +
+                            "  or rServer version: " +  requiredRServerVer + " ("+rServerVer+") <br/> " +                   		
+                            "  . Maybe can't connect to RServer. Can't proceed";
                 }
 
             } else {
-                cellHTS2Version = "R or cellHTS2 version exists but can't be fetched. Maybe can't connect to RServer. Can't proceed";
+                cellHTS2Ver = "R or cellHTS2 version exists but can't be fetched. Maybe can't connect to RServer. Can't proceed";
             }
 
 
         }
-        if (cellHTS2Version.equals("")) {
-            cellHTS2Version = "R or cellHTS2 version can't be fetched. Maybe can't connect to RServer. Can't proceed";
+        if (cellHTS2Ver.equals("")) {
+            cellHTS2Ver = "R or cellHTS2 version can't be fetched. Maybe can't connect to RServer. Can't proceed";
         }
         if (!zipEnabled) {
             gotZip = "Can't find zip functionality in R. Please recompile it with it";
         }
 
 
-        returnJSON.put("CELLHTS2VERSION", "5. " + cellHTS2Version);
+        returnJSON.put("CELLHTS2VERSION", "5. " + cellHTS2Ver);
 
 
         returnJSON.put("ZIPENABLED", "6. " + gotZip);

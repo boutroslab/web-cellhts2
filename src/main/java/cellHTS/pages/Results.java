@@ -151,7 +151,7 @@ public class Results {
 
     @Persist
     private HTSAnalyzerParameter htsAnalyzerParameter;
-
+    
     /**
      * this method should be started when starting a new R cellHTS2 run ..
      *
@@ -371,7 +371,7 @@ public class Results {
                  }
              }
 
-            resultZipFile = jobNameDir+File.separator + runName+".zip";
+            resultZipFile = runNameDir+File.separator + runName+".zip";
         //only show progress bar etc if we are not running at email notification
         if (!emailNotification) {
             //create a link for the javascript polling...this will be the java method in this obj here which will be called from js
@@ -402,7 +402,7 @@ public class Results {
             //i made this mechanism because a lot of times the attachments are too big
            String hostName =  request.getHeader("Host");
            String tempArr[] = {jobNameDir.getName(),runNameDir.getName()};
-           hostName="http://"+hostName+resources.createPageLink("EmailDownload", true, tempArr ).toAbsoluteURI();
+           hostName=resources.createPageLink("EmailDownload", true, tempArr ).toAbsoluteURI();
 
 
            paramMap.put("emailDownloadLink",hostName);

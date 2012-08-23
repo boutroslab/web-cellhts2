@@ -68,14 +68,14 @@ public class RInterface extends Thread {
     private Semaphore semaphore;
     private boolean emailNotification;
     private boolean dumpCellHTS2Obj2File;
-    private String resultZipFile;
-    private String htsResultZipFile;
+    private File resultZipFile;
+    private File htsResultZipFile;
     private String emailAddress;
     private long threadID;
     private boolean sendErrorEmail;
     //these two if we use email notification
     MailTools postMailTools;
-    //get the hostname
+    //get the hostname of the webapp cellhts2 (not rserver hostname)
     private String hostname;
     //send notification mails to the maintainer(s) of this tool in case of error
     private String maintainEmailAddress;
@@ -105,9 +105,10 @@ public class RInterface extends Thread {
         this.completeOutput = new String("");
         this.successBool = successBool;
         this.semaphore = semaphore;
+      
         this.emailNotification = eMailNotification;
-        this.resultZipFile = resultZipFile;
-        this.htsResultZipFile = new File(resultZipFile).getParent() + File.separator + new File(stringParams.get("runNameDir")).getName() + "_HTSAnalyzerResults.zip";
+        this.resultZipFile = new File(resultZipFile);
+        this.htsResultZipFile = new File(this.resultZipFile.getParent() + File.separator + new File(stringParams.get("runNameDir")).getName() + "_HTSAnalyzerResults.zip");
         this.emailAddress = emailAddress;
         this.sendErrorEmail = sendErrorEmail;
         this.uploadPath = uploadPath;
@@ -145,6 +146,7 @@ public class RInterface extends Thread {
     public RInformation getEssentialCellHTS2Information(String host, int port, String username, String passwordEncrypt) {
         String cellHTSVersion = "not found";
         String rVersion = "not found";
+        String rServerVersion = "not found";
         boolean zipFound=true;
         
 
@@ -160,7 +162,7 @@ public class RInterface extends Thread {
              eng = getRengine(host, port, username, passwordEncrypt);
             }
             if (eng != null) {
-            eng.parseAndEval("library(cellHTS2)", null, false); // don't return the result - it has a similar effect to voidEval in Rserve    
+            eng.parseAndEval("library(cellHTS2);library(Rserve)", null, false); // don't return the result - it has a similar effect to voidEval in Rserve    
             //REXP r = eng.parseAndEval("try(sessionInfo(),silent=TRUE)");
             String output = eng.parseAndEval("paste(capture.output(print(sessionInfo())),collapse=\"\\n\")").asString();
             String output2 = eng.parseAndEval("try(zip(),silent=TRUE)").asString();
@@ -170,6 +172,8 @@ public class RInterface extends Thread {
             //c.voidEval("library(cellHTS2)");
             //String output=eng.parseAndEval("paste(capture.output(print(sessionInfo())),collapse=\"\\n\")").asString();               
 
+            System.out.println(output);
+            
             Pattern p1 = Pattern.compile("R version ([\\d\\.]+) ");
             Matcher m1 = p1.matcher(output);
 
@@ -183,6 +187,13 @@ public class RInterface extends Thread {
             if (m2.find()) {
                 cellHTSVersion = m2.group(1);                       
             }
+            
+            Pattern p3 = Pattern.compile("Rserve_([\\-\\d\\.]+)");
+            Matcher m3 = p3.matcher(output);
+            if (m3.find()) {
+            	rServerVersion = m3.group(1);                       
+            }
+            
 
 
             p1 = Pattern.compile("could not find function");
@@ -201,7 +212,7 @@ public class RInterface extends Thread {
         }
 
 
-        RInformation rInformation = new RInformation(rVersion,cellHTSVersion,zipFound);
+        RInformation rInformation = new RInformation(rVersion,cellHTSVersion,rServerVersion,zipFound);
         return rInformation;
     }       
     public RConnection getRConnection() {
@@ -246,18 +257,20 @@ public class RInterface extends Thread {
             semaphore.v(threadID);
             return;
         }
-        // if we analysing using HTSAnalyzer...dont show 100 percent but stream everything alltogether in the end
+        // if we analysing using HTSAnalyzer...dont show 100 percent mark but stream everything alltogether in the end
         else if (success && builtCellHTS2ObjToFile) {
             //dont show 100 percent
             if (runHTSAnalyzeR()) {
-                //quick fix ...we will zip everything again because we can only stream one file and this is static and cannot be changed
+                //quick fix ...we already have zipped the results in runCellHTS2Analysis(), now we will append the HTS results ????
+            	//will zip everything again because we can only stream one file and this is static and cannot be changed
                 //because its already in javascript
                 addHTSAnalyzerResultsToResultsZipFile();
 
 
                 try {
-                    //since we updated the cellhts2 result file we have to copy the updated version over
-                RFileInputStream inputStream = getRengine().openFile(resultZipFile);
+             
+                	
+                RFileInputStream inputStream = getRengine().openFile(resultZipFile.getAbsolutePath());
                 FileOutputStream output = new FileOutputStream(resultZipFile);
                 //copy locally from rserver to the same location
                 ShellEnvironment.copyRFileInputStreamToLocal(inputStream,output);
@@ -320,10 +333,7 @@ public class RInterface extends Thread {
         try {
             //TODO: this code is ugly and not elegant. Better: write the R Script into a file with VARIABLE SPACERS, load it here and replace all the spacers with the settings here
             //store original location where we started r
-
-
-
-
+        	//brand the R script with the version number of used R, cellHTS2 etc.
 
             cmdString = "orgDir=getwd()";
             debugString += cmdString + "\n";
@@ -332,18 +342,17 @@ public class RInterface extends Thread {
             cmdString="dir.create('"+uploadPath + stringParams.get("jobName")+"', , recursive = TRUE, showWarnings = FALSE)";
             debugString += cmdString + "\n";             
             voidEval(cmdString);
-            //copy all the inputfiles locally to the server location
+            //copy all the inputfiles locally to the server location (only if we are not running analysis on localhost)
             File folder = new File(uploadPath + stringParams.get("jobName"));
             File[] listOfFiles = folder.listFiles();
 
             progressPercentage[0] = "1_copying files to Rserver";
-            for (int i = 0; i < listOfFiles.length; i++) {
-              if (listOfFiles[i].isFile()) {
-                   RFileOutputStream outStream = getRengine().createFile(listOfFiles[i].getAbsolutePath());
-                   ShellEnvironment.copyRFileInputStreamToRemote(new FileInputStream(listOfFiles[i]),outStream);                  
-              }
+            
+            //if we are not running the Rserver on localhost...if the Rserver is on a different physical server...copy all the files we have to analyse to the server
+            if(!rServeIsRunningOnLocalHost()) {
+               copyLocalFilesToRServer(listOfFiles);
             }
-
+            
             //first we have to change to the Indir in order to make the R cellHTS script working
             cmdString = "setwd(\"" + uploadPath + stringParams.get("jobName") + "\")";
             debugString += cmdString + "\n";
@@ -737,7 +746,7 @@ public class RInterface extends Thread {
                         }
 
 
-        //zip the results
+        //zip the results of the cellHTS run
         if (!createResultsZipFile()) {
             progressPercentage[0] = "101_Error occured trying to zip the resultfiles!";
 
@@ -751,14 +760,17 @@ public class RInterface extends Thread {
         }
 
 
-        //copy results zip file locally
+        
 
-        RFileInputStream inputStream = null;
         try {
-            inputStream = getRengine().openFile(resultZipFile);
-            FileOutputStream output = new FileOutputStream(resultZipFile);
-            //copy locally from rserver to the same location
-            ShellEnvironment.copyRFileInputStreamToLocal(inputStream,output);
+        	//copy results zip file back from rserver->locally if and ONLY if we are running this rserver thing on another server
+            File[] filesToStreamBack = new File[1];
+            filesToStreamBack[0] = resultZipFile;
+            
+        	if(!rServeIsRunningOnLocalHost()) {
+        		copyRemoteFilesToLocal(filesToStreamBack);
+        	}
+        
         } catch (IOException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             progressPercentage[0] = "101_Error occured trying to fetch the zip file from the server";
@@ -806,7 +818,7 @@ public class RInterface extends Thread {
         //TODO: this stuff here has to be outsourced into DLPropertiesDAO class
 
         //set the relation between runname and result zip file
-        propObj.setProperty(runName + "_RESULT_ZIP", resultZipFile);
+        propObj.setProperty(runName + "_RESULT_ZIP", resultZipFile.getAbsolutePath());
         //put in the properties file that we downloaded this runid zero times
         propObj.setProperty(runName, "0");
         //generate a password for downloading
@@ -852,7 +864,7 @@ public class RInterface extends Thread {
          "Full Text: http://genomebiology.com/content/pdf/gb-2006-7-7-r66.pdf\n"+
          "PubMed: http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=pubmed&amp;cmd=Retrieve&amp;dopt=AbstractPlus&amp;list_uids=16869968";
          **/
-        file = resultZipFile;
+        file = resultZipFile.getAbsolutePath();
 
         //}
         //else {
@@ -921,7 +933,7 @@ public class RInterface extends Thread {
 
         }
 
-        //begin rservering :'-)
+        //begin rservering' :-)
 
         String debugString = "";
 
@@ -1118,7 +1130,7 @@ public class RInterface extends Thread {
                         }
 
         //zip the results
-        if (!this.createHTSAnalyzerResultsZipFile()) {
+        if (!createHTSAnalyzerResultsZipFile()) {
             progressPercentage[0] = "101_Error occured trying to zip the resultfiles!";
 
             sendNotificationToMaintainer(progressPercentage[0], jobID);
@@ -1129,14 +1141,18 @@ public class RInterface extends Thread {
             //TODO:put all the exceptions and stuff in a seperate return function where you stop the semaphore and close everything
             return false;
         }
-//copy results zip file locally
+
 
         RFileInputStream inputStream = null;
         try {
-            inputStream = getRengine().openFile(htsResultZipFile);
-            FileOutputStream output = new FileOutputStream(htsResultZipFile);
-            //copy locally from rserver to the same location
-            ShellEnvironment.copyRFileInputStreamToLocal(inputStream,output);
+        	//copy results zip file back from rserver->locally if and ONLY if we are running this rserver thing on another server
+            File[] filesToStreamBack = new File[1];
+            filesToStreamBack[0] = htsResultZipFile;
+            
+        	if(!rServeIsRunningOnLocalHost()) {
+        		copyRemoteFilesToLocal(filesToStreamBack);
+        	}
+        	
         } catch (IOException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             progressPercentage[0] = "101_Error occured trying to fetch the htsanalyzer zip file from the server";
@@ -1147,17 +1163,6 @@ public class RInterface extends Thread {
             return false;
         }
 
-
-
-        //finally close this R Server connection
-        //getRengine().close();
-        //semaphore.v(threadID);
-
-
-        //send results to email
-        //if(this.emailNotification) {
-        //    sendHTSAnalyzerSuccessMail(htsResultZipFile);
-        //}
         return true;
 
 
@@ -1184,7 +1189,7 @@ public class RInterface extends Thread {
 
 
         //set the relation between runname and result zip file
-        propObj.setProperty(runName + "_HTSANALYZER_RESULT_ZIP", htsResultZipFile);
+        propObj.setProperty(runName + "_HTSANALYZER_RESULT_ZIP", htsResultZipFile.getAbsolutePath());
         //put in the properties file that we downloaded this runid zero times
         propObj.setProperty(runName + "_HTSANALYZER", "0");
         //generate a password for downloading
@@ -1224,7 +1229,7 @@ public class RInterface extends Thread {
                 "web cellHTS Team\n" +
                 "Email: " + this.maintainEmailAddress + "\n";
 
-        file = htsResultZipFile;
+        file = htsResultZipFile.getAbsolutePath();
 
         //}
         /*else {
@@ -1434,27 +1439,12 @@ public class RInterface extends Thread {
         zipDir = zipDir.replace(parent+File.separator,"");
 
         try {
-
-           // String cmdString = "system('zip -r "+resultZipFile+" "+zipDir+"', intern=FALSE)";
-            
+           
             String cmdString = "setwd('"+parent+"');zip('"+resultZipFile+"', '"+zipDir+"', flags = '-r', extras = '');setwd(orgDir)";
-          //  System.out.println(cmdString);
+            System.out.println(cmdString);
             voidEval(cmdString);
 
-            /*ZipOutputStream zos = new
-                    ZipOutputStream(new FileOutputStream(resultZipFile));
-            //we have to give the root dir ...this is a limitation of the zipDir function
-
-
-            String[] tmpDirs = zipDir.split(File.separator);
-
-            String rootDir = tmpDirs[tmpDirs.length - 1];
-
-            if (ShellEnvironment.zipDir(zipDir, zos, rootDir)) {
-
-                zos.close();
-
-            }        */
+       
         } catch (Exception e) {
             e.printStackTrace();
             returnValue = false;
@@ -1467,14 +1457,13 @@ public class RInterface extends Thread {
 
         try {
 
-            String parent = new File(htsResultZipFile).getParent();
-            String zipDir = htsResultZipFile.replace(parent+File.separator,"");
+            String parent = htsResultZipFile.getParent();
+            String zipDir = htsResultZipFile.getAbsolutePath().replace(parent+File.separator,"");
 
 
             //ShellEnvironment.addFilesToExistingZip(new File(resultZipFile), files);
             String cmdString = "setwd('"+parent+"');zip('"+resultZipFile+"', '"+zipDir+"', flags = '-g', extras = '');setwd(orgDir)";
             System.out.println(cmdString);
-            //String cmdString = "system('zip -g "+resultZipFile+" "+files[0]+"', intern=FALSE)";
             voidEval(cmdString);
         } catch (Exception e) {
             e.printStackTrace();
@@ -1497,28 +1486,12 @@ public class RInterface extends Thread {
 
 
         try {
-           // String cmdString = "system('zip -r "+resultZipFile+" "+zipDir+" -x BiogridData/*', intern=FALSE)";
             String excludeList = "htsanalyer_out"+File.separator+"HTSanalyzerReport"+File.separator+"Data"+File.separator+"BIOGRID* " +
                     "htsanalyer_out"+File.separator+"HTSanalyzerReport"+File.separator+"Data"+File.separator+"Biogrid*";
             String cmdString = "setwd('"+parent+"');zip('"+htsResultZipFile+"', '"+zipDir+"', flags = '-r',extras='-x "+excludeList+"');setwd(orgDir)";
             
             voidEval(cmdString);
 
-
-            /*ZipOutputStream zos = new
-                    ZipOutputStream(new FileOutputStream(htsResultZipFile));
-            //we have to give the root dir ...this is a limitation of the zipDir function
-
-
-            String[] tmpDirs = zipDir.split(File.separator);
-
-            String rootDir = tmpDirs[tmpDirs.length - 1];
-
-            if (ShellEnvironment.zipDirWithExcludeFiles(zipDir, zos, rootDir, excludeFiles)) {
-
-                zos.close();
-
-            }    */
         } catch (Exception e) {
             e.printStackTrace();
             returnValue = false;
@@ -1540,17 +1513,80 @@ public class RInterface extends Thread {
         semaphore.removeRunningJob(threadID);
         this.interrupt();
     }
+    
+    
     public boolean stringToRserveFile(File file,String text,String jobID) {
        try {
         //first create it locally
         FileCreator.stringToFile(file, text);
-        //then copy to server so it will be included in the zip
-        RFileOutputStream outStream = getRengine().createFile(file.getAbsolutePath());
-
-            ShellEnvironment.copyRFileInputStreamToRemote(new FileInputStream(file),outStream);
-        } catch (IOException e) {
+ 		
+ 		   //copy the file to the server if we are not running our rserver locally
+ 		   	if(!rServeIsRunningOnLocalHost()) {
+ 		   		//remove the file if already exists
+ 		   		if(doesFileExistsOnServer(file)) {
+ 		   			getRengine().removeFile(file.getAbsolutePath());
+ 		   		} 
+ 		   	    RFileOutputStream outStream = getRengine().createFile(file.getAbsolutePath()); 
+                ShellEnvironment.copyRFileInputStreamToRemote(new FileInputStream(file),outStream);
+ 		   	}
+ 	   } catch (Exception e) {
+ 		   System.out.println("file to be created: "+file.getAbsolutePath());
+ 		    e.printStackTrace();
             return false;
         }
+       
        return true;
     }
+    
+    public boolean doesFileExistsOnServer(File filename) {
+    	boolean existsAlready = false;
+  	  try {
+  		  RFileInputStream inStream = getRengine().openFile(filename.getAbsolutePath());
+  		  //if we are here we are locally running our rserver
+  		  existsAlready = true;
+  		  inStream.close();
+  		  
+  	  }catch(IOException e) {
+  		  //if we are here the file does not exist
+  		  existsAlready = false;
+  	  }
+  	  return existsAlready;
+    }
+    public boolean rServeIsRunningOnLocalHost() {    	
+			if( stringParams.get("rserve-host").equals("127.0.0.1") || stringParams.get("rserve-host").equals("localhost") ) {
+	    		return true;
+			}
+    	
+    	return false;
+    }
+    public void copyLocalFilesToRServer(File [] listOfFiles) throws IOException{
+    	for (int i = 0; i < listOfFiles.length; i++) {
+            if (listOfFiles[i].isFile()) {
+          	  //System.out.println(listOfFiles[i]);
+          	  //check if file already exists
+          	   boolean existsAlready = doesFileExistsOnServer(listOfFiles[i]);
+          	   if(!existsAlready) {
+                    RFileOutputStream outStream = getRengine().createFile(listOfFiles[i].getAbsolutePath());
+                    ShellEnvironment.copyRFileInputStreamToRemote(new FileInputStream(listOfFiles[i]),outStream);   
+          	   }
+            }
+          }
+    }
+    
+    //copy files remotely->locally into same path
+    public void copyRemoteFilesToLocal(File [] listOfFiles) throws IOException{
+    	for (int i = 0; i < listOfFiles.length; i++) {    		
+    		RFileInputStream inputStream = null;
+    		if(!doesFileExistsOnServer(listOfFiles[i])) {
+    			continue;
+    		}
+        	
+            inputStream = getRengine().openFile(listOfFiles[i].getAbsolutePath());
+            FileOutputStream output = new FileOutputStream(listOfFiles[i]);
+            //copy locally from rserver to the same location
+            ShellEnvironment.copyRFileInputStreamToLocal(inputStream,output);
+    		
+    	}
+    }
+    
 }

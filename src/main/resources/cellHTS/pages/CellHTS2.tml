@@ -229,7 +229,7 @@
                 </t:form>
             <!--</div>-->
             Filename Parsing:
-            <input type="checkbox" t:type="ck/InPlaceCheckbox" context="literal:10" value="parseFileParams"
+            <input type="checkbox" t:type="ck/InPlaceCheckbox" context="literal:10" checked="parseFileParams"
                    onCompleteCallback="onCompleteOnEvent"/>
             <!--target element for the servers side results-->
             <!--if successful upload show grid component-->

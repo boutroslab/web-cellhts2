@@ -18,14 +18,17 @@ public class RInformation {
     private String rVersion;
 
     private String cellHTS2Version;
+    
+    private String rServeVersion;
 
     //this boolean shows if R was compiled with zip functionality
     private boolean rWithZipFunction;
 
-    public RInformation(String rVersion, String cellHTS2Version, boolean RWithZipFunction) {
+    public RInformation(String rVersion, String cellHTS2Version, String rServeVersion, boolean RWithZipFunction) {
         this.rVersion = rVersion;
         this.cellHTS2Version = cellHTS2Version;
         this.rWithZipFunction = RWithZipFunction;
+        this.rServeVersion = rServeVersion;
     }
 
     public String getRVersion() {
@@ -50,5 +53,14 @@ public class RInformation {
 
     public void setRWithZipFunction(boolean rWithZipFunction) {
         this.rWithZipFunction = rWithZipFunction;
-    }     
+    }
+
+	public String getrServeVersion() {
+		return rServeVersion;
+	}
+
+	public void setrServeVersion(String rServeVersion) {
+		this.rServeVersion = rServeVersion;
+	} 
+    
 }

@@ -100,11 +100,11 @@ public class MailTools {
             msg.setContent(content);
 
             Transport.send(msg);
-        } catch (MessagingException e) {                 
-
-            e.printStackTrace();
-            throw new RuntimeException("did you forget to set up a mail server properly???");
-
+        } catch (Exception e) { 
+            //e.printStackTrace();
+            //System.out.println(message);
+            //throw new RuntimeException("did you forget to set up a mail server properly???, email message was: "+message+" stacktrace was: "+e.getMessage());
+        	throw new RuntimeException("did you forget to set up a mail server properly???",null);
         }
 
 
