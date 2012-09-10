@@ -2,19 +2,19 @@
     <head>
         <title>HTSAnalyzer configure page</title>
     </head>
-        <t:beaneditform t:id="htsanalyzeParameters" submitlabel="Configure!"  model="myBeanEditModel" exclude="initalIDs,species,duplicateRemoverMethod">
+        <t:beaneditform t:id="htsanalyzeParameters" submitlabel="Configure!" >
 
-            <t:parameter name="speciesSet">
+            <t:parameter name="species">
                   <t:label for="speciesSet"/>:
-                  <t:select t:id="speciesSet" model="speciesSet" t:value="speciesUpdater" t:blankOption="never"/>
+                  <t:select t:id="speciesSet" model="speciesSetModel" t:value="convertSpecies" t:blankOption="never"/>
               </t:parameter>
-            <t:parameter name="initalIDsSet">
+            <t:parameter name="initalIDs">
                   <t:label for="initalIDsSet"/>:
-                  <t:select t:id="initalIDsSet" model="initalIDsSet" t:value="htsanalyzeParameters.initalIds" t:blankOption="never"/>
+                  <t:select t:id="initalIDsSet" model="initalIDsSetModel" t:value="htsanalyzeParameters.initalIds" t:blankOption="never"/>
               </t:parameter>
-            <t:parameter name="duplicateRemoverMethodSet">
+            <t:parameter name="duplicateRemoverMethod">
                   <t:label for="duplicateRemoverMethodSet"/>:
-                  <t:select t:id="duplicateRemoverMethodSet" model="duplicateRemoverMethodSet" t:value="htsanalyzeParameters.duplicateRemoverMethod" t:blankOption="never"/>
+                  <t:select t:id="duplicateRemoverMethodSet" model="duplicateRemoverMethodSetModel" t:value="htsanalyzeParameters.duplicateRemoverMethod" t:blankOption="never"/>
               </t:parameter>
        </t:beaneditform>
 

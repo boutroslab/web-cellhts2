@@ -1,16 +1,22 @@
 package cellHTS.pages;
 
 import org.apache.tapestry5.annotations.Persist;
-import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.annotations.InjectPage;
+import org.apache.tapestry5.annotations.Property;
+import org.apache.tapestry5.annotations.Retain;
 import org.apache.tapestry5.beaneditor.BeanModel;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.services.BeanModelSource;
 import org.apache.tapestry5.ComponentResources;
+
 import data.HTSAnalyzerParameter;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 /**
  * Created by IntelliJ IDEA.
@@ -20,16 +26,9 @@ import java.util.HashMap;
  * To change this template use File | Settings | File Templates.
  */
 public class ConfigureHTSAnalyzer {
-    private String speciesSet;
-    private String initalIDsSet;
-    private String duplicateRemoverMethodSet;
-
-    @Persist
-    private BeanModel myBeanEditModel;
-
-    @InjectPage
-    private CellHTS2 cellHTS2;
-    
+ 
+	private String convertSpecies;
+	
     @Persist
     private HTSAnalyzerParameter htsanalyzeParameters;
 
@@ -42,96 +41,85 @@ public class ConfigureHTSAnalyzer {
     @Inject
     private ComponentResources resources;
 
-    private String speciesUpdater;
+    @Persist
+    private TreeMap<String,String> orgCode2SpeciesName;
+    @Persist
+    private TreeMap<String,String> speciesName2OrgCode;
+    
+    @InjectPage
+    private CellHTS2 cellHTS2;
 
-
-    public void onActivate() {
-        speciesSet=prop.get("htsanalyzer-organism");
-        initalIDsSet =prop.get("htsanalyzer-initalIDs");
-        duplicateRemoverMethodSet=prop.get("htsanalyzer-duplicateRemoverMethod");        
-         //init the species selection drop down with the first value
-        if(htsanalyzeParameters!=null  && htsanalyzeParameters.getSpecies()!=null) {
-            HashMap<String,String> id2OrgWRCode = speciesSetToOrgSpeciesMap();
-           
-            speciesUpdater=id2OrgWRCode.get(htsanalyzeParameters.getSpecies());
-            System.out.println(speciesUpdater);
-        }
-        else {
-            speciesUpdater=speciesSet.split(",")[0];
-        }
-
-
+    public void setupRender() {  
+    	if( htsanalyzeParameters == null  || htsanalyzeParameters.getSpecies() ==null ) {
+    		htsanalyzeParameters = new HTSAnalyzerParameter(prop);
+    	}
+    	generateOrgCode2SpeciesRelationships(prop.get("htsanalyzer-organism"));
      }
-
-
-    public HTSAnalyzerParameter getHtsanalyzeParameters() {
-        return htsanalyzeParameters;
+    
+    public String getSpeciesSetModel() {
+    	Set<String> vals = speciesName2OrgCode.keySet();
+    	//build up
+    	String species = null;
+    	for(String val: vals) {
+    		if(species == null) {
+    			species = val;
+    		}
+    		else {
+    			species += ","+val;
+    		}
+    	}
+    	return species;
     }
-
-    public void setHtsanalyzeParameters(HTSAnalyzerParameter htsanalyzeParameters) {
-        this.htsanalyzeParameters = htsanalyzeParameters;
+    public String getInitalIDsSetModel() {
+    	return prop.get("htsanalyzer-initalIDs");
     }
-
-    public Object onSuccessFromHtsanalyzeParameters() {
-        String extractedRSpeciesName = speciesUpdater.split("\\|")[0];
-        htsanalyzeParameters.setSpecies(extractedRSpeciesName);
-
-
-
-
-        return cellHTS2;
+    public String getDuplicateRemoverMethodSetModel() {
+    	return  prop.get("htsanalyzer-duplicateRemoverMethod");
     }
-
-
-    public String getSpeciesSet() {
-        return speciesSet;
+    
+    public void setSpeciesSetModel(String species) {
+    	
     }
-
-    public void setSpeciesSet(String speciesSet) {
-        this.speciesSet = speciesSet;
+    public void setDuplicateRemoverMethodSetModel(String remover) {
+    	
     }
+    
+    
+   
+    
+    public void generateOrgCode2SpeciesRelationships(String speciesString) {
+        orgCode2SpeciesName=new TreeMap<String,String>();
+        speciesName2OrgCode=new TreeMap<String,String>();
 
-    public String getInitalIDsSet() {
-        return initalIDsSet;
-    }
-
-    public void setInitalIDsSet(String initalIDsSet) {
-        this.initalIDsSet = initalIDsSet;
-    }
-
-    public String getDuplicateRemoverMethodSet() {
-        return duplicateRemoverMethodSet;
-    }
-
-    public void setDuplicateRemoverMethodSet(String duplicateRemoverMethodSet) {
-        this.duplicateRemoverMethodSet = duplicateRemoverMethodSet;
-    }
-
-    public BeanModel getMyBeanEditModel() {
-        BeanModel model = beanModelSource.createEditModel(HTSAnalyzerParameter.class, resources.getMessages());
-        // Make other changes to model here.
-        model.add("speciesSet", null);
-        model.add("initalIDsSet", null);
-        model.add("duplicateRemoverMethodSet", null);
-        
-        return model;
-    }
-
-    public String getSpeciesUpdater() {
-        return speciesUpdater;
-    }
-
-    public void setSpeciesUpdater(String speciesUpdater) {
-        this.speciesUpdater = speciesUpdater;
-        
-    }
-    public HashMap<String,String> speciesSetToOrgSpeciesMap() {
-        HashMap<String,String> returnMe=new HashMap<String,String>();
-        String[] idsWithRCode = speciesSet.split(",");
+        String[] idsWithRCode = speciesString.split(",");
         for(String idWithRCode : idsWithRCode) {
             String[]res = idWithRCode.split("\\|");
-            returnMe.put(res[0],idWithRCode);
+            orgCode2SpeciesName.put(res[0],res[1]);
+            speciesName2OrgCode.put(res[1],res[0]);
         }
-        return returnMe;
+        
     }
+    //this species is for converting the species and put it into the htsanalyzer obj correctly
+    public void setConvertSpecies(String value) {
+    	//get species code
+    	String speciesCode = speciesName2OrgCode.get(value);
+    	//put the species correctly
+    	htsanalyzeParameters.setSpecies(speciesCode);    	
+    }
+    public String getConvertSpecies() {
+    	return convertSpecies;
+    }
+
+	public HTSAnalyzerParameter getHtsanalyzeParameters() {
+		return htsanalyzeParameters;
+	}
+
+	public void setHtsanalyzeParameters(HTSAnalyzerParameter htsanalyzeParameters) {
+		this.htsanalyzeParameters = htsanalyzeParameters;
+	}
+	public Object onSuccess() {
+		return cellHTS2;
+    }
+    
+   
 }

@@ -337,7 +337,7 @@ public class CellHTS2 {
 
 
 
-
+    	printInfo();
    //    public void setupRender() {
         //coming from different pages result in different destinies
         activatedFromPageDestiny();
@@ -428,11 +428,7 @@ public class CellHTS2 {
             plateConfigBodyPattern = Configuration.PLATECONFIG_BODY_PATTERN;
 
             //just use the first params in the cslist
-            htsAnalyzerParameter=new HTSAnalyzerParameter(
-                    msg.get("htsanalyzer-organism").split(",")[0].split("\\|")[0],
-                    "GeneID",
-                    msg.get("htsanalyzer-initalIDs").split(",")[0],
-                    msg.get("htsanalyzer-duplicateRemoverMethod").split(",")[0]);
+            htsAnalyzerParameter=new HTSAnalyzerParameter(msg);
 
         }
         //this will run everytime we make a new job
@@ -764,7 +760,7 @@ public class CellHTS2 {
     public JSONObject onChangeChannelEvent(String type) {
         //this first select has to be executed so we will check here if the request was ajax enabled
         if(!request.isXHR()) {
-            throw new TapestryException("your browser cannot handle AJAX XHR requests. Talk to your ISP to configure the proxy accordingly",null);
+            return null;
         }
 
         if (type.equals("single")) {
@@ -796,7 +792,7 @@ public class CellHTS2 {
     @OnEvent(component = "channel1Textfield", value = "blur")
     public JSONObject onChannel1Textfield(String label) {
         if(!request.isXHR()) {
-            throw new TapestryException("your browser cannot handle AJAX XHR requests. Talk to your ISP to configure the proxy accordingly",null);
+            return null;
         }
        channelLabel1=label;
         return new JSONObject().put("dummy", "dummy");
@@ -811,7 +807,7 @@ public class CellHTS2 {
     @OnEvent(component = "channel2Textfield", value = "blur")
     public JSONObject onChannel2Textfield(String label) {
         if(!request.isXHR()) {
-            throw new TapestryException("your browser cannot handle AJAX XHR requests. Talk to your ISP to configure the proxy accordingly",null);
+            return null;
         }
        channelLabel2=label;
         return new JSONObject().put("dummy", "dummy");
@@ -826,7 +822,7 @@ public class CellHTS2 {
     @OnEvent(component = "viabilityFunctionTextfield", value = "blur")
     public JSONObject onViabilityFunctionTextfield(String function) {
         if(!request.isXHR()) {
-            throw new TapestryException("your browser cannot handle AJAX XHR requests. Talk to your ISP to configure the proxy accordingly",null);
+            return null;
         }
        viabilityFunction=function;
         return new JSONObject().put("dummy", "dummy");
@@ -842,7 +838,7 @@ public class CellHTS2 {
     @OnEvent(component = "emailAddressTextfield", value = "blur")
     public JSONObject onEmailAddressTextfield(String label) {
         if(!request.isXHR()) {
-            throw new TapestryException("your browser cannot handle AJAX XHR requests. Talk to your ISP to configure the proxy accordingly",null);
+            return null;
         }
        emailAddress=label;
         //use this to lose the focus of the textfield because we want to jump to the head of the page
@@ -1204,7 +1200,7 @@ public class CellHTS2 {
     @OnEvent(component = "inplacecheckbox", value = InPlaceCheckbox.EVENT_NAME)
     public void inPlaceCheckbox(String id, boolean checked) {
         if(!request.isXHR()) {
-            throw new TapestryException("your browser cannot handle AJAX XHR requests. Talk to your ISP to configure the proxy accordingly",null);
+            return;
         }
        // System.out.println("bam and then full throttle");
         parseFileParams = checked;
@@ -1868,7 +1864,7 @@ public class CellHTS2 {
     @OnEvent(component = "normalMedian", value = "click")
     public JSONObject setNormalMedian() {
         if(!request.isXHR()) {
-            throw new TapestryException("your browser cannot handle AJAX XHR requests. Talk to your ISP to configure the proxy accordingly",null);
+            return null;
         }
         normalTypes = NormalizationTypes.median;
         return new JSONObject().put("dummy", "dummy");
@@ -1881,7 +1877,7 @@ public class CellHTS2 {
     @OnEvent(component = "normalShort", value = "click")
     public JSONObject setNormalShort() {
         if(!request.isXHR()) {
-            throw new TapestryException("your browser cannot handle AJAX XHR requests. Talk to your ISP to configure the proxy accordingly",null);
+            return null;
         }
         normalTypes = NormalizationTypes.shorth;
         return new JSONObject().put("dummy", "dummy");
@@ -1894,7 +1890,7 @@ public class CellHTS2 {
     @OnEvent(component = "normalMean", value = "click")
     public JSONObject setNormalMean() {
         if(!request.isXHR()) {
-            throw new TapestryException("your browser cannot handle AJAX XHR requests. Talk to your ISP to configure the proxy accordingly",null);
+            return null;
         }
         normalTypes = NormalizationTypes.mean;
         return new JSONObject().put("dummy", "dummy");
@@ -1907,7 +1903,7 @@ public class CellHTS2 {
     @OnEvent(component = "normalNegatives", value = "click")
     public JSONObject setNormalNegatives() {
         if(!request.isXHR()) {
-            throw new TapestryException("your browser cannot handle AJAX XHR requests. Talk to your ISP to configure the proxy accordingly",null);
+            return null;
         }
         normalTypes = NormalizationTypes.negatives;
         return new JSONObject().put("dummy", "dummy");
@@ -1920,7 +1916,7 @@ public class CellHTS2 {
     @OnEvent(component = "normalPOC", value = "click")
     public JSONObject setNormalPOC() {
         if(!request.isXHR()) {
-            throw new TapestryException("your browser cannot handle AJAX XHR requests. Talk to your ISP to configure the proxy accordingly",null);
+            return null;
         }
         normalTypes = NormalizationTypes.POC;
         return new JSONObject().put("dummy", "dummy");
@@ -1933,7 +1929,7 @@ public class CellHTS2 {
     @OnEvent(component = "normalNPI", value = "click")
     public JSONObject setNormalNPI() {
         if(!request.isXHR()) {
-            throw new TapestryException("your browser cannot handle AJAX XHR requests. Talk to your ISP to configure the proxy accordingly",null);
+            return null;
         }
         normalTypes = NormalizationTypes.NPI;
         return new JSONObject().put("dummy", "dummy");
@@ -1946,7 +1942,7 @@ public class CellHTS2 {
     @OnEvent(component = "normalBScore", value = "click")
     public JSONObject setNormalBScore() {
         if(!request.isXHR()) {
-            throw new TapestryException("your browser cannot handle AJAX XHR requests. Talk to your ISP to configure the proxy accordingly",null);
+            return null;
         }
         normalTypes = NormalizationTypes.Bscore;
         return new JSONObject().put("dummy", "dummy");
@@ -1959,7 +1955,7 @@ public class CellHTS2 {
     @OnEvent(component = "normalLocfit", value = "click")
     public JSONObject setNormalLocfit() {
         if(!request.isXHR()) {
-            throw new TapestryException("your browser cannot handle AJAX XHR requests. Talk to your ISP to configure the proxy accordingly",null);
+            return null;
         }
         normalTypes = NormalizationTypes.locfit;
         return new JSONObject().put("dummy", "dummy");
@@ -1972,7 +1968,7 @@ public class CellHTS2 {
     @OnEvent(component = "normalLoess", value = "click")
     public JSONObject setNormalLoess() {
         if(!request.isXHR()) {
-            throw new TapestryException("your browser cannot handle AJAX XHR requests. Talk to your ISP to configure the proxy accordingly",null);
+            return null;
         }
         normalTypes = NormalizationTypes.loess;
 
@@ -1986,7 +1982,7 @@ public class CellHTS2 {
     @OnEvent(component = "logYes", value = "click")
     public JSONObject setLogYes() {
         if(!request.isXHR()) {
-            throw new TapestryException("your browser cannot handle AJAX XHR requests. Talk to your ISP to configure the proxy accordingly",null);
+            return null;
         }
         logTransform = LogTransform.YES;
         return new JSONObject().put("dummy", "dummy");
@@ -1999,7 +1995,7 @@ public class CellHTS2 {
     @OnEvent(component = "logNo", value = "click")
     public JSONObject setLogNo() {
         if(!request.isXHR()) {
-            throw new TapestryException("your browser cannot handle AJAX XHR requests. Talk to your ISP to configure the proxy accordingly",null);
+            return null;
         }
         logTransform = LogTransform.NO;
         return new JSONObject().put("dummy", "dummy");
@@ -2012,7 +2008,7 @@ public class CellHTS2 {
     @OnEvent(component = "scaleAdditive", value = "click")
     public JSONObject setScaleAdditive() {
         if(!request.isXHR()) {
-            throw new TapestryException("your browser cannot handle AJAX XHR requests. Talk to your ISP to configure the proxy accordingly",null);
+            return null;
         }
         normalScaling = NormalScalingTypes.additive;
         return new JSONObject().put("dummy", "dummy");
@@ -2025,7 +2021,7 @@ public class CellHTS2 {
     @OnEvent(component = "scaleMultiplicative", value = "click")
     public JSONObject setScaleMultiplicative() {
         if(!request.isXHR()) {
-            throw new TapestryException("your browser cannot handle AJAX XHR requests. Talk to your ISP to configure the proxy accordingly",null);
+            return null;
         }
         normalScaling = NormalScalingTypes.multiplicative;
         return new JSONObject().put("dummy", "dummy");
@@ -2038,7 +2034,7 @@ public class CellHTS2 {
     @OnEvent(component = "resultScalingNo", value = "click")
     public JSONObject setResultScalingNo() {
         if(!request.isXHR()) {
-            throw new TapestryException("your browser cannot handle AJAX XHR requests. Talk to your ISP to configure the proxy accordingly",null);
+            return null;
         }
         resultsScaling = ResultsScalingTypes.none;
         return new JSONObject().put("dummy", "dummy");
@@ -2051,7 +2047,7 @@ public class CellHTS2 {
     @OnEvent(component = "resultScalingPlate", value = "click")
     public JSONObject setResultScalingPlate() {
         if(!request.isXHR()) {
-            throw new TapestryException("your browser cannot handle AJAX XHR requests. Talk to your ISP to configure the proxy accordingly",null);
+            return null;
         }
         resultsScaling = ResultsScalingTypes.byPlate;
         return new JSONObject().put("dummy", "dummy");
@@ -2060,7 +2056,7 @@ public class CellHTS2 {
     @OnEvent(component = "resultScalingBatch", value = "click")
     public JSONObject setResultScalingBatch() {
         if(!request.isXHR()) {
-            throw new TapestryException("your browser cannot handle AJAX XHR requests. Talk to your ISP to configure the proxy accordingly",null);
+            return null;
         }
         resultsScaling = ResultsScalingTypes.byBatch;
         return new JSONObject().put("dummy", "dummy");
@@ -2073,7 +2069,7 @@ public class CellHTS2 {
     @OnEvent(component = "resultScalingExperiment", value = "click")
     public JSONObject setResultScalingExperiment() {
         if(!request.isXHR()) {
-            throw new TapestryException("your browser cannot handle AJAX XHR requests. Talk to your ISP to configure the proxy accordingly",null);
+            return null;
         }
         resultsScaling = ResultsScalingTypes.byExperiment;
         return new JSONObject().put("dummy", "dummy");
@@ -2087,7 +2083,7 @@ public class CellHTS2 {
     @OnEvent(component = "sumMean", value = "click")
     public JSONObject setSumMean() {
         if(!request.isXHR()) {
-            throw new TapestryException("your browser cannot handle AJAX XHR requests. Talk to your ISP to configure the proxy accordingly",null);
+            return null;
         }
         sumRep = SummerizeReplicates.mean;
         return new JSONObject().put("dummy", "dummy");
@@ -2100,7 +2096,7 @@ public class CellHTS2 {
     @OnEvent(component = "sumMedian", value = "click")
     public JSONObject setSumMedian () {
         if(!request.isXHR()) {
-            throw new TapestryException("your browser cannot handle AJAX XHR requests. Talk to your ISP to configure the proxy accordingly",null);
+            return null;
         }
         sumRep = SummerizeReplicates.median;
         return new JSONObject().put("dummy", "dummy");
@@ -2113,7 +2109,7 @@ public class CellHTS2 {
     @OnEvent(component = "sumMax", value = "click")
     public JSONObject setSumMax() {
         if(!request.isXHR()) {
-            throw new TapestryException("your browser cannot handle AJAX XHR requests. Talk to your ISP to configure the proxy accordingly",null);
+            return null;
         }
         sumRep = SummerizeReplicates.max;
         return new JSONObject().put("dummy", "dummy");
@@ -2126,7 +2122,7 @@ public class CellHTS2 {
     @OnEvent(component = "sumMin", value = "click")
     public JSONObject setSumMin() {
         if(!request.isXHR()) {
-            throw new TapestryException("your browser cannot handle AJAX XHR requests. Talk to your ISP to configure the proxy accordingly",null);
+            return null;
         }
         sumRep = SummerizeReplicates.min;
         return new JSONObject().put("dummy", "dummy");
@@ -2141,7 +2137,7 @@ public class CellHTS2 {
     @OnEvent(component = "sumClosest", value = "click")
     public JSONObject setSumClosest() {
         if(!request.isXHR()) {
-            throw new TapestryException("your browser cannot handle AJAX XHR requests. Talk to your ISP to configure the proxy accordingly",null);
+            return null;
         }
         sumRep = SummerizeReplicates.closestToZero;
         return new JSONObject().put("dummy", "dummy");
@@ -2154,7 +2150,7 @@ public class CellHTS2 {
     @OnEvent(component = "sumFurthest", value = "click")
     public JSONObject setSumFurthest() {
         if(!request.isXHR()) {
-            throw new TapestryException("your browser cannot handle AJAX XHR requests. Talk to your ISP to configure the proxy accordingly",null);
+            return null;
         }
         sumRep = SummerizeReplicates.furthestFromZero;
         return new JSONObject().put("dummy", "dummy");
@@ -2168,7 +2164,7 @@ public class CellHTS2 {
     @OnEvent(component = "viabilityChannelYes", value = "click")
     public JSONObject setViabilityChannelYes() {
         if(!request.isXHR()) {
-            throw new TapestryException("your browser cannot handle AJAX XHR requests. Talk to your ISP to configure the proxy accordingly",null);
+            return null;
         }
         viabilityChannel = ViabilityChannel.YES;
 
@@ -2185,7 +2181,7 @@ public class CellHTS2 {
     @OnEvent(component = "viabilityChannelNo", value = "click")
     public JSONObject setViabilityChannelNo() {
         if(!request.isXHR()) {
-            throw new TapestryException("your browser cannot handle AJAX XHR requests. Talk to your ISP to configure the proxy accordingly",null);
+            return null;
         }
         viabilityChannel = ViabilityChannel.NO;
         JSONObject json = new JSONObject();
@@ -2200,7 +2196,7 @@ public class CellHTS2 {
     @OnEvent(component = "HTSAnalyzerYes", value = "click")
     public JSONObject setHTSAnalyzerYes() {
         if(!request.isXHR()) {
-            throw new TapestryException("your browser cannot handle AJAX XHR requests. Talk to your ISP to configure the proxy accordingly",null);
+            return null;
         }
         useHTSAnalyzer = UseHTSAnalyzer.YES;
         return new JSONObject().put("dummy", "dummy");
@@ -2213,7 +2209,7 @@ public class CellHTS2 {
     @OnEvent(component = "HTSAnalyzerNo", value = "click")
     public JSONObject setHTSAnalyzerNo() {
         if(!request.isXHR()) {
-            throw new TapestryException("your browser cannot handle AJAX XHR requests. Talk to your ISP to configure the proxy accordingly",null);
+            return null;
         }
         useHTSAnalyzer = UseHTSAnalyzer.NO;
         return new JSONObject().put("dummy", "dummy");
@@ -3658,6 +3654,28 @@ public class CellHTS2 {
     public void setPlateConfScreenlogFileFromAdvancedFileImporter(File plateConf,File screenlog) {
         plateConfigFileFromAdvancedFileImporter=plateConf;
         screenlogFileFromAdvancedFileImporter=screenlog;
+    }
+    public void printInfo() {
+    	int mb = 1024*1024;
+        
+        //Getting the runtime reference from system
+        Runtime runtime = Runtime.getRuntime();
+         
+        System.out.println("##### Heap utilization statistics [MB] #####");
+         
+        //Print used memory
+        System.out.println("Used Memory:"
+            + (runtime.totalMemory() - runtime.freeMemory()) / mb);
+ 
+        //Print free memory
+        System.out.println("Free Memory:"
+            + runtime.freeMemory() / mb);
+         
+        //Print total available memory
+        System.out.println("Total Memory:" + runtime.totalMemory() / mb);
+ 
+        //Print Maximum available memory
+        System.out.println("Max Memory:" + runtime.maxMemory() / mb);
     }
 }
 

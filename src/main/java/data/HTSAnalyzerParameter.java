@@ -4,6 +4,9 @@ package data;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import org.apache.tapestry5.ioc.Messages;
+import org.apache.tapestry5.ioc.annotations.Inject;
+
 /**
  * Created by IntelliJ IDEA.
  * User: oliverpelz
@@ -12,7 +15,11 @@ import java.util.ArrayList;
  * To change this template use File | Settings | File Templates.
  */
 public class HTSAnalyzerParameter implements Serializable {
-    private String species;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private String species;   //species will be a small single code
     //general parameters
     private String annotationColumn;
     private String initalIDs;
@@ -29,16 +36,14 @@ public class HTSAnalyzerParameter implements Serializable {
     //parameters for network analysis
     private Integer nGseaPlots;
     
-
-    public HTSAnalyzerParameter(String species,String annotationColumn, String initalIDs,String duplicateRemoverMethod) {
-        this.species=species;
-        this.annotationColumn=annotationColumn;
-        this.initalIDs=initalIDs;
-        this.duplicateRemoverMethod=duplicateRemoverMethod;
-        /*species="Dm";
-        annotationColumn="GeneID";
-        initalIDs="FlybaseCG";
-        duplicateRemoverMethod="max"; */
+   
+    
+    @Inject
+    public HTSAnalyzerParameter(Messages msg) {
+    	species = msg.get("htsanalyzer-organism").split(",")[0].split("\\|")[0];  
+    	annotationColumn = "GeneID";
+    	initalIDs= msg.get("htsanalyzer-initalIDs").split(",")[0];
+    	duplicateRemoverMethod = msg.get("htsanalyzer-duplicateRemoverMethod").split(",")[0];
         orderAbsValue=false;
         //useGEneListCollectionDM=false;
         useGEneListCollectionKegg=false;
@@ -49,8 +54,7 @@ public class HTSAnalyzerParameter implements Serializable {
         minGeneSetSize=20;
         nGseaPlots=10;
     }
-
-
+ 
     public String getAnnotationColumn() {
         return annotationColumn;
     }

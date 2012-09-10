@@ -109,19 +109,23 @@ public class Layout {
 
                 }
                 finally {
-                   if(!rInformationExists)  {
-                        RInterface rInterface = new RInterface();
-                        String rserveHost =  msg.get("rserve-host");
-                        Integer rservePort = Integer.parseInt(msg.get("rserve-port"));
-                        String username = msg.get("rserve-username");
-                        String password = msg.get("rserve-password");
-
-                        rInformation = rInterface.getEssentialCellHTS2Information(rserveHost,rservePort,username,password);
-                    } 
+                	createRInformationIfNotExists();
                 }
             }
     }
 
+    public RInformation createRInformationIfNotExists() {
+    	if(!rInformationExists)  {
+            RInterface rInterface = new RInterface();
+            String rserveHost =  msg.get("rserve-host");
+            Integer rservePort = Integer.parseInt(msg.get("rserve-port"));
+            String username = msg.get("rserve-username");
+            String password = msg.get("rserve-password");
+
+            rInformation = rInterface.getEssentialCellHTS2Information(rserveHost,rservePort,username,password);
+        } 
+    	return rInformation;
+    }
 
 
     public String getBuild() {
@@ -156,7 +160,7 @@ public class Layout {
     }
 
     public RInformation getRInformation() {
-        return rInformation;
+        return createRInformationIfNotExists();
     }
 
     public void setRInformation(RInformation rInformation) {

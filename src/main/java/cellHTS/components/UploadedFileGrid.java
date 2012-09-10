@@ -28,6 +28,8 @@ import org.apache.tapestry5.*;
 import org.apache.tapestry5.util.TextStreamResponse;
 import org.apache.tapestry5.json.JSONObject;
 import org.apache.tapestry5.services.Request;
+import org.apache.tapestry5.services.javascript.JavaScriptSupport;
+
 
 import java.io.File;
 import java.util.regex.Pattern;
@@ -60,7 +62,7 @@ public final class UploadedFileGrid {
     private ComponentResources resources;
 
     @Environmental
-    private RenderSupport pageRenderSupport;
+    private JavaScriptSupport pageRenderSupport;
 
     @Persist
     private boolean noFirstRun;
@@ -206,8 +208,14 @@ public final class UploadedFileGrid {
         JSONObject returnJSON = new JSONObject();
         //this is only to complete the ajax request with a response
         returnJSON.put("JSON", "successfully done");
-
+        if (request==null) {
+        	return new JSONObject("");
+        }
         String jSONString = request.getParameter(PARAM_NAME);
+        if(jSONString == null) {
+        	return new JSONObject("");
+        }
+        
         //the actual json request is in fiefox3 and sagari always the last element TODO:check IE what happens there?
        // String jSONString = requestArr.get(requestArr.size()-1);
 
