@@ -149,7 +149,7 @@ public class RInterface extends Thread {
         String rServerVersion = "not found";
         boolean zipFound=true;
         
-
+        String libStuff = "";
         try {
             //REngine eng = REngine.engineForClass("org.rosuda.REngine.JRI.JRIEngine", new String[1], new REngineStdOutput(), false);
 
@@ -162,7 +162,8 @@ public class RInterface extends Thread {
              eng = getRengine(host, port, username, passwordEncrypt);
             }
             if (eng != null) {
-            eng.parseAndEval("library(cellHTS2);library(Rserve)", null, false); // don't return the result - it has a similar effect to voidEval in Rserve    
+            
+            libStuff = eng.parseAndEval("library(cellHTS2);library(Rserve)").asString(); 
             //REXP r = eng.parseAndEval("try(sessionInfo(),silent=TRUE)");
             String output = eng.parseAndEval("paste(capture.output(print(sessionInfo())),collapse=\"\\n\")").asString();
             String output2 = eng.parseAndEval("try(zip(),silent=TRUE)").asString();
@@ -208,7 +209,9 @@ public class RInterface extends Thread {
             eng.close();
 
         } catch (Exception e) {
+        	System.out.println("return result from importing library: "+libStuff);
             e.printStackTrace();
+            return new RInformation("N.A.","N.A.","N.A.",false);
         }
 
 

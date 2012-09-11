@@ -109,7 +109,9 @@ public class AdvancedFileImporter {
     public void setupRender() {
         if(!init) {
             if(uploadPath==null) {
-                throw new TapestryException("upload path has not been submitted to this page",null);
+                //throw new TapestryException("upload path has not been submitted to this page",null);
+            	System.out.println("upload path has not been submitted to this page");
+            	return;
             }
             else {
                 File pathFileObj=new File(uploadPath);
