@@ -459,6 +459,11 @@ public class FileParser {
                                    returnArr[1] = "error in parsing plate or replicate or channel in line: " + lineCnt + " " + line;
                                    return returnArr;
                                 }
+                                catch(ArrayIndexOutOfBoundsException e) {
+                                    returnArr[0] = "false";
+                                    returnArr[1] = "error in parsing plate or replicate or channel in line: " + lineCnt + " " + line;
+                                    return returnArr;
+                                 }
                             }
 
 
