@@ -267,3 +267,14 @@ padding:2px;
 	opacity:.80;
 	filter: alpha(opacity=80);
 }
+.tipInfo {
+	background-color:#FF0000;
+	font-size: 1.3em;
+	font-weight:bold;
+	padding:1px 2px;
+	margin-left:5px;
+	color:#FFFFFF;
+	text-decoration: none;
+	
+	
+}

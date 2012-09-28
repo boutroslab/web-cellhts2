@@ -25,7 +25,7 @@ import data.RInformation;
  * Time: 17:37:42
  * To change this template use File | Settings | File Templates.
  */
-@Import(library={"${tapestry.scriptaculous}/prototype.js", "browserDetect.js", "flashdetect.js", "dependenciesChecker.js"})
+@Import(library={"browserDetect.js", "flashdetect.js", "dependenciesChecker.js"})
 public class DependenciesChecker {
     @Persist
     private boolean init;

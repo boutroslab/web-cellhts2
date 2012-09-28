@@ -28,8 +28,7 @@ import java.util.HashSet;
 
 //context is the path to the webapp folder
 @Import(stylesheet={"context:/assets/swfupload.css"},
-        library={"${tapestry.scriptaculous}/prototype.js"
-                ,"context:/assets/js/swfupload.js"
+        library={"context:/assets/js/swfupload.js"
                 ,"context:/assets/js/swfupload.queue.js"
                 ,"context:/assets/js/fileprogress.js"
                 ,"context:/assets/js/handlers.js"

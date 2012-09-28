@@ -18,11 +18,11 @@
  *
  */
 
-document.observe("dom:loaded", function() {
+jQuery(document).ready(function() {	
 
     var divEnable = "";
     var divDisableJSON = "";
-    var ajaxURI = $("ajax_uri").textContent;
+    var ajaxURI = jQuery("#ajax_uri").text();
 
     receiveAjaxDataFromServer(ajaxURI);
 
@@ -45,9 +45,9 @@ function setNewPageDetails(divEnable,divDisableList) {
         if (elementName == divEnable) {
             continue;
         }
-        var element = $(elementName);
-        if (element != null) {
-            element.style.display = "none";
+        var element = jQuery("#"+elementName);
+        if (element[0] ) {
+            element.hide();
             //     alert("debug setting element to none display"+elementName);
         }
         else {
@@ -55,9 +55,9 @@ function setNewPageDetails(divEnable,divDisableList) {
         }
     }
     //now make the one visible you want to show
-    var enableElement = $(divEnable);
-    if (enableElement != null) {
-        enableElement.style.display = "";
+    var enableElement = jQuery("#"+divEnable);
+    if (enableElement[0]) {
+        enableElement.show();
         // alert("debug setting element to enable display"+divEnable);
     }
     else {

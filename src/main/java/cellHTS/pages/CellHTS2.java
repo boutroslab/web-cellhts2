@@ -57,7 +57,7 @@ import cellHTS.dao.Semaphore;
  * To change this template use File | Settings | File Templates.
  */
 
-@Import(library={"${tapestry.scriptaculous}/prototype.js", "CellHTS2.js","divEnabler.js","../components/browserDetect.js"})
+@Import(library={"context:/assets/js/jquery.min.js", "context:/assets/js/jquery.cluetip.min.js", "CellHTS2.js","divEnabler.js","../components/browserDetect.js"})
 public class CellHTS2 {
 
     @Inject
@@ -575,6 +575,14 @@ public class CellHTS2 {
         }
         return isDualChannel;
     }
+    
+    //this inverts the value of dualChannel to be able to hide/show the input element
+    public String getIsHiddenDualChannel() {
+    	if(getIsDualChannel()) {
+    		return "visible";
+    	}
+    	else return "none";
+    }
 
 
     /**
@@ -745,31 +753,44 @@ public class CellHTS2 {
             
         }
     }
-
-
+    /**
+    *
+    * this method section generates URIs for AJAX requests which will be embedded in html so 
+    * that js can access them
+    *  all those methods are called xxxxURI()
+    * 
+    */
+  //for the ajax requests
+    public String getAJAXRequestURI() {
+        return resources.createEventLink("enableNewPageLinks").toAbsoluteURI();
+    }
+    public String getChangeChannelEventURI() {
+    	return resources.createEventLink("ChangeChannelEvent").toAbsoluteURI();
+    }
+    
 
     /**
      *
-     * catch html events of type onXXX..we need this to get the change from the drop down without submitting the form
+     * catch html events from ajax..we need this to get the change from the drop down without submitting the form
      * this catches step1
      *
      *
      * @param type the string of the channel drop down either single or dual
      */
-    @OnEvent(component = "channel", value = "change")
-    public JSONObject onChangeChannelEvent(String type) {
+    public JSONObject onChangeChannelEvent() {
         //this first select has to be executed so we will check here if the request was ajax enabled
         if(!request.isXHR()) {
             return null;
         }
+        String type = request.getParameter("type");
 
-        if (type.equals("single")) {
+        if (type.equals("single_channel")) {
             channel = ChannelTypes.single_channel;
             isDualChannel = true;
             //activate the forward link
             activatedPages.put(currentPagePointer, false);
 
-        } else if (type.equals("dual")) {
+        } else if (type.equals("dual_channel")) {
             channel = ChannelTypes.dual_channel;
             isDualChannel = false;
             activatedPages.put(currentPagePointer, false);
@@ -2827,10 +2848,7 @@ public class CellHTS2 {
     }
 
     
-    //for the ajax requests
-    public String getAJAXRequestURI() {
-        return resources.createEventLink("enableNewPageLinks").toAbsoluteURI();
-    }
+    
     public JSONObject onEnableNewPageLinks() {
             JSONObject tempObj = new JSONObject();
             JSONArray  jsonArr = new JSONArray();

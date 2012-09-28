@@ -1,6 +1,6 @@
 /*
  * //
- * // Copyright (C) 2009 Boutros-Labs(German cancer research center) b110-it@dkfz.de
+\ * // Copyright (C) 2009 Boutros-Labs(German cancer research center) b110-it@dkfz.de
  * //
  * //
  * //    This program is free software: you can redistribute it and/or modify
@@ -46,7 +46,7 @@ import org.apache.tapestry5.ioc.internal.util.TapestryException;
  *
  */
 
-@Import(library={"${tapestry.scriptaculous}/prototype.js","gridEditor.js"})
+@Import(library={"gridEditor.js"})
 public class GridEditor {
 
     @Inject

@@ -27,7 +27,7 @@
         
 
     <t:dependenciesChecker  t:id="dependenciesChecker" enableDIVOnSuccess="cellHTS2DIV"/> 
-    <div id="ajax_uri" style="visibility:hidden">${AJAXRequestURI}</div>   
+    
 
        <div id="cellHTS2DIV">
 <!--this anchor will be used to jump to the top everytime-->
@@ -130,14 +130,17 @@
                 href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/web+cellHTS2+Manual#webcellHTS2Manual-step1"
                 target="_blank">here</a>)
 
-            <div t:type="ck/Tooltip" clientId="tooltip1"
+            <!--  <div t:type="ck/Tooltip" clientId="tooltip1"
                  value="Previously saved session files can be used to restore complete analysis settings."
-                 effect="appear">
+                 effect="appear">-->
+                 <span class="tipInfo"><a href="#" id="mylink" title="Previously saved session files can be used to restore complete analysis settings.">?</a></span> 
                 <t:form t:id="sessionFileUpload">
                     <input t:type="upload" t:id="sessionFileUploadInput" validate="required"
-                           t:value="uploadedSessionFile"/>
+                           t:value="uploadedSessionFile">      
+                    </input>
                 </t:form>
-            </div>
+                
+           <!--   </div> -->
 
 
             <b>Step 1:</b> Select type of experiment
@@ -150,17 +153,15 @@
                 <t:select t:id="channel"
                           t:blankOption="always"
                           t:blankLabel="please select"
-                          t:mixins="ck/OnEvent"
-                          onCompleteCallback="onCompleteOnEvent"
-                          event="change"/>
+                          />
             </t:form>
 
 
             <!--<t:actionlink t:id="channelView">Proceed</t:actionlink>-->
 
-            <t:if t:test="${isDualChannel}">
+            
                 <p>
-                    <t:form t:id="channelForm" action="#" t:type="Form">
+                    <t:form t:id="channelForm" action="#" t:type="Form" style="display:${IsHiddenDualChannel}">
 
                         Would you like to label your channels?
                         <br/>
@@ -205,7 +206,7 @@
                         </t:parameter>
                     </t:form>
                 </p>
-            </t:if>
+            
 
         </div>
         <div id="step2DIV" style="display:none">
@@ -1019,8 +1020,9 @@
             </t:if>
         </t:if>
        </div>
-
-
+		<!-- this section is for variables we need in js... -->
+		<div id="ajax_uri" style="visibility:hidden">${AJAXRequestURI}</div>   
+        <div id="change_channel_uri" style="visibility:hidden">${ChangeChannelEventURI}</div> 
         
     </body>
 
