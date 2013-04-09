@@ -33,14 +33,16 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
+import org.apache.tapestry5.ComponentResources;
 import org.apache.tapestry5.annotations.*;
 import org.apache.tapestry5.json.JSONObject;
+import org.apache.tapestry5.services.Request;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.internal.util.TapestryException;
 import data.DataFile;
 import data.Plate;
-
+@Import(stylesheet = {"context:/assets/jquery.tooltip.css"},library={"context:/assets/js/jquery.min.js", "context:/assets/js/jquery.tooltip.pack.js","AdvancedFileImporter.js"})
 public class AdvancedFileImporter {
     @Persist
     private boolean convertedAllFiles;
@@ -84,8 +86,10 @@ public class AdvancedFileImporter {
     @InjectComponent
     private FileImporter annotationImporter;
     @Persist
+    @Property
     private boolean containsMultiChannelData;
-     @Persist
+    @Persist
+    @Property 
     private boolean containsHeadline;
     @Persist
     private int replicateNumbers;
@@ -105,7 +109,86 @@ public class AdvancedFileImporter {
     private MultipleFileUploader multipleUploadOne;
     @Persist
     private LinkedHashMap<String,Integer> plateDatafileColMap;
+    @Inject
+    private ComponentResources resources;
+    @Inject
+    private Request request;   
+    /**
+    *
+    * this method section generates URIs for AJAX requests which will be embedded in html so 
+    * that js can access them
+    *  all those methods are called xxxxURI()
+    * 
+    */
+  //for the ajax requests
+    public String getMultiChannelDataURI() {
+        return resources.createEventLink("MultiChannelDataEvent").toAbsoluteURI();
+    }
+    public String getContainsHeadlineURI() {
+        return resources.createEventLink("ContainsHeadlineEvent").toAbsoluteURI();
+    }
+    public String getChangeReplicNumberURI() {
+        return resources.createEventLink("ChangeReplicNumberEvent").toAbsoluteURI();
+    }
+    
+    /**
+    *
+    * catch html events from ajax..we need this to get the change from the drop down without submitting the form
+    * this catches step1
+    *
+    *
+    * @param type the string of the channel drop down either single or dual
+    */
+    
+   
+   
+  
+  public JSONObject onChangeReplicNumberEvent() {
+      //this first select has to be executed so we will check here if the request was ajax enabled
+      if(!request.isXHR()) {
+          return null;
+      }       
+      String label = request.getParameter("label");
+      try {
+      replicateNumbers=Integer.parseInt(label);
+      }catch(NumberFormatException e) {
+    	  replicateNumbers = 1;
+      }
+      return new JSONObject().put("dummy", "dummy");     
+  }
+  
+    
+   public JSONObject onMultiChannelDataEvent() {
+       //this first select has to be executed so we will check here if the request was ajax enabled
+       if(!request.isXHR()) {
+           return null;
+       }       
+       String checked = request.getParameter("value");
+       if(checked.equals("true")) {
+    	   containsMultiChannelData = true;
+       }
+       else {
+    	   containsMultiChannelData = false;
+       }
+       return new JSONObject().put("dummy", "dummy");
 
+   }
+   
+   public JSONObject onContainsHeadlineEvent() {
+       //this first select has to be executed so we will check here if the request was ajax enabled
+       if(!request.isXHR()) {
+           return null;
+       }       
+       String checked = request.getParameter("value");
+       if(checked.equals("true")) {
+    	   containsHeadline = true;
+       }
+       else {
+    	   containsHeadline = false;
+       }
+       return new JSONObject().put("dummy", "dummy");
+
+   }
     public void setupRender() {
         if(!init) {
             if(uploadPath==null) {
@@ -502,6 +585,11 @@ public class AdvancedFileImporter {
 
        return false;
     }
+  //this event handler method has no functionality as we get all our data through ajax styles
+    //but tapestry throws exceptions if nothing is there
+    public void onSubmitFromDummyForm() {
+    
+    }
 
     public Object onActionFromGoBackwebCellHTS2() {        
         cellHTS2.activatedFromOtherPage(this.getClass().getName());
@@ -541,23 +629,7 @@ public class AdvancedFileImporter {
         return new Object[]{"test"};
     }
     
-    @OnEvent(component = "containsMultiChannelData", value = "change")
-     public JSONObject onContainsMultiChannelData(boolean type) {
-            containsMultiChannelData=type;                            
-            return new JSONObject().put("multi",type);
-        }
-    @OnEvent(component = "containsHeadline", value = "change")
-    public JSONObject onContainsHeadline(boolean type) {
-        containsHeadline=type;
-        System.out.println("changed on server");
-        return new JSONObject().put("dummy", "");
-    }
-   @OnEvent(component = "replicateNumbers", value = "blur")
-    public JSONObject onBluredreplicateNumbers(int value) {
-        this.replicateNumbers=value;
-       return new JSONObject().put("dummy", "");
-    }
-
+    
     public void initHeadsToFind() {
         headsToFindDatafile.clear();
         headsToFindDatafile.add("Plate");
@@ -657,23 +729,6 @@ public class AdvancedFileImporter {
     public void setDataFileCreated(boolean dataFileCreated) {
         this.dataFileCreated = dataFileCreated;
     }
-
-    public boolean isContainsMultiChannelData() {
-        return containsMultiChannelData;
-    }
-
-    public void setContainsMultiChannelData(boolean containsMultiChannelData) {
-        this.containsMultiChannelData = containsMultiChannelData;
-    }
-
-    public boolean isContainsHeadline() {
-        return containsHeadline;
-    }
-
-    public void setContainsHeadline(boolean containsHeadline) {
-        this.containsHeadline = containsHeadline;
-    }
-
     public int getReplicateNumbers() {
         return replicateNumbers;
     }
@@ -719,6 +774,9 @@ public class AdvancedFileImporter {
 
     public void setAnnotationfileImporterMsg(String annotationfileImporterMsg) {
         this.annotationfileImporterMsg = annotationfileImporterMsg;
+    }
+    public void setMultiChannelData(boolean val) {
+    	this.containsMultiChannelData = val;
     }
     // end of getters and setters-------------------------------------------------------------------------
 }

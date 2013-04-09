@@ -31,7 +31,6 @@ import org.apache.tapestry5.json.JSONArray;
 import org.apache.tapestry5.beaneditor.BeanModel;
 import org.apache.tapestry5.services.BeanModelSource;
 import org.apache.tapestry5.services.Request;
-import org.chenillekit.tapestry.core.components.InPlaceCheckbox;
 
 
 import java.io.*;
@@ -57,7 +56,7 @@ import cellHTS.dao.Semaphore;
  * To change this template use File | Settings | File Templates.
  */
 
-@Import(library={"context:/assets/js/jquery.min.js", "context:/assets/js/jquery.cluetip.min.js", "CellHTS2.js","divEnabler.js","../components/browserDetect.js"})
+@Import(stylesheet = {"context:/assets/jquery.tooltip.css"},library={"context:/assets/js/jquery.min.js", "context:/assets/js/jquery.tooltip.pack.js","CellHTS2.js","divEnabler.js","../components/browserDetect.js"})
 public class CellHTS2 {
 
     @Inject
@@ -239,7 +238,7 @@ public class CellHTS2 {
 
     //Ajax checkbox for parsing filenames option
     @Persist
-    private boolean parseFileParams;
+    private Boolean parseFileParams;
     //this is a temp value variable for the checkbox template
 
     //    @Persist
@@ -747,6 +746,9 @@ public class CellHTS2 {
 
         //only go to next div if we are errorfree
         if (!errorNextLink) {
+        	if(experiment == null) {
+        		experiment = new Experiment();
+        	}
             experiment.setDualChannel(isDualChannel);
             currentPagePointer++;
             resetErrorMsgs();
@@ -767,8 +769,42 @@ public class CellHTS2 {
     public String getChangeChannelEventURI() {
     	return resources.createEventLink("ChangeChannelEvent").toAbsoluteURI();
     }
+    public String getChangeChannelDescURI() {
+    	return resources.createEventLink("ChangeChannelDescEvent").toAbsoluteURI();
+    }
+    public String getChangeInPlaceCheckboxURI() {
+    	return resources.createEventLink("ChangeInPlaceCheckbox").toAbsoluteURI();
+    }
+    public String getChangeNormalizationMethodURI() {
+    	return resources.createEventLink("ChangeNormalizationMethod").toAbsoluteURI();
+    }
+    public String getChangeIsLogTransformURI() {
+    	return resources.createEventLink("ChangeIsLogTransform").toAbsoluteURI();
+    }
+    public String getChangeScalingMethodURI() {
+    	return resources.createEventLink("ChangeScalingMethod").toAbsoluteURI();
+    }
+    public String getChangeResultScalingMethodURI() {
+    	return resources.createEventLink("ChangeResultScalingMethod").toAbsoluteURI();
+    }
+    public String getChangeSummarizeReplicatesURI() {
+    	return resources.createEventLink("ChangeSummarizeReplicates").toAbsoluteURI();
+    }
+    public String getChangeViabilityChannelURI() {
+    	return resources.createEventLink("ChangeViabilityChannel").toAbsoluteURI();
+    }
+    public String getChangeHTSAnalyzerSettingsURI() {
+    	return resources.createEventLink("ChangeHTSAnalyzerSettings").toAbsoluteURI();
+    }
+    public String getChangeViabFuncURI() {
+    	return resources.createEventLink("ChangeViabFunc").toAbsoluteURI();
+    }
+    public String getChangeEmailAddressURI() {
+    	return resources.createEventLink("ChangeEmailAddress").toAbsoluteURI();
+    }
     
-
+    
+    
     /**
      *
      * catch html events from ajax..we need this to get the change from the drop down without submitting the form
@@ -783,6 +819,9 @@ public class CellHTS2 {
             return null;
         }
         String type = request.getParameter("type");
+        if(type == null || activatedPages == null) {
+        	return null;
+        }
 
         if (type.equals("single_channel")) {
             channel = ChannelTypes.single_channel;
@@ -808,65 +847,61 @@ public class CellHTS2 {
      *
      * these 3 methods are to get the values on the server without submitting them ...ajax
      *
-     * @param label the submitted textstring
      */
-    @OnEvent(component = "channel1Textfield", value = "blur")
-    public JSONObject onChannel1Textfield(String label) {
+    public JSONObject onChangeChannelDescEvent() {
+        //this first select has to be executed so we will check here if the request was ajax enabled
         if(!request.isXHR()) {
             return null;
         }
-       channelLabel1=label;
+        String label = request.getParameter("label");
+        String currentId = request.getParameter("currentID");
+        
+        if(currentId.equals("channelTextfield")) {
+        	channelLabel1=label;
+        }
+        else {
+        	channelLabel2=label;
+        }
+        return new JSONObject().put("dummy", "dummy");        
+        
+        
+    }
+    /**
+    *
+    * these method does ajaxing the "apply viability function" textfield
+    *
+    */
+    public JSONObject onChangeViabFunc() {
+        //this first select has to be executed so we will check here if the request was ajax enabled
+        if(!request.isXHR()) {
+            return null;
+        }
+        String textField = request.getParameter("textField");
+        
+        viabilityFunction=textField;
+        System.out.println(viabilityFunction);
         return new JSONObject().put("dummy", "dummy");
     }
-
     /**
-     *
-     * these 3 methods are to get the values on the server without submitting them ...ajax
-     *
-     * @param label
-     */
-    @OnEvent(component = "channel2Textfield", value = "blur")
-    public JSONObject onChannel2Textfield(String label) {
+    *
+    * these method does ajaxing the email address textfield
+    *
+    */
+    public JSONObject onChangeEmailAddress() {
+        //this first select has to be executed so we will check here if the request was ajax enabled
         if(!request.isXHR()) {
             return null;
         }
-       channelLabel2=label;
+        String textField = request.getParameter("textField");
+        
+        emailAddress=textField;
+        System.out.println(emailAddress);
         return new JSONObject().put("dummy", "dummy");
     }
-
-    /**
-     *
-     * these 3 methods are to get the values on the server without submitting them ...ajax
-     *
-     * @param function
-     */
-    @OnEvent(component = "viabilityFunctionTextfield", value = "blur")
-    public JSONObject onViabilityFunctionTextfield(String function) {
-        if(!request.isXHR()) {
-            return null;
-        }
-       viabilityFunction=function;
-        return new JSONObject().put("dummy", "dummy");
-    }
+    
 
 
-    /**
-     *
-     * these 3 methods are to get the values on the server without submitting them ...ajax
-     *
-     * @param label
-     */
-    @OnEvent(component = "emailAddressTextfield", value = "blur")
-    public JSONObject onEmailAddressTextfield(String label) {
-        if(!request.isXHR()) {
-            return null;
-        }
-       emailAddress=label;
-        //use this to lose the focus of the textfield because we want to jump to the head of the page
-        JSONObject json = new JSONObject();
-        json.put("loseFocus","true");
-        return json;
-    }
+     
 
 
     
@@ -1218,15 +1253,23 @@ public class CellHTS2 {
      * @param id the submitted id
      * @param checked if checked or not
      */
-    @OnEvent(component = "inplacecheckbox", value = InPlaceCheckbox.EVENT_NAME)
-    public void inPlaceCheckbox(String id, boolean checked) {
+    public JSONObject onChangeInPlaceCheckbox() {
         if(!request.isXHR()) {
-            return;
+            return null;
         }
-       // System.out.println("bam and then full throttle");
-        parseFileParams = checked;
-       // return new JSONObject().put("dummy", "dummy");
+        String checked = request.getParameter("value");
+        if(checked.equals("true")) {
+        	parseFileParams = true;
+        }
+        else {
+        	parseFileParams = false;
+        }
+        
+        return new JSONObject().put("dummy", "dummy");
     }
+    
+    
+    
 
     //
     /**
@@ -1235,6 +1278,9 @@ public class CellHTS2 {
      *
      */
     public void onActionFromDropDataFileList() {
+    	if(dataFileList == null || excludeFilesFromParsing == null ) {
+    		return;
+    	}
         //TODO:should we erase the files on the server??
         dataFileList.clear();
         excludeFilesFromParsing.clear();
@@ -1870,373 +1916,170 @@ public class CellHTS2 {
     }
 
     public Object onActionFromShowAdvancedFileImporter(){
+    	if(advancedFileImporter == null || jobNameDir == null) {
+    		return this;
+    	}
        advancedFileImporter.setInit(false);
        advancedFileImporter.setUploadPath(jobNameDir.getAbsolutePath());
-       advancedFileImporter.setContainsMultiChannelData(isDualChannel);
+       advancedFileImporter.setMultiChannelData(isDualChannel);
        return advancedFileImporter;
     }
 
 
     /**
      *
-     *  event handler methods for radio buttons...onEvent mixin style :-)
+     *  event handler methods for radio buttons for normalization methods
      *
      */
-    @OnEvent(component = "normalMedian", value = "click")
-    public JSONObject setNormalMedian() {
-        if(!request.isXHR()) {
+    public JSONObject onChangeNormalizationMethod() {
+    	if(!request.isXHR()) {
             return null;
         }
-        normalTypes = NormalizationTypes.median;
-        return new JSONObject().put("dummy", "dummy");
+    	String method = request.getParameter("method");
+    	try {
+    		normalTypes = NormalizationTypes.valueOf(method);
+    		if(normalTypes == null) {
+    			return null;
+    		}
+    	}	
+    	catch(IllegalArgumentException e) {
+    		return null;
+    	}
+    	System.out.println(normalTypes);
+    	return new JSONObject().put("dummy", "dummy");
     }
     /**
-     *
-     *  event handler methods for radio buttons...onEvent mixin style :-)
-     *
-     */
-    @OnEvent(component = "normalShort", value = "click")
-    public JSONObject setNormalShort() {
-        if(!request.isXHR()) {
+    *
+    *  event handler methods for radio buttons for isLogTransform
+    *
+    */
+    public JSONObject onChangeIsLogTransform() {
+    	if(!request.isXHR()) {
             return null;
         }
-        normalTypes = NormalizationTypes.shorth;
-        return new JSONObject().put("dummy", "dummy");
+    	String logTransformStr = request.getParameter("logTransform");
+    	try {
+    		logTransform = LogTransform.valueOf(logTransformStr);
+    		if(logTransform == null) {
+    			return null;
+    		}
+    	}	
+    	catch(IllegalArgumentException e) {
+    		return null;
+    	}
+    	System.out.println(logTransform);
+    	return new JSONObject().put("dummy", "dummy");
     }
     /**
-     *
-     *  event handler methods for radio buttons...onEvent mixin style :-)
-     *
-     */
-    @OnEvent(component = "normalMean", value = "click")
-    public JSONObject setNormalMean() {
-        if(!request.isXHR()) {
+    *
+    *  event handler methods for radio buttons for scaling method
+    *
+    */
+    public JSONObject onChangeScalingMethod() {
+    	if(!request.isXHR()) {
             return null;
         }
-        normalTypes = NormalizationTypes.mean;
-        return new JSONObject().put("dummy", "dummy");
+    	String method = request.getParameter("scalingMethod");
+    	try {
+    		normalScaling = NormalScalingTypes.valueOf(method);
+    		if(normalScaling == null) {
+    			return null;
+    		}
+    	}	
+    	catch(IllegalArgumentException e) {
+    		return null;
+    	}
+    	System.out.println(normalScaling);
+    	return new JSONObject().put("dummy", "dummy");
     }
     /**
-     *
-     *  event handler methods for radio buttons...onEvent mixin style :-)
-     *
-     */
-    @OnEvent(component = "normalNegatives", value = "click")
-    public JSONObject setNormalNegatives() {
-        if(!request.isXHR()) {
+    *
+    *  event handler methods for radio buttons for result scaling method
+    *
+    */
+    public JSONObject onChangeResultScalingMethod() {
+    	if(!request.isXHR()) {
             return null;
         }
-        normalTypes = NormalizationTypes.negatives;
-        return new JSONObject().put("dummy", "dummy");
+    	String method = request.getParameter("resultScalingMethod");
+    	try {
+    		resultsScaling = ResultsScalingTypes.valueOf(method);
+    		if(resultsScaling == null) {
+    			return null;
+    		}
+    	}	
+    	catch(IllegalArgumentException e) {
+    		return null;
+    	}
+    	System.out.println(resultsScaling);
+    	return new JSONObject().put("dummy", "dummy");
     }
     /**
-     *
-     *  event handler methods for radio buttons...onEvent mixin style :-)
-     *
-     */
-    @OnEvent(component = "normalPOC", value = "click")
-    public JSONObject setNormalPOC() {
-        if(!request.isXHR()) {
+    *
+    *  event handler methods for radio buttons for summerize replicates method
+    *
+    */
+    public JSONObject onChangeSummarizeReplicates() {
+    	if(!request.isXHR()) {
             return null;
         }
-        normalTypes = NormalizationTypes.POC;
-        return new JSONObject().put("dummy", "dummy");
+    	String sumRepMethod = request.getParameter("sumRepMethod");
+    	try {
+    		sumRep = SummerizeReplicates.valueOf(sumRepMethod);
+    		if(sumRep == null) {
+    			return null;
+    		}
+    	}	
+    	catch(IllegalArgumentException e) {
+    		return null;
+    	}
+    	System.out.println(sumRep);
+    	return new JSONObject().put("dummy", "dummy");
     }
     /**
-     *
-     *  event handler methods for radio buttons...onEvent mixin style :-)
-     *
-     */
-    @OnEvent(component = "normalNPI", value = "click")
-    public JSONObject setNormalNPI() {
-        if(!request.isXHR()) {
+    *
+    *  event handler methods for radio buttons for summerize replicates method
+    *
+    */
+    public JSONObject onChangeViabilityChannel() {
+    	if(!request.isXHR()) {
             return null;
         }
-        normalTypes = NormalizationTypes.NPI;
-        return new JSONObject().put("dummy", "dummy");
+    	String viabChannel = request.getParameter("viabChannel");
+    	try {
+    		viabilityChannel = ViabilityChannel.valueOf(viabChannel);
+    		if(viabilityChannel == null) {
+    			return null;
+    		}
+    	}	
+    	catch(IllegalArgumentException e) {
+    		return null;
+    	}
+    	System.out.println(viabilityChannel);
+    	return new JSONObject().put("dummy", "dummy");
     }
     /**
-     *
-     *  event handler methods for radio buttons...onEvent mixin style :-)
-     *
-     */
-    @OnEvent(component = "normalBScore", value = "click")
-    public JSONObject setNormalBScore() {
-        if(!request.isXHR()) {
+    *
+    *  event handler methods for radio buttons for summerize replicates method
+    *
+    */
+    public JSONObject onChangeHTSAnalyzerSettings() {
+    	if(!request.isXHR()) {
             return null;
         }
-        normalTypes = NormalizationTypes.Bscore;
-        return new JSONObject().put("dummy", "dummy");
+    	String htsAnalyzerSet = request.getParameter("htsAnalyzerSet");
+    	try {
+    		useHTSAnalyzer = UseHTSAnalyzer.valueOf(htsAnalyzerSet);
+    		if(useHTSAnalyzer == null) {
+    			return null;
+    		}
+    	}	
+    	catch(IllegalArgumentException e) {
+    		return null;
+    	}
+    	System.out.println(useHTSAnalyzer);
+    	return new JSONObject().put("dummy", "dummy");
     }
-    /**
-     *
-     *  event handler methods for radio buttons...onEvent mixin style :-)
-     *
-     */
-    @OnEvent(component = "normalLocfit", value = "click")
-    public JSONObject setNormalLocfit() {
-        if(!request.isXHR()) {
-            return null;
-        }
-        normalTypes = NormalizationTypes.locfit;
-        return new JSONObject().put("dummy", "dummy");
-    }
-    /**
-     *
-     *  event handler methods for radio buttons...onEvent mixin style :-)
-     *
-     */
-    @OnEvent(component = "normalLoess", value = "click")
-    public JSONObject setNormalLoess() {
-        if(!request.isXHR()) {
-            return null;
-        }
-        normalTypes = NormalizationTypes.loess;
-
-        return new JSONObject().put("dummy", "dummy");
-    }
-    /**
-     *
-     *  event handler methods for radio buttons...onEvent mixin style :-)
-     *
-     */
-    @OnEvent(component = "logYes", value = "click")
-    public JSONObject setLogYes() {
-        if(!request.isXHR()) {
-            return null;
-        }
-        logTransform = LogTransform.YES;
-        return new JSONObject().put("dummy", "dummy");
-    }
-    /**
-     *
-     *  event handler methods for radio buttons...onEvent mixin style :-)
-     *
-     */
-    @OnEvent(component = "logNo", value = "click")
-    public JSONObject setLogNo() {
-        if(!request.isXHR()) {
-            return null;
-        }
-        logTransform = LogTransform.NO;
-        return new JSONObject().put("dummy", "dummy");
-    }
-    /**
-     *
-     *  event handler methods for radio buttons...onEvent mixin style :-)
-     *
-     */
-    @OnEvent(component = "scaleAdditive", value = "click")
-    public JSONObject setScaleAdditive() {
-        if(!request.isXHR()) {
-            return null;
-        }
-        normalScaling = NormalScalingTypes.additive;
-        return new JSONObject().put("dummy", "dummy");
-    }
-    /**
-     *
-     *  event handler methods for radio buttons...onEvent mixin style :-)
-     *
-     */
-    @OnEvent(component = "scaleMultiplicative", value = "click")
-    public JSONObject setScaleMultiplicative() {
-        if(!request.isXHR()) {
-            return null;
-        }
-        normalScaling = NormalScalingTypes.multiplicative;
-        return new JSONObject().put("dummy", "dummy");
-    }
-    /**
-     *
-     *  event handler methods for radio buttons...onEvent mixin style :-)
-     *
-     */
-    @OnEvent(component = "resultScalingNo", value = "click")
-    public JSONObject setResultScalingNo() {
-        if(!request.isXHR()) {
-            return null;
-        }
-        resultsScaling = ResultsScalingTypes.none;
-        return new JSONObject().put("dummy", "dummy");
-    }
-    /**
-     *
-     *  event handler methods for radio buttons...onEvent mixin style :-)
-     *
-     */
-    @OnEvent(component = "resultScalingPlate", value = "click")
-    public JSONObject setResultScalingPlate() {
-        if(!request.isXHR()) {
-            return null;
-        }
-        resultsScaling = ResultsScalingTypes.byPlate;
-        return new JSONObject().put("dummy", "dummy");
-    }
-
-    @OnEvent(component = "resultScalingBatch", value = "click")
-    public JSONObject setResultScalingBatch() {
-        if(!request.isXHR()) {
-            return null;
-        }
-        resultsScaling = ResultsScalingTypes.byBatch;
-        return new JSONObject().put("dummy", "dummy");
-    }
-    /**
-     *
-     *  event handler methods for radio buttons...onEvent mixin style :-)
-     *
-     */
-    @OnEvent(component = "resultScalingExperiment", value = "click")
-    public JSONObject setResultScalingExperiment() {
-        if(!request.isXHR()) {
-            return null;
-        }
-        resultsScaling = ResultsScalingTypes.byExperiment;
-        return new JSONObject().put("dummy", "dummy");
-    }
-
-    /**
-     *
-     *  event handler methods for radio buttons...onEvent mixin style :-)
-     *
-     */
-    @OnEvent(component = "sumMean", value = "click")
-    public JSONObject setSumMean() {
-        if(!request.isXHR()) {
-            return null;
-        }
-        sumRep = SummerizeReplicates.mean;
-        return new JSONObject().put("dummy", "dummy");
-    }
-    /**
-     *
-     *  event handler methods for radio buttons...onEvent mixin style :-)
-     *
-     */
-    @OnEvent(component = "sumMedian", value = "click")
-    public JSONObject setSumMedian () {
-        if(!request.isXHR()) {
-            return null;
-        }
-        sumRep = SummerizeReplicates.median;
-        return new JSONObject().put("dummy", "dummy");
-    }
-    /**
-     *
-     *  event handler methods for radio buttons...onEvent mixin style :-)
-     *
-     */
-    @OnEvent(component = "sumMax", value = "click")
-    public JSONObject setSumMax() {
-        if(!request.isXHR()) {
-            return null;
-        }
-        sumRep = SummerizeReplicates.max;
-        return new JSONObject().put("dummy", "dummy");
-    }
-    /**
-     *
-     *  event handler methods for radio buttons...onEvent mixin style :-)
-     *
-     */
-    @OnEvent(component = "sumMin", value = "click")
-    public JSONObject setSumMin() {
-        if(!request.isXHR()) {
-            return null;
-        }
-        sumRep = SummerizeReplicates.min;
-        return new JSONObject().put("dummy", "dummy");
-    }
-
-
-    /**
-     *
-     *  event handler methods for radio buttons...onEvent mixin style :-)
-     *
-     */
-    @OnEvent(component = "sumClosest", value = "click")
-    public JSONObject setSumClosest() {
-        if(!request.isXHR()) {
-            return null;
-        }
-        sumRep = SummerizeReplicates.closestToZero;
-        return new JSONObject().put("dummy", "dummy");
-    }
-    /**
-     *
-     *  event handler methods for radio buttons...onEvent mixin style :-)
-     *
-     */
-    @OnEvent(component = "sumFurthest", value = "click")
-    public JSONObject setSumFurthest() {
-        if(!request.isXHR()) {
-            return null;
-        }
-        sumRep = SummerizeReplicates.furthestFromZero;
-        return new JSONObject().put("dummy", "dummy");
-    }
-
-    /**
-     *   set back to the javascript
-     *
-     * @return a JSONObj
-     */
-    @OnEvent(component = "viabilityChannelYes", value = "click")
-    public JSONObject setViabilityChannelYes() {
-        if(!request.isXHR()) {
-            return null;
-        }
-        viabilityChannel = ViabilityChannel.YES;
-
-        JSONObject json = new JSONObject();
-        json.put("viabilityChannel","true");
-        return json;
-
-    }
-    /**
-     *   set back to the javascript
-     *
-     * @return a JSONObj
-     */
-    @OnEvent(component = "viabilityChannelNo", value = "click")
-    public JSONObject setViabilityChannelNo() {
-        if(!request.isXHR()) {
-            return null;
-        }
-        viabilityChannel = ViabilityChannel.NO;
-        JSONObject json = new JSONObject();
-        json.put("viabilityChannel","false");
-        return json;
-    }
-    /**
-     *
-     *  event handler methods for radio buttons...onEvent mixin style :-)
-     *
-     */
-    @OnEvent(component = "HTSAnalyzerYes", value = "click")
-    public JSONObject setHTSAnalyzerYes() {
-        if(!request.isXHR()) {
-            return null;
-        }
-        useHTSAnalyzer = UseHTSAnalyzer.YES;
-        return new JSONObject().put("dummy", "dummy");
-    }
-    /**
-     *
-     *  event handler methods for radio buttons...onEvent mixin style :-)
-     *
-     */
-    @OnEvent(component = "HTSAnalyzerNo", value = "click")
-    public JSONObject setHTSAnalyzerNo() {
-        if(!request.isXHR()) {
-            return null;
-        }
-        useHTSAnalyzer = UseHTSAnalyzer.NO;
-        return new JSONObject().put("dummy", "dummy");
-    }
-
-
     /**
      *
      * this is the model for the description editor
@@ -2852,7 +2695,10 @@ public class CellHTS2 {
     public JSONObject onEnableNewPageLinks() {
             JSONObject tempObj = new JSONObject();
             JSONArray  jsonArr = new JSONArray();
-
+            
+            if(activatedPages == null) {
+            	return new JSONObject("dummy","dummy");
+            }
             for (int i = 1; i <= activatedPages.size(); i++) {
                 //for (String entry : availableDIVs) {
                 jsonArr.put("step" + i + "DIV");
@@ -3694,6 +3540,12 @@ public class CellHTS2 {
  
         //Print Maximum available memory
         System.out.println("Max Memory:" + runtime.maxMemory() / mb);
+    }
+    public boolean getIsDataFileEmpty() {
+    	if(dataFileList.isEmpty()) {
+    		return true;
+    	}
+    	return false;
     }
 }
 

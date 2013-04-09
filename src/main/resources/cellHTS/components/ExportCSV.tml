@@ -7,16 +7,14 @@
      <div id="${uniqueID}">
          Choose filetype:
         <!--(please note: if you choose excel, only Excel 95, 97, 2000, XP, and 2003 are supported)-->
-      <t:form t:id="dummyID">
+      <t:form t:id="bigFormID">
         <t:select t:id="fileType" model="fileTypeModel"
                           t:blankOption="always"
                           t:blankLabel="please select"
-                          t:mixins="ck/OnEvent"
-                          onCompleteCallback="onCompleteFileTypeChangeEvent"
-                          event="change"/>
-      </t:form>
+                          />
+      
       <br/>
-       <t:form t:id="bigFormID">
+       
             <!--<t:label for="sheetNumber"/>-->
             <t:textfield t:id="sheetNumber" size="2" /> Excel Sheet Number
            <br/>
@@ -29,14 +27,8 @@
            <font color="red">${errorMsg}</font>
         </t:if>
         </div>                                                                                                          
+ 	<!-- this section is for variables we need in js... -->
+		<div id="filetype_uri" style="visibility:hidden">${AJAXRequestURI}</div>   
          </body>
-    <script type="text/javascript">
-        <!-- //
-
-
-        function onCompleteFileTypeChangeEvent(response) {
-           //dummy
-        }
-        //-->
-    </script>
+    
     </html>

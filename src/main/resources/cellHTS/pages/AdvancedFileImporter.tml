@@ -28,10 +28,11 @@
     <br/>
     <br/>
     <body>
-        <div t:type="ck/Tooltip" clientId="tooltip0"
+        <!-- <div t:type="ck/Tooltip" clientId="tooltip0"
                  value="If flash >V.7 is enabled multiple files can be uploaded by holding down mouse button or using Shift+arrow key"
-                 effect="appear">
-        <div t:type="MultiplefileUploader" t:id="multipleUploadOne" t:uploadPath="uploadPath"/>
+                 effect="appear"> -->
+        <div id="tooltip0">      
+        	<div t:type="MultiplefileUploader" t:id="multipleUploadOne" t:uploadPath="uploadPath"/>
         </div>
         <br/>
        <!-- <t:actionlink t:id="processFiles">Go on</t:actionlink> -->
@@ -41,25 +42,28 @@
                  <!--value="If an excel file cannot be read, save it as Excel97-2004 Worksheet(xls)."-->
                  <!--effect="appear">-->
 
-            <t:form>
-                <t:checkbox t:id="containsHeadline"
-                            t:mixins="ck/OnEvent"
-                            
-                            event="change"/>
-                    Data Files contain Headlines such as Plate, Well, Replicate...<br/>
-
-                <t:checkbox t:id="containsMultiChannelData"
-                                t:mixins="ck/OnEvent"
-
-                                event="change"/>
+            <t:form t:id="dummyForm">
+                <t:if test="containsHeadline">
+            			<t:checkbox t:id="containsHeadline" checked="true"/>
+            			<t:parameter t:name="else">
+            				<t:checkbox t:id="containsHeadline2" value="containsHeadline"/>
+            			</t:parameter>
+            	</t:if>
+                
+                    Data Files contain Headlines such as Plate, Well, Replicate...<br/>               
+                    <t:if test="containsMultiChannelData">
+            			<t:checkbox t:id="containsMultiChannelData" checked="true"/>
+            			<t:parameter t:name="else">
+            				<t:checkbox t:id="containsMultiChannelData2" value="containsMultiChannelData"/>
+            			</t:parameter>
+            		</t:if>
                     Data Files contain Multi Channel Data<br/>
-
                     <!--<t:label for="replicateNumbers">Number of Replicates</t:label>-->
-                    <t:textfield t:id="replicateNumbers" size="2"
-                     t:mixins="ck/OnEvent"
-
-                     event="blur"
-                            /> Number of Replicates<br/>
+                    <input type="text" size="20" id="replicateNumbers" value="${replicateNumbers}" />         
+                    <!--  <t:textfield t:id="replicateNumbers" size="2"
+                     t:mixins="ck/OnEvent" event="blur"/> --> 
+                     Number of Replicates
+                     <br/>
                    
 
              </t:form>    
@@ -69,21 +73,23 @@
             <t:if test="convertedAllFiles">
 
 
-                <div t:type="ck/Tooltip" clientId="tooltip2"
+                <!--  <div t:type="ck/Tooltip" clientId="tooltip2"
                  value="The well column must be of standard well format, e.g.: A01, D15. The actual signal value column must be positive or negative floating point numbers."
-                 effect="appear">
-                <t:FileImporter t:id="datafileImporter" filesToProcess="filesToImport" headsToFind="headsToFindDatafile"
-                                showHeadline="literal:true" compareHeader="literal:false"/>
+                 effect="appear">-->
+                 <div id="tooltip1">
+                	<t:FileImporter t:id="datafileImporter" filesToProcess="filesToImport" headsToFind="headsToFindDatafile"
+                                	showHeadline="literal:true" compareHeader="literal:false"/>
                
-                <font color="red">${datafileImporterMsg}</font>
-                <br/>
+                	<font color="red">${datafileImporterMsg}</font>
+                	<br/>
                 </div>
                 <t:if test="dataFileCreated">
 
                     Please select if your files contain Plate Config / Screenlog data
                     <br/>
-                    <div t:type="ck/Tooltip" clientId="tooltip2"
-                 value="valid column values here are pos, neg, sample, empty, other, cont1, cont and contaminated." effect="appear">
+                    <!--  <div t:type="ck/Tooltip" clientId="tooltip2"
+                 value="valid column values here are pos, neg, sample, empty, other, cont1, cont and contaminated." effect="appear">-->
+                    <div id="tooltip2">
                     <t:FileImporter t:id="plateConfigImporter" filesToProcess="filesToImport"
                                     headsToFind="headsToFindPlateconfigfile" showHeadline="literal:false"
                                     compareHeader="containsHeadline"/>
@@ -113,6 +119,12 @@
         <!--</t:if>  -->
         <br/>
         <t:actionlink t:id="goBackwebCellHTS2">import generated files to web cellHTS2/ go back</t:actionlink>
+        
+        <!-- this section is for variables we need in js... -->
+		<div id="multi_channel_data_uri" style="visibility:hidden">${MultiChannelDataURI}</div>   
+        <div id="headline_uri" style="visibility:hidden">${ContainsHeadlineURI}</div> 
+        <div id="change_replic_num" style="visibility:hidden">${ChangeReplicNumberURI}</div> 
+        
     </body>
     
 </t:layout>

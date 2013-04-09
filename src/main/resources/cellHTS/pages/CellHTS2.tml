@@ -133,12 +133,15 @@
             <!--  <div t:type="ck/Tooltip" clientId="tooltip1"
                  value="Previously saved session files can be used to restore complete analysis settings."
                  effect="appear">-->
-                 <span class="tipInfo"><a href="#" id="mylink" title="Previously saved session files can be used to restore complete analysis settings.">?</a></span> 
-                <t:form t:id="sessionFileUpload">
+                 
+                 <div id="uploadSessionFileTip">
+                     <t:form t:id="sessionFileUpload">
                     <input t:type="upload" t:id="sessionFileUploadInput" validate="required"
                            t:value="uploadedSessionFile">      
                     </input>
                 </t:form>
+                </div>
+                
                 
            <!--   </div> -->
 
@@ -172,27 +175,30 @@
                                 <td width="80px" align="center">
                                     <strong>Channel 1:</strong>
                                 </td>
-                                <td width="130px">
-                                    <input t:type="TextField"
+                                <td width="130px"> 
+                                	<input type="text" size="20" id="channelTextfield" value="${channelLabel1}" />                               	
+                                    <!--  <input t:type="TextField"
                                            t:id="channel1Textfield"
                                            value="channelLabel1"
                                            validate="required,regexp" size="20"
                                            t:mixins="ck/OnEvent"
                                            onCompleteCallback="onCompleteOnEvent"
-                                           event="blur"/>
+                                           event="blur"
+                                           />  -->
 
                                 </td>
                                 <td width="80px" align="center">
                                     <strong>Channel 2:</strong>
                                 </td>
                                 <td width="130px">
-                                    <input t:type="TextField"
+                                <input type="text" size="20" id="channelTextfield2" value="${channelLabel2}"/> 
+                                    <!--  <input t:type="TextField"
                                            t:id="channel2Textfield"
                                            value="channelLabel2"
                                            validate="required,regexp" size="20"
                                            t:mixins="ck/OnEvent"
                                            onCompleteCallback="onCompleteOnEvent"
-                                           event="blur"/>
+                                           event="blur"/> -->
 
 
                                 </td>
@@ -225,13 +231,21 @@
             <!--<div t:type="ck/Tooltip" clientId="tooltip2"-->
                  <!--value="If the experiment has a lot of data files, it is best to pack them into a ZIP file and upload it."-->
                  <!--effect="appear">t-->
+                 <div id="uploadDataFileTip">
                 <t:form t:id="dataFileUpload">
-                    <input t:type="upload" t:id="dataFileUploadInput" validate="required" t:value="uploadedDataFile"/>
+                    <input t:type="upload" t:id="dataFileUploadInput" validate="required" t:value="uploadedDataFile" />
                 </t:form>
+                </div>
             <!--</div>-->
             Filename Parsing:
-            <input type="checkbox" t:type="ck/InPlaceCheckbox" context="literal:10" value="parseFileParams"
-                   onCompleteCallback="onCompleteOnEvent"/>
+            <t:if test="parseFileParams">
+            	<input type="checkbox" id="parseFileParams" checked="true"/> 
+            	<t:parameter t:name="else">
+            		<input type="checkbox" id="parseFileParams" /> 
+            	</t:parameter>
+            </t:if>
+            <!--  <input type="checkbox" t:type="ck/InPlaceCheckbox" context="literal:10" value="parseFileParams"
+                   onCompleteCallback="onCompleteOnEvent"/>-->
             <!--target element for the servers side results-->
             <!--if successful upload show grid component-->
 
@@ -243,15 +257,16 @@
             <br/>
 
             <!--show pattern if we have at least one datafile accepted-->
-            <t:if test="ognl:dataFileList.isEmpty()" negate="true">
+            <t:if test="IsDataFileEmpty" negate="true">
                 <p>
                     apply regexp (for more information click <a
                         href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/web+cellHTS2+Manual#webcellHTS2Manual-regexp"
                         target="_blank">here</a>)
                     <br/>
-                    <div t:type="ck/Tooltip" clientId="tooltip3"
+                    <div id="updateFileParamsTip">
+                    <!--  <div t:type="ck/Tooltip" clientId="tooltip3" 
                          value="Use this if the parameters of the uploaded files could not automatically be found. For syntax review the manual."
-                         effect="appear">
+                         effect="appear"> -->
                         <t:form t:id="updateFileParamsPage">
                             <!--this is just dummy to reload the page-->
                             <t:textfield t:id="fixRegExp" value="fixRegExp" size="20"/>
@@ -303,8 +318,9 @@
                     href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/web+cellHTS2+Manual#webcellHTS2Manual-plateconfigfileformat"
                     target="_blank">help</a>).
                     <br/>
-                    <div t:type="ck/Tooltip" clientId="tooltip4"
-                         value="Upload all the positive, negative, other and empty wells information." effect="appear">
+                    <!--  <div t:type="ck/Tooltip" clientId="tooltip4"
+                         value="Upload all the positive, negative, other and empty wells information." effect="appear"> -->
+                        <div id="plateConfigFileTip"> 
                         <t:form t:id="plateConfigFileUpload">
                             <t:errors/>
                             <input t:type="upload" t:id="plateConfigFileInput" t:value="uploadedPlateConfigFile"/>
@@ -325,9 +341,9 @@
                     href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/web+cellHTS2+Manual#webcellHTS2Manual-screenlogfileformat"
                     target="_blank">help</a>).
                     <br/>
-                    <div t:type="ck/Tooltip" clientId="tooltip5"
-                         value="Upload the contaminated wells information." effect="appear">
-
+                    <!--  <div t:type="ck/Tooltip" clientId="tooltip5"
+                         value="Upload the contaminated wells information." effect="appear"> -->
+					    <div id="screenLogFileTip">
                         <t:form t:id="screenlogFileUpload">
 
                             <input t:type="upload" t:id="screenlogFileInput" t:value="uploadedScreenlogFile"/>
@@ -369,9 +385,7 @@
                                 </td>
                                 <td width="50px" align="right">
                                     <t:radio t:id="normalMedian"
-                                             t:mixins="ck/OnEvent"
-                                             onCompleteCallback="onCompleteOnEvent"
-                                             event="click"/>
+                                             />
 
                                 </td>
                             </tr>
@@ -389,9 +403,7 @@
                                 </td>
                                 <td width="50px" align="right">
                                     <t:radio t:id="normalShort"
-                                             t:mixins="ck/OnEvent"
-                                             onCompleteCallback="onCompleteOnEvent"
-                                             event="click"/>
+                                             />
                                 </td>
                             </tr>
                             <tr>
@@ -402,9 +414,7 @@
                                     <!--<a href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/Mean+normalization">Help</a></td>-->
                                 <td width="50px" align="right">
                                     <t:radio t:id="normalMean"
-                                             t:mixins="ck/OnEvent"
-                                             onCompleteCallback="onCompleteOnEvent"
-                                             event="click"/>
+                                             />
 
                                 </td>
 
@@ -420,9 +430,7 @@
                                 </td>
                                 <td width="50px" align="right">
                                     <t:radio t:id="normalNegatives"
-                                             t:mixins="ck/OnEvent"
-                                             onCompleteCallback="onCompleteOnEvent"
-                                             event="click"/>
+                                             />
 
                                 </td>
                             </tr>
@@ -437,9 +445,7 @@
                                 </td>
                                 <td width="50px" align="right">
                                     <t:radio t:id="normalPOC"
-                                             t:mixins="ck/OnEvent"
-                                             onCompleteCallback="onCompleteOnEvent"
-                                             event="click"/>
+                                             />
 
                                 </td>
                             </tr>
@@ -455,9 +461,7 @@
                                 </td>
                                 <td width="50px" align="right">
                                     <t:radio t:id="normalNPI"
-                                             t:mixins="ck/OnEvent"
-                                             onCompleteCallback="onCompleteOnEvent"
-                                             event="click"/>
+                                            />
 
                                 </td>
 
@@ -473,9 +477,7 @@
                                 </td>
                                 <td width="50px" align="right">
                                     <t:radio t:id="normalBScore"
-                                             t:mixins="ck/OnEvent"
-                                             onCompleteCallback="onCompleteOnEvent"
-                                             event="click"/>
+                                            />
 
                                 </td>
                             </tr>
@@ -491,9 +493,7 @@
                                 </td>
                                 <td width="50px" align="right">
                                     <t:radio t:id="normalLocfit"
-                                             t:mixins="ck/OnEvent"
-                                             onCompleteCallback="onCompleteOnEvent"
-                                             event="click"/>
+                                             />
 
                                 </td>
 
@@ -512,9 +512,7 @@
                                 </td>
                                 <td width="50px" align="right">
                                     <t:radio t:id="normalLoess"
-                                             t:mixins="ck/OnEvent"
-                                             onCompleteCallback="onCompleteOnEvent"
-                                             event="click"/>
+                                             />
 
                                 </td>
 
@@ -532,16 +530,14 @@
                 <p>
                     <b>Step 5:</b> Should the raw values be log-transformed before normalisation?
                     <table>
-                        <t:radiogroup t:value="logTransform">
+                        <t:radiogroup t:id="logTransformRadioGroup"  t:value="logTransform">
                             <tr>
                                 <td>
                                     <strong>Yes:</strong>
                                 </td>
                                 <td width="50px" align="right">
-                                    <t:radio t:id="logYes"
-                                             t:mixins="ck/OnEvent"
-                                             onCompleteCallback="onCompleteOnEvent"
-                                             event="click"/>
+                                    <t:radio t:id="logYes" 
+                                             />
                                 </td>
 
                             </tr>
@@ -551,9 +547,7 @@
                                 </td>
                                 <td width="50px" align="right">
                                     <t:radio t:id="logNo"
-                                             t:mixins="ck/OnEvent"
-                                             onCompleteCallback="onCompleteOnEvent"
-                                             event="click"/>
+                                             />
                                 </td>
                             </tr>
                         </t:radiogroup>
@@ -564,7 +558,7 @@
                 <p>
                     <b>Step 6:</b>  Normalization Scaling method?
                     <table>
-                        <t:radiogroup t:value="normalScaling">
+                        <t:radiogroup t:id="normalScalingRadioGroup" t:value="normalScaling">
                             <tr>
 
                                 <td>
@@ -572,9 +566,7 @@
                                 </td>
                                 <td width="50px" align="right">
                                     <t:radio t:id="scaleAdditive"
-                                             t:mixins="ck/OnEvent"
-                                             onCompleteCallback="onCompleteOnEvent"
-                                             event="click"/>
+                                             />
                                 </td>
                             </tr>
                             <tr>
@@ -583,9 +575,7 @@
                                 </td>
                                 <td width="50px" align="right">
                                     <t:radio t:id="scaleMultiplicative"
-                                             t:mixins="ck/OnEvent"
-                                             onCompleteCallback="onCompleteOnEvent"
-                                             event="click"/>
+                                             />
                                 </td>
                             </tr>
                         </t:radiogroup>
@@ -596,7 +586,7 @@
                 <p>
                     <b>Step 7:</b>  How would you like to adjust your variance?
                     <table>
-                        <t:radiogroup t:value="resultsScaling">
+                        <t:radiogroup t:id="resultsScalingRadioGroup" t:value="resultsScaling">
                             <tr>
 
                                 <td>
@@ -605,9 +595,7 @@
                                 <td>the score will be the normalised value of each well</td>
                                 <td width="50px" align="right">
                                     <t:radio t:id="resultScalingNo"
-                                             t:mixins="ck/OnEvent"
-                                             onCompleteCallback="onCompleteOnEvent"
-                                             event="click"
+                                             
                                             />
                                 </td>
                             </tr>
@@ -621,9 +609,7 @@
 
                                 <td width="50px" align="right">
                                     <t:radio t:id="resultScalingPlate"
-                                             t:mixins="ck/OnEvent"
-                                             onCompleteCallback="onCompleteOnEvent"
-                                             event="click"
+                                             
                                             />
                                 </td>
                             </tr>
@@ -638,9 +624,7 @@
                                 </td>
                                 <td width="50px" align="right">
                                     <t:radio t:id="resultScalingBatch"
-                                             t:mixins="ck/OnEvent"
-                                             onCompleteCallback="onCompleteOnEvent"
-                                             event="click"
+                                             
                                             />
                                 </td>
                             </tr>
@@ -654,9 +638,7 @@
                                 </td>
                                 <td width="50px" align="right">
                                     <t:radio t:id="resultScalingExperiment"
-                                             t:mixins="ck/OnEvent"
-                                             onCompleteCallback="onCompleteOnEvent"
-                                             event="click"
+                                             
                                             />
                                 </td>
                             </tr>
@@ -669,7 +651,7 @@
                 <p>
                     <b>Step 8:</b>  How would you like to summarize your replicates?
                     <table>
-                        <t:radiogroup t:value="sumRep">
+                        <t:radiogroup t:id="sumRepRadioGroup" t:value="sumRep">
                             <tr>
                                 <td>
                                     <strong>Mean:</strong>
@@ -677,9 +659,7 @@
                                 <td>the mean of replicate values is considered </td>
                                 <td width="50px" align="right">
                                     <t:radio t:id="sumMean"
-                                             t:mixins="ck/OnEvent"
-                                             onCompleteCallback="onCompleteOnEvent"
-                                             event="click"
+                                             
                                             />
                                 </td>
 
@@ -691,9 +671,7 @@
                                 <td>the median of replicate values is considered</td>
                                 <td width="50px" align="right">
                                     <t:radio t:id="sumMedian"
-                                             t:mixins="ck/OnEvent"
-                                             onCompleteCallback="onCompleteOnEvent"
-                                             event="click"
+                                            
                                             />
                                 </td>
                             </tr>
@@ -705,9 +683,7 @@
                                 <td>the maximum of replicate intensities is taken</td>
                                 <td width="50px" align="right">
                                     <t:radio t:id="sumMax"
-                                             t:mixins="ck/OnEvent"
-                                             onCompleteCallback="onCompleteOnEvent"
-                                             event="click"
+                                             
                                             />
                                 </td>
                             </tr>
@@ -718,9 +694,7 @@
                                 <td>the minimum of replicate intensities is taken</td>
                                 <td width="50px" align="right">
                                     <t:radio t:id="sumMin"
-                                             t:mixins="ck/OnEvent"
-                                             onCompleteCallback="onCompleteOnEvent"
-                                             event="click"
+                                             
                                             />
                                 </td>
 
@@ -731,9 +705,10 @@
                                 </td>
                                 <td>the square root of the mean squared value of the replicates is taken</td>
                                 <td width="50px" align="right">
-                                    <div t:type="ck/Tooltip" clientId="tooltip6"
+                                 	<div id="notAvailableMethodTip">
+                                    <!--  <div t:type="ck/Tooltip" clientId="tooltip6"
                                          value="This function is still under construction and will be available soon."
-                                         effect="appear">
+                                         effect="appear"> -->
 
                                     </div>
                                 </td>
@@ -750,9 +725,7 @@
                                 <td>the value closest to zero is taken as a summary</td>
                                 <td width="50px" align="right">
                                     <t:radio t:id="sumClosest"
-                                             t:mixins="ck/OnEvent"
-                                             onCompleteCallback="onCompleteOnEvent"
-                                             event="click"
+                                            
                                             />
                                 </td>
                             </tr>
@@ -764,9 +737,7 @@
 
                                 <td width="50px" align="right">
                                     <t:radio t:id="sumFurthest"
-                                             t:mixins="ck/OnEvent"
-                                             onCompleteCallback="onCompleteOnEvent"
-                                             event="click"
+                                            
                                             />
                                 </td>
                             </tr>
@@ -790,9 +761,7 @@
                                 </td>
                                 <td width="50px" align="right">
                                     <t:radio t:id="viabilityChannelYes"
-                                             t:mixins="ck/OnEvent"
-                                             event="click"
-                                             onCompleteCallback="onViabilityFunctionButton"
+                                            
                                             />
                                 </td>
                             </tr>
@@ -803,9 +772,7 @@
                                 </td>
                                 <td width="50px" align="right">
                                     <t:radio t:id="viabilityChannelNo"
-                                             t:mixins="ck/OnEvent"
-                                             event="click"
-                                             onCompleteCallback="onViabilityFunctionButton"
+                                             
                                             />
                                 </td>
                             </tr>
@@ -819,13 +786,15 @@
                 apply viability function
                 <t:form t:id="viabilityFunctionForm" action="#" t:type="Form">
                     <p>
-                        <input t:type="TextField"
+                    
+                    	<input type="text" size="20" id="viabilityFunctionTextfield" value="${viabilityFunction}" />
+                        <!--  <input t:type="TextField"
                                t:id="viabilityFunctionTextfield"
                                value="viabilityFunction"
                                size="20"
                                t:mixins="ck/OnEvent"
                                onCompleteCallback="onCompleteOnEvent"
-                               event="blur"/>
+                               event="blur"/>-->
                     </p>
                 </t:form>
             </div>
@@ -839,16 +808,14 @@
                     href="http://rnai-screening-wiki.dkfz.de/signaling/wiki/display/rnaiwiki/HTSAnalyzer+Addon"
                     target="_blank">help</a>)?
                     <table>
-                        <t:radiogroup t:value="useHTSAnalyzer">
+                        <t:radiogroup t:id="useHTSAnalyzerRadioGroup" t:value="useHTSAnalyzer">
                             <tr>
                                 <td>
                                     <strong>Yes:</strong>
                                 </td>
                                 <td width="50px" align="right">
                                     <t:radio t:id="HTSAnalyzerYes"
-                                             t:mixins="ck/OnEvent"
-                                             onCompleteCallback="onCompleteOnEvent"
-                                             event="click"/>
+                                             />
                                 </td>
 
                             </tr>
@@ -858,9 +825,7 @@
                                 </td>
                                 <td width="50px" align="right">
                                     <t:radio t:id="HTSAnalyzerNo"
-                                             t:mixins="ck/OnEvent"
-                                             onCompleteCallback="onCompleteOnEvent"
-                                             event="click"/>
+                                             />
                                 </td>
                             </tr>
                         </t:radiogroup>
@@ -910,9 +875,10 @@
                 </t:if>
             </p>
             <p>
-                <div t:type="ck/Tooltip" clientId="tooltip7"
-                     value="Please click on the create/update button to make changes permanent." effect="appear">
-
+                <!--  <div t:type="ck/Tooltip" clientId="tooltip7"
+                     value="Please click on the create/update button to make changes permanent." effect="appear">-->
+					<div id="permanentButtonTip" >
+					
                     Edit/Create Description Text:
 
                     <t:beaneditform t:id="updateExperimentDesc" object="experiment"
@@ -939,8 +905,8 @@
                         </t:parameter>
                     </t:beaneditform>
                 </div>
-
-            </p>
+			</p>
+            
 
             <br/>
             <b>Step 12:</b>
@@ -948,12 +914,13 @@
                 <t:form t:id="emailForm" t:type="Form">
                 <t:if t:test="isEmailMandantory">
                     Please enter an Email address to receive the analysis report:
-                        <input t:type="TextField"
+                    <input type="text" size="20" id="emailAddressTextfield" value="${emailAddress}" />
+                        <!--  <input t:type="TextField"
                                t:id="emailAddressTextfield"
                                value="emailAddress"
                                t:mixins="ck/OnEvent"
                                onCompleteCallback="onLoseFocusOnEmailTextfield"
-                               event="blur"/>
+                               event="blur"/>-->
                     </t:if>
                     </t:form>
 
@@ -966,8 +933,9 @@
             </p>
             <p>
                 <!--we need the eventhandler here too to update the description file/variables before storing in a file-->
-                <div t:type="ck/Tooltip" clientId="tooltip8"
-                     value="Saved session files can be loaded later to restore the complete analysis." effect="appear">
+                <!--  <div t:type="ck/Tooltip" clientId="tooltip8"
+                     value="Saved session files can be loaded later to restore the complete analysis." effect="appear">-->
+                     <div id="saveSessionTip">
                      <t:form t:id="saveSession">
                         <t:submit value="Save session" onclick="clickedStartCellHTS2Link();"/>
                     </t:form>
@@ -1023,6 +991,19 @@
 		<!-- this section is for variables we need in js... -->
 		<div id="ajax_uri" style="visibility:hidden">${AJAXRequestURI}</div>   
         <div id="change_channel_uri" style="visibility:hidden">${ChangeChannelEventURI}</div> 
+        <div id="change_desc_uri" style="visibility:hidden">${ChangeChannelDescURI}</div> 
+        <div id="change_inplace_checkbox" style="visibility:hidden">${ChangeInPlaceCheckboxURI}</div>
+        <div id="change_norm_methods" style="visibility:hidden">${ChangeNormalizationMethodURI}</div>
+        <div id="change_logtransform" style="visibility:hidden">${ChangeIsLogTransformURI}</div>
+        <div id="change_scaling_method" style="visibility:hidden">${ChangeScalingMethodURI}</div>
+        <div id="change_result_scaling_method" style="visibility:hidden">${ChangeResultScalingMethodURI}</div>
+        <div id="change_summarize_replicate_method" style="visibility:hidden">${ChangeSummarizeReplicatesURI}</div>
+        <div id="change_viability_channel" style="visibility:hidden">${ChangeViabilityChannelURI}</div>
+        <div id="change_hts_analyzer_settings" style="visibility:hidden">${ChangeHTSAnalyzerSettingsURI}</div>
+        <div id="change_viabFunc_uri" style="visibility:hidden">${ChangeViabFuncURI}</div>
+        <div id="change_emailAddress_uri" style="visibility:hidden">${ChangeEmailAddressURI}</div>
+        
+        
         
     </body>
 

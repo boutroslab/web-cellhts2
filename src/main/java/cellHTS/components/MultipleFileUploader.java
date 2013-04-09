@@ -209,6 +209,9 @@ public class MultipleFileUploader {
     @OnEvent(value = "setFlashInstalled")
     public void  setFlashInstalledOrNot() {
          String trueOrFalse = request.getParameter(PARAMNAME);
+         if(trueOrFalse == null) {
+        	 trueOrFalse = "false";
+         }
          if(trueOrFalse.equals("true")) {
              multipleFileUploadComponentStarted=true;
          }
@@ -298,6 +301,9 @@ public class MultipleFileUploader {
     }
 
     public void onActionFromDeleteAllUploadedFiles() {
+    	if(uploadedFiles == null) {
+    		return;
+    	}
         if(uploadedFiles.size()>0) {
             for(String uploadFile : uploadedFiles) {
                 new File(uploadFile).delete();

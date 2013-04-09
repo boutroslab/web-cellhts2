@@ -1,5 +1,6 @@
 package cellHTS.components;
 
+import org.apache.tapestry5.annotations.Import;
 import org.apache.tapestry5.annotations.Persist;
 import org.apache.tapestry5.annotations.OnEvent;
 import org.apache.tapestry5.annotations.Parameter;
@@ -8,6 +9,7 @@ import org.apache.tapestry5.json.JSONObject;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.*;
 import org.apache.tapestry5.services.FormSupport;
+import org.apache.tapestry5.services.Request;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -26,6 +28,7 @@ import cellHTS.classes.SelectedColumn;
  * Time: 10:42:16
  * To change this template use File | Settings | File Templates.
  */                                  //implement the methods so we can use the selectedColumn in a loop
+@Import(stylesheet = {"context:/assets/jquery.tooltip.css"},library={"context:/assets/js/jquery.min.js", "context:/assets/js/jquery.tooltip.pack.js","FileImporter.js"})
 public class FileImporter{
 
 //parameters ----------------------------------------------------------------------------
@@ -91,7 +94,52 @@ public class FileImporter{
     @Persist
     private String multipleChangeSelect;
 
+    @Inject
+    private ComponentResources resources;
+    @Inject
+    private Request request;
 
+    
+    //for the ajax requests
+    public String getAJAXRequestURI() {
+        return resources.createEventLink("ChangeChannelEvent").toAbsoluteURI();
+    }
+    public JSONObject onChangeChannelEvent() {
+        //this first select has to be executed so we will check here if the request was ajax enabled
+        if(!request.isXHR()) {
+            return null;
+        }
+        String type = request.getParameter("type");
+
+      //this is the empty one
+        if(type.equals("")) {
+            moreThanOneCols.clear();
+            return new JSONObject().put("selectHeader","");
+        }
+
+        String[] column = type.split(":");
+
+        if(column[0]!=null) {
+            Integer col = Integer.parseInt(column[0]);
+
+            moreThanOneCols.add(col);
+        }
+        else {
+            return new JSONObject().put("selectHeader", "");
+        }
+        
+        String colsString="";
+        for(Integer moreThanOne : moreThanOneCols){
+            if(colsString.equals("")) {
+                colsString=""+moreThanOne;
+            }
+            else {
+                colsString+=","+moreThanOne;
+            }
+        }
+        
+        return new JSONObject().put("dummy", "dummy");
+    }
 
     
    public void setupRender() {
@@ -324,43 +372,7 @@ public class FileImporter{
                 if(objs.length>0) {
                     componentResources.triggerEvent(EVENTNAME, objs, callback);
     }           }
-    //AJAX event handlers
-
-    @OnEvent(component = "multipleChangeSelect", value = "change")
-    public JSONObject onSelectChangeEvent(String type) {
-        if(!moreThanOne)  {
-            return new JSONObject().put("selectHeader", "");
-        }
-        //this is the empty one
-        if(type.equals("")) {
-            moreThanOneCols.clear();
-            return new JSONObject().put("selectHeader","");
-        }
-
-        String[] column = type.split(":");
-
-        if(column[0]!=null) {
-            Integer col = Integer.parseInt(column[0]);
-
-            moreThanOneCols.add(col);
-        }
-        else {
-            return new JSONObject().put("selectHeader", "");
-        }
-        
-        String colsString="";
-        for(Integer moreThanOne : moreThanOneCols){
-            if(colsString.equals("")) {
-                colsString=""+moreThanOne;
-            }
-            else {
-                colsString+=","+moreThanOne;
-            }
-        }
-       
-        return new JSONObject().put("selectHeader",colsString);
-    }
-
+    
     //getters and setters -----------------------------------------------------------------------------
 
     public boolean getErrorFound() {

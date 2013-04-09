@@ -6,7 +6,10 @@ import org.apache.tapestry5.ComponentResources;
 import org.apache.tapestry5.RenderSupport;
 import org.apache.tapestry5.MarkupWriter;
 import org.apache.tapestry5.json.JSONObject;
+import org.apache.tapestry5.services.Request;
 import org.apache.tapestry5.ioc.annotations.Inject;
+
+import data.ChannelTypes;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -26,6 +29,7 @@ import jxl.Cell;
  */
 
 //this component exports a excel or csv file to the standard csv tab file we will use in other components as well
+@Import(stylesheet = {"context:/assets/jquery.tooltip.css"},library={"context:/assets/js/jquery.min.js", "context:/assets/js/jquery.tooltip.pack.js","ExportCSV.js"})
 public class ExportCSV {
     //parameters ----------------------------------------------------------------------------
     @Parameter(required = true)
@@ -33,6 +37,7 @@ public class ExportCSV {
 //parameters end ----------------------------------------------------------------------------
 
     @Persist
+    @Property
     private String fileType;
     @Persist
     private String csvDelimter;
@@ -68,6 +73,27 @@ public class ExportCSV {
 
     @Environmental
     private RenderSupport pageRenderSupport;
+    
+    @Inject
+    private ComponentResources resources;
+    @Inject
+    private Request request;
+    
+    //for the ajax requests
+    public String getAJAXRequestURI() {
+        return resources.createEventLink("ChangeChannelEvent").toAbsoluteURI();
+    }
+    public JSONObject onChangeChannelEvent() {
+        //this first select has to be executed so we will check here if the request was ajax enabled
+        if(!request.isXHR()) {
+            return null;
+        }
+        String type = request.getParameter("type");
+
+        fileType = type;
+        
+        return new JSONObject().put("dummy", "dummy");
+    }
 
     public void setupRender() {
         if (!init) {
@@ -84,7 +110,10 @@ public class ExportCSV {
             resetError();
         }
     }
-   //TODO: variables dont get updated
+   
+    
+    
+    //TODO: variables dont get updated
     public void onSubmitFromBigFormID() {
 
 
@@ -136,18 +165,6 @@ public class ExportCSV {
         //call an event which will be fired if we successfully converted everything
 
     }
-
-
-    //AJAX event handlers
-
-    @OnEvent(component = "fileType", value = "change")
-    public void onFileTypeChangeEvent(String type) {
-        fileType = type;
-        if (fileType.equals("excel")) {            
-        }
-        //return new JSONObject().put("fileType", fileType);
-    }
-
 
     public void triggerSuccessEvent() {
         //trigger an event that everything has been converted successfully and
@@ -327,15 +344,6 @@ public class ExportCSV {
     public void setFileTypeModel(String fileTypeModel) {
         this.fileTypeModel = fileTypeModel;
     }
-
-    public String getFileType() {
-        return fileType;
-    }
-
-    public void setFileType(String fileType) {
-        this.fileType = fileType;
-    }
-
     public boolean isErrorFound() {
         return errorFound;
     }

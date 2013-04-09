@@ -209,11 +209,11 @@ public final class UploadedFileGrid {
         //this is only to complete the ajax request with a response
         returnJSON.put("JSON", "successfully done");
         if (request==null) {
-        	return new JSONObject("");
+        	return new JSONObject("dummy","dummy");
         }
         String jSONString = request.getParameter(PARAM_NAME);
         if(jSONString == null) {
-        	return new JSONObject("");
+        	return new JSONObject("dummy","dummy");
         }
         
         //the actual json request is in fiefox3 and sagari always the last element TODO:check IE what happens there?

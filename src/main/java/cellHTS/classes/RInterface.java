@@ -163,7 +163,9 @@ public class RInterface extends Thread {
             }
             if (eng != null) {
             
-            libStuff = eng.parseAndEval("library(cellHTS2);library(Rserve)").asString(); 
+            libStuff = eng.parseAndEval("paste(capture.output(print( library(cellHTS2) )),collapse=\"\\n\")").asString();
+            libStuff = libStuff + eng.parseAndEval("paste(capture.output(print( library(Rserve) )),collapse=\"\\n\")").asString();
+            
             //REXP r = eng.parseAndEval("try(sessionInfo(),silent=TRUE)");
             String output = eng.parseAndEval("paste(capture.output(print(sessionInfo())),collapse=\"\\n\")").asString();
             String output2 = eng.parseAndEval("try(zip(),silent=TRUE)").asString();

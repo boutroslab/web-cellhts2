@@ -52,10 +52,7 @@
                     Add further columns: 
                         <t:select t:id="multipleChangeSelect" model="plateDataModel"
                                      t:blankOption="always"
-                                     t:blankLabel="drop all"
-                                     t:mixins="ck/OnEvent"
-                                     onCompleteCallback="onCompleteSelectChangeEvent"
-                                     event="change"
+                                     t:blankLabel="drop all"                                     
                                     />
                     <div id="showSelectedCols"/>   
                 </t:if>
@@ -67,23 +64,10 @@
                 <input t:type="submit" value="create files"/>
 
             </t:form>
-        </div>         
+        </div>  
+        <!-- this section is for variables we need in js... -->
+		<div id="multiple_change_uri" style="visibility:hidden">${AJAXRequestURI}</div>         
     </body>
-    <script type="text/javascript">
-        <!-- //
-
-        function onCompleteSelectChangeEvent(response) {                
-            var selectedHeads  = response.selectHeader;
-
-            if(selectedHeads!="") {
-                document.getElementById('showSelectedCols').innerHTML="selected columns:"+selectedHeads;
-            }
-            else {
-
-                document.getElementById('showSelectedCols').innerHTML="";                    
-            }
-        }
-
-        //-->
-    </script>
+    
+    
 </html>
