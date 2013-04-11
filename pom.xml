@@ -109,6 +109,11 @@ of testing facilities designed for use with TestNG (http://testng.org/), so it's
             <version>0.6.8</version>
         </dependency>
         <dependency>
+            <groupId>org.rosuda.REngine.JRI</groupId>
+            <artifactId>JRIEngine</artifactId>
+            <version>0.5-5</version>
+        </dependency>
+        <dependency>
             <groupId>javax.mail</groupId>
             <artifactId>mail</artifactId>
             <version>1.4.2</version>
