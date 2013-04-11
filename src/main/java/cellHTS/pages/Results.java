@@ -158,7 +158,7 @@ public class Results {
      */
     public void initNewRun() {
         if(!notFirstRun) {
-
+        	
 
             if(System.getProperty("upload-path-webserver")!=null) {
 
@@ -421,6 +421,13 @@ public class Results {
         if(prop.get("send-exception-notification-mails").equals("YES")) {
             sendErrorEmail = true;
         }
+        if(semaphore==null || semaphore.getMaxSpace()==null) {
+        	//set the app.properties value of the max parallel runs in the semaphore service
+            //this is needed because semaphore is a service which cant inject messages by itself
+            int maxRuns = Integer.parseInt(prop.get("max-parallel-runs"));
+            semaphore.initMaxParallelRuns(maxRuns);
+        }
+        
         rInterface = new RInterface(paramMap,progressPercentage,rSuccessStatus,resultZipFile,semaphore,emailNotification,emailAddress,maintainersMail,sendErrorEmail,uploadPath);
 
         //run it in a seperate thread...the progressPercentage arr will be updated and is

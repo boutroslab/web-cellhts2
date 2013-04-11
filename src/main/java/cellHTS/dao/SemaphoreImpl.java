@@ -35,7 +35,7 @@ import java.util.HashSet;
 public class SemaphoreImpl implements Semaphore {
 
     //this is a shared variable so we have to synchronize the access to it
-    private Integer maxSpace;
+    private static Integer maxSpace;
 
     private Integer maxAvailableSpace;
 

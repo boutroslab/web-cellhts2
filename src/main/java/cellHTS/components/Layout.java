@@ -32,7 +32,9 @@ import java.util.jar.Manifest;
 import java.util.jar.Attributes;
 
 import cellHTS.classes.RInterface;
-import data.RInformation;
+import cellHTS.dao.RCellHTS2VersionDAO;
+import cellHTS.dao.RCellHTS2VersionDAOImpl;
+
 
 /**
  * This class generates the general layout of the webtool so its like a frame where the different sites
@@ -44,18 +46,7 @@ import data.RInformation;
  * Time: 13:53:30
  */
 public class Layout {
-    //to access .pom file entries etc.
-
-    @Inject
-    private ApplicationGlobals applicationGlobals;
-
-    @Persist
-    private boolean initOnce;
-
-    @SessionState
-    private RInformation rInformation;
-    private boolean rInformationExists;
-
+   
     @Inject
     private Request request;
 
@@ -63,93 +54,28 @@ public class Layout {
         return request.getContextPath();
     }
     @SessionState
-     private String galaxyURLState;
-
-    @Inject
-    private Messages msg;
-
+    private String galaxyURLState;
     private boolean galaxyURLStateExists;
 
-    @Persist
-    private String buildCellHTS2Version;
-    @Persist
-    private String versionCellHTS2; 
-
-    /**
-     * initalize stuff, do this only once such as retriving cellHTS version (Singleton call)
-     */
-    @SetupRender
-    public void init() {
-        //do this only once
-        if (!initOnce) {
-            initOnce = true;
-            //check the sessionstate variables 
-
-                String path = applicationGlobals.getServletContext().getRealPath(File.separator);
-                //this will actually start and end a rserver instance
-
-
-
-                    buildCellHTS2Version="";
-                    versionCellHTS2 = "";
-
-                try {
-                    File manifestFile = new File(path, "META-INF/MANIFEST.MF");
-
-                    Manifest mf = new Manifest();
-                    mf.read(new FileInputStream(manifestFile));
-
-                    Attributes atts = mf.getMainAttributes();
-
-                    buildCellHTS2Version = atts.getValue("Implementation-Build");
-                    versionCellHTS2 = atts.getValue("Implementation-Version");
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-
-                }
-                finally {
-                	createRInformationIfNotExists();
-                }
-            }
-    }
-
-    public RInformation createRInformationIfNotExists() {
-    	if(!rInformationExists)  {
-            RInterface rInterface = new RInterface();
-            String rserveHost =  msg.get("rserve-host");
-            Integer rservePort = Integer.parseInt(msg.get("rserve-port"));
-            String username = msg.get("rserve-username");
-            String password = msg.get("rserve-password");
-
-            rInformation = rInterface.getEssentialCellHTS2Information(rserveHost,rservePort,username,password);
-        } 
-    	return rInformation;
-    }
-
+    @Inject
+    private RCellHTS2VersionDAO rCellHTS2Version;
 
     public String getBuild() {
-        if (buildCellHTS2Version==null) {
-            buildCellHTS2Version = "<not available>";
-        }
-        if (buildCellHTS2Version.equals("")) {
-            //when we are running through a jetty we cant get the MANIFEST so we will
-            //output not available
-            buildCellHTS2Version = "<not available>";
-        }
+        String buildCellHTS2Version= rCellHTS2Version.getBuildCellHTS2Version();
+       
         return buildCellHTS2Version;
     }
 
     public String getVersion() {
-
-        if (versionCellHTS2==null) {
-            versionCellHTS2 = "<not available>";
-        }
-        if (versionCellHTS2.equals("")) {
-            versionCellHTS2 = "<not available>";
-        }
-        return versionCellHTS2;
+        String versionCellHTS2Version = rCellHTS2Version.getVersionCellHTS2Version();
+        
+        return versionCellHTS2Version;
     }
+
+    public String getCellHTS2Version() {
+        return rCellHTS2Version.getCellHTS2Version();
+    }
+
     public String getGalaxyEnabled() {
         if(galaxyURLStateExists) {
             return "Galaxy enabled";
@@ -159,11 +85,4 @@ public class Layout {
         }
     }
 
-    public RInformation getRInformation() {
-        return createRInformationIfNotExists();
-    }
-
-    public void setRInformation(RInformation rInformation) {
-        this.rInformation = rInformation;
-    }
 }
