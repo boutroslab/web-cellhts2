@@ -55,9 +55,8 @@ public class DependenciesChecker {
     private Messages msg;
     @Persist
     private boolean allDependenciesAreMet;
-    @SessionState
-    private RCellHTS2VersionDAOImpl rCellHTS2Version;
-    private boolean rCellHTS2VersionExists;
+    @Inject
+    private RCellHTS2VersionDAO rCellHTS2Version;
     
     @Parameter(required=true, defaultPrefix="literal")
     private String enableDIVOnSuccess;
