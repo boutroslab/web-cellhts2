@@ -15,6 +15,7 @@ import java.util.regex.Matcher;
 import java.util.HashMap;
 
 import cellHTS.classes.RInterface;
+import cellHTS.dao.RCellHTS2VersionDAO;
 import cellHTS.dao.RCellHTS2VersionDAOImpl;
 import cellHTS.pages.CellHTS2;
 
@@ -319,14 +320,7 @@ public class DependenciesChecker {
              return "Cannot read or write directory: "+uploadPath+".\nCheck read/write permissions. Can't proceed";
         }
     public String getRVersion() {
-        if(!rCellHTS2VersionExists)  {
-                RInterface rInterface = new RInterface();
-                return rInterface.getCellHTS2Version();
-        }
-        else {
-            return rCellHTS2Version.getCellHTS2Version();
-        }
-
+    	return rCellHTS2Version.getCellHTS2Version();
     }
 
     public String getB_PARAMNAME() {
