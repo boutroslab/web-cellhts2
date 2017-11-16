@@ -3204,23 +3204,13 @@ public class CellHTS2 {
     private File getNewJobnameDir() {
         String jobNamePath="";
 	String jobName="";
-        try {
 
-        jobName  = File.createTempFile("JOB", File.separator,new File(uploadPath)).getName();
-
-       
+        long unixTime = System.currentTimeMillis() / 1000L;
+	
+	jobName = "JOB" + Long.toString(unixTime);
             
         jobNamePath = uploadPath+jobName;
 
-        //delete the file,we dont need it we will create a dir with this name
-        (new File(jobNamePath)).delete();
-        
-        //new File(jobNamePath).mkdirs();   //dont create it yet ... create it only if someone uploads a file
-        }catch(IOException e) {
-
-            e.printStackTrace();
-            return null;
-        }
         return new File(jobNamePath);
     }
 

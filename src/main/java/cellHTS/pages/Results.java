@@ -335,31 +335,28 @@ public class Results {
         paramMap.put("rserve-port",prop.get("rserve-port"));
         paramMap.put("rserve-username",prop.get("rserve-username"));
         paramMap.put("rserve-password",prop.get("rserve-password"));
-        
-            try {
-                String jobName = jobNameDir.getName();
+       
+        long unixTime = System.currentTimeMillis() / 1000L;
+	
+        String runName = "RUN" + Long.toString(unixTime);
+        String jobName = jobNameDir.getName();
+	
                 //use jobname as the heading in the html result file
                 paramMap.put("htmlResultName",jobName);
-                runNameDir = File.createTempFile(jobName+"_RUN", File.separator, new File(uploadPath));
-                
-                //del the dir...we want to create a file instead
-                runNameDir.delete();
-                //do not create the dir...R must do it because otherwise we get problems with file permissions
-                //runNameDir.mkdirs();
 
-                //add a possible jobname prefix
+		System.out.println("JOBNAME: " + jobName);
+		
+		runNameDir = new File(uploadPath + jobName + "_" + runName);
+                
+                System.out.println("RUNNAMEDIR: " + runNameDir.getName());
+                System.out.println("RUNNAMEDIRabs: " + runNameDir.getAbsolutePath());
+                //do not create the dir...R must do it because otherwise we get problems with file permissions
 
                 //generate new jobname
                 paramMap.put("runNameDir",runNameDir.getAbsolutePath());
 
-            } catch (IOException e) {
-                String exceptionString = runNameDir.getName();
-                TapestryException fileUploadError = new TapestryException("somethings wrong with creating a new run id:" + exceptionString, null);
-                throw fileUploadError;
-            }
 
         //how to call the zipfile
-            String runName = runNameDir.getName();
              if (this.jobNamePrefix != null) {
                  if (!this.jobNamePrefix.equals("")) {
                      //spaces or slashes will kill valid unix filename description
@@ -371,7 +368,7 @@ public class Results {
                  }
              }
 
-            resultZipFile = runNameDir+File.separator + runName+".zip";
+            resultZipFile = runNameDir.getAbsolutePath() + File.separator + runName + ".zip";
         //only show progress bar etc if we are not running at email notification
         if (!emailNotification) {
             //create a link for the javascript polling...this will be the java method in this obj here which will be called from js
@@ -381,9 +378,6 @@ public class Results {
             //we need three things in our new page for displatyin success: path to zip files, path to save the zip and jobname
             //we are passing these parameters as an array to the page
             ArrayList<String> p = new ArrayList();
-
-
-
 
             //add the link to the js success url
             p.add(resultZipFile);
