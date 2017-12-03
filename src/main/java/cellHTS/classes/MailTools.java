@@ -1,23 +1,3 @@
-/*
- * //
- * // Copyright (C) 2009 Boutros-Labs(German cancer research center) b110-it@dkfz.de
- * //
- * //
- * //    This program is free software: you can redistribute it and/or modify
- * //    it under the terms of the GNU General Public License as published by
- * //    the Free Software Foundation, either version 3 of the License, or
- * //    (at your option) any later version.
- * //
- * //    This program is distributed in the hope that it will be useful,
- * //    but WITHOUT ANY WARRANTY; without even the implied warranty of
- * //    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * //
- * //    You should have received a copy of the GNU General Public License
- * //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
- */
-
 package cellHTS.classes;
 
 import org.apache.tapestry5.ioc.internal.util.TapestryException;
@@ -31,15 +11,32 @@ import javax.activation.DataHandler;
 import javax.activation.DataSource;
 
 /**
- *
- * This class provides tools for email sending through a email server
  * Created by IntelliJ IDEA.
  * User: oliverpelz
- * Date: 27.03.2009
- * Time: 15:50:35
+ * Date: Jan 25, 2011
+ * Time: 11:20:48 AM
+ * To change this template use File | Settings | File Templates.
  *
  */
 public class MailTools {
+    private String SMTPHOST;
+    private String PORTNUMBER;
+    private String smtpUser;
+    private String smtpUserHost;
+    private String password;
+
+    public String getSmtpUser() {
+       return smtpUser;
+    }
+    public String getSmtpUserHost() {
+       return smtpUserHost;
+    }
+    public String getPassword(){
+       return password;
+    }
+    
+	
+	
     //filename is the name of an attachment, if you use null it will be empty
     /**
      *
@@ -51,6 +48,34 @@ public class MailTools {
      * @param from       Email address from
      * @param filename   Array of attachment files
      */
+    public MailTools(String smtpHost, String smtpPort, String smtpUser, String smtpUserHost, String password) {
+	 this.SMTPHOST     = smtpHost;
+	 this.PORTNUMBER   = smtpPort;
+	 this.smtpUser     = smtpUser;
+	 this.smtpUserHost = smtpUserHost;
+	 this.password     = password;
+    }
+
+     class MyAuthenticator extends Authenticator {
+	String userName = null;
+        String host     = null;
+	String password = null;
+
+	public MyAuthenticator() {
+	}
+
+	public MyAuthenticator(String username, String host, String password) {
+		this.userName = username;
+                this.host     = host;
+		this.password = password;
+	}
+
+	protected PasswordAuthentication getPasswordAuthentication() {
+		return new PasswordAuthentication(userName + "@" + host, password);
+	}
+};
+
+
     public void postMail(String recipient,
                          String subject,
                          String message,
@@ -58,55 +83,65 @@ public class MailTools {
                          String filename[]  //this is an attachment
     ) {
         try {
-            Properties props = new Properties();
-            props.put("mail.smtp.host", "localhost");
-
-            Session session = Session.getDefaultInstance(props);
-
-            Message msg = new MimeMessage(session);
-
-            InternetAddress addressFrom = new InternetAddress(from);
-            msg.setFrom(addressFrom);
-            InternetAddress addressTo = new InternetAddress(recipient);
-            msg.setSubject(subject);
-            msg.setRecipient(Message.RecipientType.TO, addressTo);
+		final Properties props = new Properties();
+		props.put("mail.smtp.host", this.SMTPHOST);
+		props.put("mail.smtp.port", this.PORTNUMBER);
+		props.put("mail.transport.protocol","smtp");
+		props.put("mail.smtp.auth", "true");
+                //props.put("mail.smtp.starttls.enable", "true");
+		//props.put("mail.smtp.tls", "true");
+		//props.put("mail.smtp.ssl.checkserveridentity", "true");
 
 
+
+		MyAuthenticator auth = new MyAuthenticator(getSmtpUser(), getSmtpUserHost(), getPassword());
+
+		Session session = Session.getDefaultInstance(props, auth);
+
+		Message msg = new MimeMessage(session);
+		msg.setFrom(new InternetAddress(from));
+		msg.addRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
+		msg.setSubject(subject);
+		msg.setText(message);
+
+
+            //filename = null;
+            if (filename != null) {
             MimeMultipart content = new MimeMultipart("alternative");
-
-
             MimeBodyPart text = new MimeBodyPart();
 
-            text.setText(message);
             text.setHeader("MIME-Version", "1.0");
             text.setHeader("Content-Type", text.getContentType());
             content.addBodyPart(text);
 
-            if (filename != null) {
-                for(String file : filename) {
+    
+		    for(String file : filename) {
                     DataSource fileDataSource = new FileDataSource(file);
 
                     BodyPart messageBodyPart = new MimeBodyPart();
                     messageBodyPart.setDataHandler(new DataHandler(fileDataSource));
                     messageBodyPart.setFileName(new File(file).getName());
-
+		    System.out.println("damn filename: " + file);
 
                 //add the file to the content
                     content.addBodyPart(messageBodyPart);
-                }
-            }
-
+            
+		    }
             //add the content to the message
             msg.setContent(content);
+           
+	    }
 
-            Transport.send(msg);
-        } catch (Exception e) { 
-            //e.printStackTrace();
-            //System.out.println(message);
-            //throw new RuntimeException("did you forget to set up a mail server properly???, email message was: "+message+" stacktrace was: "+e.getMessage());
-        	throw new RuntimeException("did you forget to set up a mail server properly???",null);
+            //msg.saveChanges();
+	    Transport.send(msg);
+
+        } catch (MessagingException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Mail server seems to be unreachable: "+e.getMessage());
         }
 
 
     }
 }
+ 
+

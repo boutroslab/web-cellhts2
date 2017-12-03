@@ -31,6 +31,7 @@ import cellHTS.classes.RInterface;
 import cellHTS.classes.Configuration;
 import cellHTS.dao.Semaphore;
 import cellHTS.components.Layout;
+import org.apache.tapestry5.ioc.Messages;
 
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -151,7 +152,10 @@ public class Results {
 
     @Persist
     private HTSAnalyzerParameter htsAnalyzerParameter;
-    
+
+    @Inject
+    private Messages messages;
+ 
     /**
      * this method should be started when starting a new R cellHTS2 run ..
      *
@@ -421,8 +425,14 @@ public class Results {
             int maxRuns = Integer.parseInt(prop.get("max-parallel-runs"));
             semaphore.initMaxParallelRuns(maxRuns);
         }
+
+        String smtpHost = messages.get("smtp-host");
+        String smtpPort = messages.get("smtp-port");
+        String smtpUser = messages.get("smtp-user");
+        String smtpUserHost = messages.get("smtp-userHost");
+        String smtpPassword = messages.get("smtp-password");  
         
-        rInterface = new RInterface(paramMap,progressPercentage,rSuccessStatus,resultZipFile,semaphore,emailNotification,emailAddress,maintainersMail,sendErrorEmail,uploadPath);
+        rInterface = new RInterface(paramMap,progressPercentage,rSuccessStatus,resultZipFile,semaphore,emailNotification,emailAddress,maintainersMail,sendErrorEmail,uploadPath, smtpHost, smtpPort, smtpUser, smtpUserHost, smtpPassword);
 
         //run it in a seperate thread...the progressPercentage arr will be updated and is
         //visible outside (in here) through a call by reference

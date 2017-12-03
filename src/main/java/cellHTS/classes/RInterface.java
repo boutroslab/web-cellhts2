@@ -105,7 +105,7 @@ public class RInterface extends Thread {
      * @param maintainEmailAddress  email adress which occurs in the email in the from section and where to send questions etc to
      * @param sendErrorEmail should a email sent to the developer if Rserve reported a error?
      */
-    public RInterface(HashMap<String, String> map, String[] progressPercentage,Boolean [] successBool,String resultZipFile,Semaphore semaphore,boolean eMailNotification,String emailAddress,String maintainEmailAddress,boolean sendErrorEmail,String uploadPath) {
+    public RInterface(HashMap<String, String> map, String[] progressPercentage,Boolean [] successBool,String resultZipFile,Semaphore semaphore,boolean eMailNotification,String emailAddress,String maintainEmailAddress,boolean sendErrorEmail,String uploadPath, String smtpHost, String smtpPort, String smtpUser, String smtpUserHost, String smtpPassword) {
 
         this.stringParams = map;
         this.progressPercentage = progressPercentage;
@@ -119,7 +119,8 @@ public class RInterface extends Thread {
         this.sendErrorEmail=sendErrorEmail;
         this.uploadPath = uploadPath;
          if(this.emailNotification) {
-              postMailTools = new MailTools();
+             // postMailTools = new MailTools();
+                postMailTools = new MailTools(smtpHost, smtpPort, smtpUser, smtpUserHost, smtpPassword);
              try {
                 InetAddress addr = InetAddress.getLocalHost();
                 // Get hostname
