@@ -371,8 +371,9 @@ public class Results {
 
                  }
              }
+            String uploadPath = System.getProperty("upload-path-webserver");
 
-            resultZipFile = runNameDir.getAbsolutePath() + File.separator + runName + ".zip";
+            resultZipFile = uploadPath + File.separator + runName + ".zip";
         //only show progress bar etc if we are not running at email notification
         if (!emailNotification) {
             //create a link for the javascript polling...this will be the java method in this obj here which will be called from js
